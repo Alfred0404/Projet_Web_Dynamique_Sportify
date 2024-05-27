@@ -66,10 +66,12 @@ if (!mysqli_select_db($conn, $database)) {
         </div>
     </section>
     <footer>
-
+        <p>© 2024 Sportify</p>
+        <p>sportify@gmail.com</p>
+        <p>01 38 67 18 52</p>
+        <p>12 rue de la bite - 75015 - Paris</p>
+        <a href="#">Google Maps</a>
     </footer>
-
-
 </body>
 
 </html>
