@@ -1,9 +1,9 @@
 <?php
 $user_name = "root";
 $password = "";
-$database = "tp7";
+$database = "test1";
 $server = "127.0.0.1";
-$port = 3301;
+$port = 3306;
 
 $conn = mysqli_connect($server, $user_name, $password, $database, $port);
 
@@ -18,7 +18,7 @@ if (!mysqli_select_db($conn, $database)) {
 }
 // echo "Database selected successfully";
 
-// Requête SQL pour sélectionner toutes les lignes de la table `utilisateurs`
+// Requête SQL pour sélectionner toutes les lignes de la table utilisateurs
 // $sql = "SELECT id, titre, auteur FROM livres";
 // $result = mysqli_query($conn, $sql);
 
@@ -58,18 +58,23 @@ if (!mysqli_select_db($conn, $database)) {
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>
         </ul>
     </div>
-    <section>
+    <section class="">
         <div class="section-content">
             <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
             <h1>Sportify</h1>
             <p>La solution de mise en relation avec des professionnels du sport</p>
         </div>
     </section>
+    <section class="bulletin">
+        <h1>Bulletin sportif de la semaine</h1>
+    </section>
     <footer>
-
+        <p>© 2024 Sportify</p>
+        <p>sportify@gmail.com</p>
+        <p>01 38 67 18 52</p>
+        <p>10 rue sextius Michel - 75015 - Paris</p>
+        <a href="#">Google Maps</a>
     </footer>
-
-
 </body>
 
-</html>
+</html>`
