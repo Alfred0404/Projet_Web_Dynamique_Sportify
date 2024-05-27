@@ -58,12 +58,15 @@ if (!mysqli_select_db($conn, $database)) {
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>
         </ul>
     </div>
-    <section>
+    <section class="">
         <div class="section-content">
             <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
             <h1>Sportify</h1>
             <p>La solution de mise en relation avec des professionnels du sport</p>
         </div>
+    </section>
+    <section class="bulletin">
+        <h1>Bulletin sportif de la semaine</h1>
     </section>
     <footer>
         <p>© 2024 Sportify</p>
