@@ -1,86 +1,130 @@
+/* rendez_vous.css */
+
+/* Réinitialiser les marges et les paddings par défaut */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-h1 {
     color: #333;
-    text-align: center;
-    margin-top: 20px;
-}
-
-form {
-    background: #fff;
+    line-height: 1.6;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    max-width: 400px;
-    width: 100%;
-    margin: 20px auto;
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #555;
-}
-
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #218838;
-}
-
-.nav {
-    background: #333;
+header {
+    background-color: #333;
+    color: #fff;
     padding: 10px 0;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    margin: 0;
 }
 
 .nav ul {
-    list-style-type: none;
-    margin: 0;
+    list-style: none;
     padding: 0;
+    margin: 0;
     display: flex;
     justify-content: center;
+    background-color: #444;
 }
 
-.nav li {
-    margin: 0 15px;
+.nav ul li {
+    margin: 0 10px;
 }
 
-.nav a {
-    color: white;
+.nav ul li a {
+    color: #fff;
     text-decoration: none;
+    padding: 10px 20px;
+    display: block;
 }
 
-.nav a:hover {
-    text-decoration: underline;
+.nav ul li a:hover {
+    background-color: #555;
+}
+
+section {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.rdv-details {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.rdv-details h2 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.rdv-details p {
+    margin-bottom: 5px;
+}
+
+form {
+    margin-top: 20px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="date"],
+form input[type="datetime-local"],
+form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+form button {
+    display: inline-block;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+form button:hover {
+    background-color: #555;
 }
 
 footer {
-    background: #333;
-    color: white;
     text-align: center;
     padding: 10px 0;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    background-color: #333;
+    color: #fff;
+    margin-top: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+    margin: 5px 0;
 }

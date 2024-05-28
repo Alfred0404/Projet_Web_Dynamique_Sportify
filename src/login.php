@@ -2,7 +2,7 @@
 session_start();
 $user_name = "root";
 $password = "";
-$database = "sportify"; // Utilisez la base de données correcte
+$database = "sportify"; 
 $server = "127.0.0.1";
 $port = 3306;
 
