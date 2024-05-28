@@ -108,10 +108,37 @@ section {
 }
 
 .section-content {
-    margin-top: 10%;
+    margin-top: 15%;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.section-content form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+
+}
+
+.search-field {
+    padding: 10px;
+    border-radius: 32px;
+    border: none;
+    width: 300px;
+    margin-right: 10px;
+
+}
+
+.search-submit {
+    padding: 10px 20px;
+    border-radius: 32px;
+    border: none;
+    background: #fff;
+    color: #000;
+    font-weight: 600;
+
 }
 
 section img {
@@ -132,11 +159,11 @@ section p {
     margin-bottom: 20px;
 }
 
-.rdvs {
+.resultats {
     background: black;
 }
 
-.rdvs h1 {
+.resultats h1 {
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 20px;

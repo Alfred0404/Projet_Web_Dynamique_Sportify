@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../src/css/parcourir.css">
-    <title>Accueil</title>
+    <title>Sportify - Parcourir</title>
 </head>
 
 <body>
@@ -31,6 +31,17 @@
     </section>
     <section class="services">
         <h1>Nos services</h1>
+        <div class="btns-activite">
+            <button>
+                <p>Activités sportives</p>
+            </button>
+            <button>
+                <p>Les Sports de Compétition</p>
+            </button>
+            <button>
+                <p>Salles de sport Omnes</p>
+            </button>
+        </div>
     </section>
     <footer>
         <p>© 2024 Sportify</p>

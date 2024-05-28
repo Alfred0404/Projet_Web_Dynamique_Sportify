@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../src/css/recherche.css">
-    <title>Accueil</title>
+    <title>Sportify - Recherche</title>
 </head>
 
 <body>
@@ -26,11 +26,15 @@
     </div>
     <section class="first-section">
         <div class="section-content">
-            <h1>Rendez-vous</h1>
+            <h1>Rechercher</h1>
+            <form action="" class="search-bar">
+                <input class="search-field" type="text" name="search" placeholder="Rechercher...">
+                <button class="search-submit" type="submit">Rechercher</button>
+            </form>
         </div>
     </section>
-    <section class="rdvs">
-        <h1>Vos rendez-vous</h1>
+    <section class="resultats">
+        <h1>Résultats</h1>
     </section>
     <footer>
         <p>© 2024 Sportify</p>
