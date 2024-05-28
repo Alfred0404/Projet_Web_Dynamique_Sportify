@@ -31,17 +31,18 @@
     </section>
     <section class="services">
         <h1>Nos services</h1>
-        <div class="btns-activite">
-            <button>
+        <form class="btns-activite" action="traitement.php" method="post">
+            <button type="submit" name="button_parcourir" value="activite_sportive">
                 <p>Activités sportives</p>
             </button>
-            <button>
+            <button type="submit" name="button_parcourir" value="les_sports_de_competition">
                 <p>Les Sports de Compétition</p>
             </button>
-            <button>
+            <button type="submit" name="button_parcourir" value="salles_de_sport_omnes">
                 <p>Salles de sport Omnes</p>
             </button>
-        </div>
+        </form>
+        <iframe name="hidden_iframe" style="display:none;"></iframe>
     </section>
     <footer>
         <p>© 2024 Sportify</p>

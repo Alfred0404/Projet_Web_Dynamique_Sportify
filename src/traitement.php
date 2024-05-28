@@ -36,3 +36,11 @@ if (mysqli_num_rows($result) > 0) {
 } else {
     echo "0 résultats";
 }
+
+if (isset($_POST['button_parcourir'])) {
+    $button_parcourir = $_POST['button_parcourir'];
+    // Effectuer les actions nécessaires avec le texte du bouton
+    echo "Le texte du bouton cliqué est : " . htmlspecialchars($button_parcourir);
+} else {
+    echo "Aucun texte de bouton reçu.";
+}

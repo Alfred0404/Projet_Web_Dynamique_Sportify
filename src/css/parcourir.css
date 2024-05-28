@@ -164,6 +164,18 @@ section p {
     border-radius: 16px;
 }
 
+.btns-activite button:hover {
+    background: #fff;
+    color: #000;
+    transition: 0.5s ease-in-out;
+}
+
+.btns-activite button:focus {
+    background: #fff;
+    color: #000;
+    transition: 0.1s;
+}
+
 
 
 footer {

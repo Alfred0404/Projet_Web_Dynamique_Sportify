@@ -27,7 +27,7 @@
     <section class="first-section">
         <div class="section-content">
             <h1>Rechercher</h1>
-            <form action="" class="search-bar">
+            <form action="traitement.php" class="search-bar">
                 <input class="search-field" type="text" name="search" placeholder="Rechercher...">
                 <button class="search-submit" type="submit">Rechercher</button>
             </form>
