@@ -1,9 +1,83 @@
+<?php
+session_start();
+include "db_connection.php";
+
+// Fonction pour valider et sécuriser les entrées utilisateur
+function validate($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+// Inscription
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
+    $role = validate($_POST['register_role']);
+    $nom = validate($_POST['name']);
+    $prenom = validate($_POST['prenom']);
+    $sexe = validate($_POST['sexe']);
+    $email = validate($_POST['email']);
+    $password = validate($_POST['password']);
+
+    $table = $role;
+    $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Erreur de préparation de la requête : " . $conn->error);
+    }
+    $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
+    $stmt->execute();
+    
+    if ($stmt->affected_rows === 1) {
+        header("Location: index.php?success=Account created successfully");
+        exit();
+    } else {
+        echo "Erreur: " . $sql . "<br>" . $conn->error;
+    }
+}
+
+// Connexion
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
+    $role = validate($_POST['login_role']);
+    $username = validate($_POST['username']);
+    $password = validate($_POST['password']);
+
+    $table = $role;
+    $sql = "SELECT * FROM $table WHERE nom_$table = ?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Erreur de préparation de la requête : " . $conn->error);
+    }
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+        if ($password == $row['mdp_' . $table]) {
+            $_SESSION['user_name'] = $row['nom_' . $table];
+            $_SESSION['prenom'] = $row['prenom_' . $table];
+            $_SESSION['email'] = $row['email_' . $table];
+            $_SESSION['role'] = $role;
+            header("Location: accueil.php");
+            exit();
+        } else {
+            echo "Mot de passe incorrect.";
+            exit();
+        }
+    } else {
+        echo "Nom d'utilisateur incorrect.";
+        exit();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de Connexion et Création de Compte</title>
+    <title>Connexion et Inscription</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,8 +93,8 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
-            margin: 10px;
             width: 300px;
+            margin-bottom: 20px;
         }
         h2 {
             margin-bottom: 20px;
@@ -49,120 +123,61 @@
         button:hover {
             background-color: #4cae4c;
         }
-        .hidden {
-            display: none;
-        }
     </style>
+    <script>
+        function showRegistrationFields() {
+            const role = document.getElementById('register_role').value;
+            const fields = document.getElementById('registration_fields');
+            if (role) {
+                fields.style.display = 'block';
+            } else {
+                fields.style.display = 'none';
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <h2>Connexion</h2>
-        <?php if (isset($login_message) && $login_message): ?>
-            <p><?php echo $login_message; ?></p>
-        <?php endif; ?>
-        <label for="role">Sélectionnez votre rôle :</label>
-        <select id="login-role" name="role" onchange="showLoginForm()">
-            <option value="">--Choisir un rôle--</option>
-            <option value="admin">Administrateur</option>
-            <option value="coach">Coach</option>
-            <option value="client">Client</option>
-        </select>
-
-        <!-- Formulaire de connexion pour les administrateurs -->
-        <form id="login-admin-form" class="hidden" method="post" action="login.php">
-            <input type="hidden" name="login_role" value="admin">
-            <label for="admin-username">Nom d'utilisateur (Admin) :</label>
-            <input type="text" id="admin-username" name="username" required>
-            <label for="admin-password">Mot de passe :</label>
-            <input type="password" id="admin-password" name="password" required>
-            <button type="submit">Se connecter</button>
-        </form>
-
-        <!-- Formulaire de connexion pour les coachs -->
-        <form id="login-coach-form" class="hidden" method="post" action="login.php">
-            <input type="hidden" name="login_role" value="coach">
-            <label for="coach-username">Nom d'utilisateur (Coach) :</label>
-            <input type="text" id="coach-username" name="username" required>
-            <label for="coach-password">Mot de passe :</label>
-            <input type="password" id="coach-password" name="password" required>
-            <button type="submit">Se connecter</button>
-        </form>
-
-        <!-- Formulaire de connexion pour les clients -->
-        <form id="login-client-form" class="hidden" method="post" action="login.php">
-            <input type="hidden" name="login_role" value="client">
-            <label for="client-username">Nom d'utilisateur (Client) :</label>
-            <input type="text" id="client-username" name="username" required>
-            <label for="client-password">Mot de passe :</label>
-            <input type="password" id="client-password" name="password" required>
-            <button type="submit">Se connecter</button>
-        </form>
-    </div>
-
-    <div class="container">
-        <h2>Créer un compte</h2>
-        <?php if (isset($register_message) && $register_message): ?>
-            <p><?php echo $register_message; ?></p>
-        <?php endif; ?>
-        <label for="register-role">Sélectionnez votre rôle :</label>
-        <select id="register-role" name="register_role" onchange="showRegisterForm()">
-            <option value="">--Choisir un rôle--</option>
-            <option value="admin">Administrateur</option>
-            <option value="coach">Coach</option>
-            <option value="client">Client</option>
-        </select>
-
-        <!-- Formulaire d'inscription -->
-        <form id="register-form" class="hidden" method="post" action="register.php">
-            <input type="hidden" id="register-role-hidden" name="register_role">
-            <label for="name">Nom :</label>
-            <input type="text" id="name" name="name" required>
-            <label for="prenom">Prénom :</label>
-            <input type="text" id="prenom" name="prenom" required>
-            <label for="sexe">Sexe :</label>
-            <input type="text" id="sexe" name="sexe" required>
-            <label for="email">Adresse Email :</label>
-            <input type="email" id="email" name="email" required>
+        <form method="post" action="index.php">
+            <label for="login_role">Sélectionnez votre rôle :</label>
+            <select id="login_role" name="login_role" required>
+                <option value="">--Choisir un rôle--</option>
+                <option value="admin">Administrateur</option>
+                <option value="coach">Coach</option>
+                <option value="client">Client</option>
+            </select>
+            <label for="username">Nom d'utilisateur :</label>
+            <input type="text" id="username" name="username" required>
             <label for="password">Mot de passe :</label>
             <input type="password" id="password" name="password" required>
-            <button type="submit">S'inscrire</button>
+            <button type="submit">Se connecter</button>
         </form>
     </div>
-
-    <script>
-        function showLoginForm() {
-            var selectedRole = document.getElementById("login-role").value;
-            var adminForm = document.getElementById("login-admin-form");
-            var coachForm = document.getElementById("login-coach-form");
-            var clientForm = document.getElementById("login-client-form");
-
-            if (selectedRole === "admin") {
-                adminForm.classList.remove("hidden");
-                coachForm.classList.add("hidden");
-                clientForm.classList.add("hidden");
-            } else if (selectedRole === "coach") {
-                adminForm.classList.add("hidden");
-                coachForm.classList.remove("hidden");
-                clientForm.classList.add("hidden");
-            } else if (selectedRole === "client") {
-                adminForm.classList.add("hidden");
-                coachForm.classList.add("hidden");
-                clientForm.classList.remove("hidden");
-            } else {
-                adminForm.classList.add("hidden");
-                coachForm.classList.add("hidden");
-                clientForm.classList.add("hidden");
-            }
-        }
-
-        function showRegisterForm() {
-            var selectedRole = document.getElementById("register-role").value;
-            var registerForm = document.getElementById("register-form");
-            var registerRoleHidden = document.getElementById("register-role-hidden");
-
-            registerRoleHidden.value = selectedRole;
-            registerForm.classList.remove("hidden");
-        }
-    </script>
+    <div class="container">
+        <h2>Créer un compte</h2>
+        <form method="post" action="index.php">
+            <label for="register_role">Sélectionnez votre rôle :</label>
+            <select id="register_role" name="register_role" onchange="showRegistrationFields()" required>
+                <option value="">--Choisir un rôle--</option>
+                <option value="admin">Administrateur</option>
+                <option value="coach">Coach</option>
+                <option value="client">Client</option>
+            </select>
+            <div id="registration_fields" style="display: none;">
+                <label for="name">Nom :</label>
+                <input type="text" id="name" name="name">
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom">
+                <label for="sexe">Sexe :</label>
+                <input type="text" id="sexe" name="sexe">
+                <label for="email">Adresse Email :</label>
+                <input type="email" id="email" name="email">
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password">
+                <button type="submit">S'inscrire</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

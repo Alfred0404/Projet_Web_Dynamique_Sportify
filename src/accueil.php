@@ -1,35 +1,24 @@
 <?php
 session_start();
-include "db_connection.php";
-
-// Vérifier si l'utilisateur est connecté
-if (!isset($_SESSION['role'])) {
+if (!isset($_SESSION['user_name'])) {
     header("Location: index.php");
     exit();
 }
-
-$role = $_SESSION['role'];
-$username = $_SESSION['user_name'];
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../src/css/accueil.css">
     <title>Accueil</title>
 </head>
-
 <body>
     <header>
         <h1 class="title">Sportify</h1>
         <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
-        <p>Bienvenue, <?php echo htmlspecialchars($username); ?>!</p>
-        <p>Vous êtes connecté en tant que <?php echo htmlspecialchars($role); ?>.</p>
-        <a href="logout.php">Déconnexion</a>
     </header>
-
     <div class="nav">
         <ul>
             <li class="nav-item"><a href="#">Accueil</a></li>
@@ -37,6 +26,7 @@ $username = $_SESSION['user_name'];
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
     <section class="">
@@ -57,5 +47,4 @@ $username = $_SESSION['user_name'];
         <a href="#">Google Maps</a>
     </footer>
 </body>
-
 </html>
