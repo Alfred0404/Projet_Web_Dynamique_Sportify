@@ -9,49 +9,37 @@ function validate($data) {
     return $data;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Assurez-vous que vous avez bien inclus le fichier de connexion à la base de données
-    include "db_connection.php";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
+    $role = $_POST['login_role'];
+    $username = validate($_POST['username']);
+    $password = validate($_POST['password']);
 
-    // Vérifiez si les données du formulaire ont été soumises via POST
-    if(isset($_POST['nom_admin'], $_POST['mdp_admin'])) {
-        // Récupérez les données du formulaire et nettoyez-les
-        $nom_admin = validate($_POST['nom_admin']);
-        $mdp_admin = validate($_POST['mdp_admin']);
+    if ($role == 'admin') {
+        $table = 'admin';
+    } elseif ($role == 'coach') {
+        $table = 'coach';
+    } elseif ($role == 'client') {
+        $table = 'client';
+    }
 
-        // Vérifiez si les champs requis ne sont pas vides
-        if (empty($nom_admin) || empty($mdp_admin)) {
-            echo "Nom d'utilisateur et mot de passe sont requis.";
+    $sql = "SELECT * FROM $table WHERE nom_$table='$username'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        if ($password == $row['mdp_' . $table]) {
+            $_SESSION['role'] = $role;
+            $_SESSION['user_name'] = $username;
+            header("Location: home.php");
             exit();
         } else {
-            // Préparez et exécutez la requête SQL pour vérifier les informations d'identification de l'utilisateur
-            $sql = "SELECT * FROM admin WHERE nom_admin = ?";
-            $stmt = $conn->prepare($sql);
-            if ($stmt === false) {
-                die("Erreur de préparation de la requête : " . $conn->error);
-            }
-            $stmt->bind_param("s", $nom_admin);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            if ($result->num_rows === 1) {
-                $row = $result->fetch_assoc();
-                if ($mdp_admin == $row['mdp_admin']) {
-                    // Nom d'utilisateur et mot de passe corrects, rediriger vers la page de connexion réussie
-                    $_SESSION['nom_admin'] = $row['nom_admin'];
-                    header("Location: home.php");
-                    exit(); // Assurez-vous qu'aucun contenu HTML n'est envoyé après cette redirection
-                } else {
-                    echo "Mot de passe incorrect.";
-                    exit();
-                }
-            } else {
-                echo "Nom d'utilisateur incorrect.";
-                exit();
-            }
+            $login_message = "Mot de passe incorrect.";
+            header("Location: index.php?message=$login_message");
+            exit();
         }
     } else {
-        echo "Nom d'utilisateur et mot de passe sont requis.";
+        $login_message = "Aucun compte trouvé avec ce nom d'utilisateur.";
+        header("Location: index.php?message=$login_message");
         exit();
     }
 }
