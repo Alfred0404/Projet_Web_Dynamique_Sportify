@@ -1,39 +1,18 @@
 <?php
-$user_name = "root";
-$password = "";
-$database = "tp7";
-$server = "127.0.0.1";
-$port = 3306;
+session_start();
+include "db_connection.php";
 
-$conn = mysqli_connect($server, $user_name, $password, $database, $port);
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+// Vérifier si l'utilisateur est connecté
+if (!isset($_SESSION['role'])) {
+    header("Location: index.php");
+    exit();
 }
-// echo "<p>Connection to the Server opened successfully</p>";
 
-// Optionnel : sélection de la base de données
-if (!mysqli_select_db($conn, $database)) {
-    die("Database selection failed: " . mysqli_error($conn));
-}
-// echo "Database selected successfully";
-
-// Requête SQL pour sélectionner toutes les lignes de la table `utilisateurs`
-// $sql = "SELECT id, titre, auteur FROM livres";
-// $result = mysqli_query($conn, $sql);
-
-// if (mysqli_num_rows($result) > 0) {
-//     // Affichage des résultats
-//     while ($row = mysqli_fetch_assoc($result)) {
-//         echo "ID: " . $row["id"] . " - titre: " . $row["titre"] . " - auteur: " . $row["auteur"] . "<br>";
-//     }
-// } else {
-//     echo "0 résultats";
-// }
+$role = $_SESSION['role'];
+$username = $_SESSION['user_name'];
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -46,9 +25,11 @@ if (!mysqli_select_db($conn, $database)) {
     <header>
         <h1 class="title">Sportify</h1>
         <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
+        <p>Bienvenue, <?php echo htmlspecialchars($username); ?>!</p>
+        <p>Vous êtes connecté en tant que <?php echo htmlspecialchars($role); ?>.</p>
+        <a href="logout.php">Déconnexion</a>
     </header>
 
-    </div>
     <div class="nav">
         <ul>
             <li class="nav-item"><a href="#">Accueil</a></li>
