@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 // Récupérer les activités de type 'activite'
-$sql = "SELECT id_activites, nom_activites FROM activites WHERE type = 'activite'";
+$sql = "SELECT id_activites, nom_activites FROM activites WHERE type = 'sport de competition'";
 $result = $conn->query($sql);
 ?>
 
@@ -22,10 +22,10 @@ $result = $conn->query($sql);
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Activités sportives</title>
+    <title>Sport de compétition</title>
 </head>
 <body>
-    <h1>Activités sportives</h1>
+    <h1>Sport de compétition</h1>
     <ul>
         <?php
         if ($result->num_rows > 0) {
