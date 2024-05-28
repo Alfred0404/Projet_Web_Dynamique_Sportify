@@ -160,15 +160,13 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
         document.getElementById('reserve-button').addEventListener('click', function () {
             if (selectedCell) {
                 const jour = selectedCell.dataset.jour;
-                const heureDebut = selectedCell.dataset.heure;
-                const heureFin = new Date(new Date().setHours(parseInt(heureDebut.split(':')[0]) + 1)).toISOString().substring(11, 16);
-                const confirmation = confirm(`Voulez-vous réserver le créneau ${jour} de ${heureDebut} à ${heureFin} ?`);
+                const heure = selectedCell.dataset.heure;
+                const confirmation = confirm(`Voulez-vous réserver le créneau ${jour} de ${heure} à ${parseInt(heure.split(':')[0]) + 1}h ?`);
                 if (confirmation) {
                     const formData = new FormData();
                     formData.append('id_coach', <?= $id_coach ?>);
-                    formData.append('date_rdv_date', new Date().toISOString().split('T')[0]);
-                    formData.append('date_rdv_time', heureDebut);
-                    
+                    formData.append('date_rdv', `${new Date().toISOString().split('T')[0]} ${heure}:00`);
+
                     fetch('rendez_vous.php', {
                         method: 'POST',
                         body: formData

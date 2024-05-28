@@ -34,6 +34,34 @@ if (isset($_POST['cancel_rdv'])) {
     exit();
 }
 
+// Ajouter un rendez-vous
+if (isset($_POST['id_coach']) && isset($_POST['date_rdv'])) {
+    $id_coach = $_POST['id_coach'];
+    $date_rdv = $_POST['date_rdv'];
+
+    // Vérifier la disponibilité
+    $sql_check = "SELECT * FROM prise_de_rendez_vous WHERE id_coach = ? AND date_rdv = ?";
+    $stmt_check = mysqli_prepare($conn, $sql_check);
+    mysqli_stmt_bind_param($stmt_check, "is", $id_coach, $date_rdv);
+    mysqli_stmt_execute($stmt_check);
+    $result_check = mysqli_stmt_get_result($stmt_check);
+
+    if (mysqli_num_rows($result_check) > 0) {
+        echo "Le créneau est déjà réservé. Veuillez choisir un autre créneau.";
+    } else {
+        $sql = "INSERT INTO prise_de_rendez_vous (id_coach, id_client, date_rdv, statut_rdv) VALUES (?, ?, ?, 1)";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "iis", $id_coach, $_SESSION['user_id'], $date_rdv);
+
+        if (mysqli_stmt_execute($stmt)) {
+            echo "Rendez-vous pris avec succès!";
+        } else {
+            echo "Erreur lors de la prise du rendez-vous : " . mysqli_stmt_error($stmt);
+        }
+    }
+    exit();
+}
+
 // Récupérer les rendez-vous de l'utilisateur
 $sql = "SELECT rv.id_coach, rv.date_rdv, rv.statut_rdv, c.nom_coach, c.prenom_coach, c.email_coach, c.specialite_coach 
         FROM prise_de_rendez_vous rv 
