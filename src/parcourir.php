@@ -18,7 +18,7 @@
     <div class="nav">
         <ul>
             <li class="nav-item"><a href="accueil.php">Accueil</a></li>
-            <li class="nav-item"><a href="#">Tout parcourir</a></li>
+            <li class="nav-item active"><a href="#">Tout parcourir</a></li>
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>

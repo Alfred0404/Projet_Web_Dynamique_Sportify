@@ -61,6 +61,11 @@ header img {
     width: 50%;
 }
 
+li.nav-item.active {
+    background: #ff9e01;
+    color: #000;
+}
+
 .nav-item {
     margin: 0;
     background: #fff;

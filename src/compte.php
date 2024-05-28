@@ -21,7 +21,7 @@
             <li class="nav-item"><a href="parcourir.php">Tout parcourir</a></li>
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
-            <li class="nav-item"><a href="#">Votre compte</a></li>
+            <li class="nav-item active"><a href="#">Votre compte</a></li>
         </ul>
     </div>
     <section class="first-section">
