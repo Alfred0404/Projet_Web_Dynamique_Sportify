@@ -22,10 +22,10 @@ $result = $conn->query($sql);
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Activités et Coachs</title>
+    <title>Activités sportives</title>
 </head>
 <body>
-    <h1>Liste des Activités</h1>
+    <h1>Activités sportives</h1>
     <ul>
         <?php
         if ($result->num_rows > 0) {
@@ -45,7 +45,7 @@ $result = $conn->query($sql);
         $id_activite = intval($_GET['id']);
         
         // Requête pour trouver le coach responsable
-        $sql_coach = "SELECT coach.nom_coach FROM coach 
+        $sql_coach = "SELECT coach.id_coach, coach.nom_coach FROM coach 
                       INNER JOIN activites ON coach.specialite_coach = activites.id_activites 
                       WHERE activites.id_activites = $id_activite";
         $result_coach = $conn->query($sql_coach);
@@ -53,12 +53,13 @@ $result = $conn->query($sql);
         if ($result_coach->num_rows > 0) {
             echo "<h2>Coach Responsable</h2>";
             while($row_coach = $result_coach->fetch_assoc()) {
-                echo "<p>" . $row_coach["nom_coach"] . "</p>";
+                echo "<li><a href='coach_details.php?id=" . $row_coach["id_coach"] . "'>" . $row_coach["nom_coach"] . "</a></li>";
             }
         } else {
             echo "<p>Aucun coach responsable trouvé pour cette activité.</p>";
         }
     }
+
 
     // Fermer la connexion
     $conn->close();
