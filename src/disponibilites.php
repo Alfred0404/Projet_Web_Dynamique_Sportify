@@ -165,7 +165,7 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                 if (confirmation) {
                     const formData = new FormData();
                     formData.append('id_coach', <?= $id_coach ?>);
-                    formData.append('date_rdv', `${new Date().toISOString().split('T')[0]} ${heure}:00`);
+                    formData.append('date_rdv', new Date().toISOString().split('T')[0] + ' ' + heure + ':00');
 
                     fetch('rendez_vous.php', {
                         method: 'POST',
@@ -178,6 +178,7 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                             selectedCell.classList.add('taken');
                             selectedCell.innerText = 'Réservé';
                             document.getElementById('reserve-button').disabled = true;
+                            window.location.href = 'rendez_vous.php';
                         } else {
                             alert(data);
                         }

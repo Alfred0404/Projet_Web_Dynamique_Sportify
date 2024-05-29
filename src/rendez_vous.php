@@ -35,7 +35,7 @@ if (isset($_POST['cancel_rdv'])) {
 }
 
 // Ajouter un rendez-vous
-if (isset($_POST['id_coach']) && isset($_POST['date_rdv'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['cancel_rdv'])) {
     $id_coach = $_POST['id_coach'];
     $date_rdv = $_POST['date_rdv'];
 
@@ -47,11 +47,17 @@ if (isset($_POST['id_coach']) && isset($_POST['date_rdv'])) {
     $result_check = mysqli_stmt_get_result($stmt_check);
 
     if (mysqli_num_rows($result_check) > 0) {
-        echo "Le créneau est déjà réservé. Veuillez choisir un autre créneau.";
+        echo "Le créneau est déjà réservé.";
     } else {
-        $sql = "INSERT INTO prise_de_rendez_vous (id_coach, id_client, date_rdv, statut_rdv) VALUES (?, ?, ?, 1)";
+        // Assigner une salle aléatoire pour la réservation
+        $sql_salle = "SELECT id_salle FROM salle ORDER BY RAND() LIMIT 1";
+        $result_salle = mysqli_query($conn, $sql_salle);
+        $salle = mysqli_fetch_assoc($result_salle);
+        $id_salle = $salle['id_salle'];
+
+        $sql = "INSERT INTO prise_de_rendez_vous (id_client, id_coach, id_salle, date_rdv, statut_rdv) VALUES (?, ?, ?, ?, 1)";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "iis", $id_coach, $_SESSION['user_id'], $date_rdv);
+        mysqli_stmt_bind_param($stmt, "iiis", $_SESSION['user_id'], $id_coach, $id_salle, $date_rdv);
 
         if (mysqli_stmt_execute($stmt)) {
             echo "Rendez-vous pris avec succès!";
@@ -63,9 +69,10 @@ if (isset($_POST['id_coach']) && isset($_POST['date_rdv'])) {
 }
 
 // Récupérer les rendez-vous de l'utilisateur
-$sql = "SELECT rv.id_coach, rv.date_rdv, rv.statut_rdv, c.nom_coach, c.prenom_coach, c.email_coach, c.specialite_coach 
+$sql = "SELECT rv.id_coach, rv.date_rdv, rv.id_salle, rv.statut_rdv, c.nom_coach, c.prenom_coach, c.email_coach, c.specialite_coach, s.nom_salle 
         FROM prise_de_rendez_vous rv 
         JOIN coach c ON rv.id_coach = c.ID_coach 
+        JOIN salle s ON rv.id_salle = s.id_salle 
         WHERE rv.id_client = ?";
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "i", $_SESSION['user_id']);
@@ -106,6 +113,7 @@ $rendez_vous = mysqli_fetch_all($result, MYSQLI_ASSOC);
                 <div class="rdv-details" data-coach-id="<?= $rdv['id_coach'] ?>" data-date-rdv="<?= $rdv['date_rdv'] ?>">
                     <h2>Rendez-vous avec <?= htmlspecialchars($rdv['nom_coach']) ?> <?= htmlspecialchars($rdv['prenom_coach']) ?></h2>
                     <p>Date et Heure: <?= htmlspecialchars($rdv['date_rdv']) ?></p>
+                    <p>Salle: <?= htmlspecialchars($rdv['nom_salle']) ?></p>
                     <p>Email: <?= htmlspecialchars($rdv['email_coach']) ?></p>
                     <p>Spécialité: <?= htmlspecialchars($rdv['specialite_coach']) ?></p>
                     <button class="cancel-button" data-coach-id="<?= $rdv['id_coach'] ?>" data-date-rdv="<?= $rdv['date_rdv'] ?>">Annuler le RDV</button>
