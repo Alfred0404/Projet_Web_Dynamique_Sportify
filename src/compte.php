@@ -99,6 +99,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_coach'])) {
         button:hover {
             background-color: #4cae4c;
         }
+        .btn-back {
+            background-color: #007bff;
+        }
+        .btn-back:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
@@ -111,6 +117,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_coach'])) {
         <p><strong>Rôle:</strong> <?php echo ucfirst($_SESSION['role']); ?></p>
         <form method="post" action="logout.php">
             <button type="submit">Déconnexion</button>
+        </form>
+        <form method="get" action="accueil.php">
+            <button type="submit" class="btn-back">Retour à l'accueil</button>
         </form>
     </div>
     
