@@ -233,6 +233,7 @@ if ($is_client) {
             <input type="text" id="telephone" name="telephone" value="<?php echo $telephone_coach; ?>" required>
             <button type="submit">Mettre à jour</button>
         </form>
+<<<<<<< HEAD
         </div>
         <?php endif; ?>
 
@@ -251,6 +252,11 @@ if ($is_client) {
         </form>
         </div>
         <?php endif; ?>
+=======
+    </div>
+    <?php endif; ?>
+
+>>>>>>> b6f695585298a047198b1e68fffb4bb75cebd1f2
 </body>
 
 </html>

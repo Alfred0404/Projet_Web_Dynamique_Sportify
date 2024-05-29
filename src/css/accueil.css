@@ -43,9 +43,15 @@ header img {
 
 
 .nav {
+    padding-block-start: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: sticky;
+    align-self: flex-start;
+    top: 20px;
+    overflow-y: auto;
+    z-index: 10;
 }
 
 .nav ul {
@@ -53,6 +59,14 @@ header img {
     justify-content: space-between;
     align-items: center;
     width: 50%;
+}
+
+li.nav-item.active {
+    background: #ff9e01;
+    color: #000;
+    border-radius: 32px;
+    font-weight: 600;
+
 }
 
 .nav-item {
@@ -70,8 +84,8 @@ section::before {
     width: 100%;
     height: 50px;
     background:
-        linear-gradient(
-            rgba(0, 0, 0, 1),
+        linear-gradient(rgba(0, 0, 0, 1),
+
             rgba(0, 0, 0, 0.7),
             rgba(0, 0, 0, 0));
 
@@ -81,12 +95,12 @@ section::before {
 
 section::after {
     content: "";
-    bottom: -120px;
+
+    bottom: -130px;
     width: 100%;
     height: 100px;
     background:
-        linear-gradient(
-            rgba(0, 0, 0, 0),
+        linear-gradient(rgba(0, 0, 0, 0),
             rgba(0, 0, 0, 0.7),
             rgba(0, 0, 0, 1));
 
@@ -104,6 +118,7 @@ section {
             rgba(0, 0, 0, 0.7)),
         url(../../assets/background.jpg);
     background-size: cover;
+    z-index: -2;
 }
 
 .section-content {
@@ -135,6 +150,14 @@ section p {
     background: black;
 }
 
+.bulletin h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    position: relative;
+    top: 100px;
+}
+
 footer {
     display: flex;
     flex-direction: row;
@@ -146,5 +169,5 @@ footer {
 
 footer p,
 a {
-    margin: 40px 20px;
+    margin: 40px 20px;
 }
