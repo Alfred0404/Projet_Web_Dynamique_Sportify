@@ -64,6 +64,8 @@ header img {
 li.nav-item.active {
     background: #ff9e01;
     color: #000;
+    border-radius: 32px;
+    font-weight: 600;
 }
 
 .nav-item {
@@ -119,33 +121,6 @@ section {
     align-items: center;
 }
 
-.section-content form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-
-}
-
-.search-field {
-    padding: 10px;
-    border-radius: 32px;
-    border: none;
-    width: 300px;
-    margin-right: 10px;
-
-}
-
-.search-submit {
-    padding: 10px 20px;
-    border-radius: 32px;
-    border: none;
-    background: #fff;
-    color: #000;
-    font-weight: 600;
-
-}
-
 section img {
     height: 200px;
     width: auto;
@@ -161,20 +136,54 @@ section h1 {
 
 section p {
     font-size: 1.5rem;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
-.resultats {
+.services {
     background: black;
 }
 
-.resultats h1 {
+.services h1 {
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 20px;
     position: relative;
     top: 100px;
 }
+
+.btns-activite {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+    gap: 100px;
+}
+
+.btns-activite button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 40px;
+    margin-bottom: 0;
+    background: #000;
+    color: #fff;
+    border: 3px solid #fff;
+    border-radius: 16px;
+}
+
+.btns-activite button:hover {
+    background: #fff;
+    color: #000;
+    transition: 0.5s ease-in-out;
+}
+
+.btns-activite button:focus {
+    background: #fff;
+    color: #000;
+    transition: 0.1s;
+}
+
+
 
 footer {
     display: flex;
@@ -183,10 +192,6 @@ footer {
     background: #000;
     color: #fff;
     height: 100px;
-}
-
-.lien-gmaps {
-    color: #fff;
 }
 
 footer p,

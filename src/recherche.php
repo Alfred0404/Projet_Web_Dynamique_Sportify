@@ -41,7 +41,7 @@
         <p>sportify@gmail.com</p>
         <p>01 38 67 18 52</p>
         <p>10 rue Sextius Michel - 75015 - Paris</p>
-        <a href="#">Google Maps</a>
+        <a class="lien-gmaps" href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google Maps</a>
     </footer>
 </body>
 

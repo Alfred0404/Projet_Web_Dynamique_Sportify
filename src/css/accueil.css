@@ -163,7 +163,9 @@ footer {
     color: #fff;
     height: 100px;
 }
-
+.lien-gmaps {
+    color: #fff;
+}
 footer p,
 a {
     margin: 40px 20px;
