@@ -103,14 +103,13 @@ $rendez_vous = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     <div class="nav">
         <ul>
-            <li><a href="accueil.php">Accueil</a></li>
-            <li><a href="parcourir.php">Tout parcourir</a></li>
-            <li><a href="recherche.php">Rechercher</a></li>
-            <li><a href="#">Rendez-vous</a></li>
-            <li><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="accueil.php">Accueil</a></li>
+            <li class="nav-item"><a href="parcourir.php">Tout parcourir</a></li>
+            <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
+            <li class="nav-item active"><a href="#">Rendez-vous</a></li>
+            <li class="nav-item"><a href="compte.php">Votre compte</a></li>
         </ul>
     </div>
-
     <section>
         <h1>Vos Rendez-vous Confirmés</h1>
         <?php if (count($rendez_vous) > 0): ?>

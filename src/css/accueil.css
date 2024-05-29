@@ -43,16 +43,30 @@ header img {
 
 
 .nav {
+    padding-block-start: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: sticky;
+    align-self: flex-start;
+    top: 20px;
+    overflow-y: auto;
+    z-index: 10;
 }
 
 .nav ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 70%;
+    width: 50%;
+}
+
+li.nav-item.active {
+    background: #ff9e01;
+    color: #000;
+    border-radius: 32px;
+    font-weight: 600;
+
 }
 
 .nav-item {
@@ -104,6 +118,7 @@ section {
             rgba(0, 0, 0, 0.7)),
         url(../../assets/background.jpg);
     background-size: cover;
+    z-index: -2;
 }
 
 .section-content {
@@ -134,6 +149,16 @@ section p {
 .bulletin {
     background: black;
 }
+
+
+.bulletin h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    position: relative;
+    top: 100px;
+}
+
 
 footer {
     display: flex;
