@@ -1,19 +1,26 @@
 <?php
 // Vérifier si un identifiant de coach est passé en paramètre
-if(isset($_GET['id'])) {
+if (isset($_GET['id'])) {
     // Récupérer l'identifiant du coach depuis l'URL
     $id_coach = intval($_GET['id']);
 
     // Connexion à la base de données
-    $servername = "localhost";
-    $username = "root";
+    $user_name = "root";
     $password = "";
-    $dbname = "Sportify";
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $database = "sportify";
+    $server = "127.0.0.1";
+    $port = 3301;
 
-    // Vérifier la connexion
-    if ($conn->connect_error) {
-        die("Connexion échouée: " . $conn->connect_error);
+    $conn = mysqli_connect($server, $user_name, $password, $database, $port);
+
+    if (!$conn) {
+        echo "le port 3301 ne marche pas";
+        $port = 3306;
+        $conn = mysqli_connect($server, $user_name, $password, $database, $port);
+
+        if (!$conn) {
+            die("Connection failed: " . mysqli_connect_error());
+        }
     }
 
     // Récupérer les informations du coach
@@ -29,33 +36,36 @@ if(isset($_GET['id'])) {
         $cv_coach = $row["cv_coach"];
         $bureau_coach = $row["bureau_coach"];
         $photo_coach = $row["photo_coach"];
-?>
+        ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Détails du Coach</title>
-</head>
-<body>
-    <h1>Détails du Coach</h1>
-    <p>Nom: <?php echo $nom_coach; ?></p>
-    <p>Prénom: <?php echo $prenom_coach; ?></p>
-    <p>Email: <?php echo $email_coach; ?></p>
-    <p>Bureau: <?php echo $bureau_coach; ?></p>
-    <p>CV: <?php echo $cv_coach; ?></p>
-    <!-- Afficher le CV -->
-    <?php //if(!empty($cv_coach)) { ?>
-    <a href="<?php echo $cv_coach; ?>" target="_blank">CV</a>
-    <?php //} ?>
-    <!-- Afficher la photo -->
-    <?php if(!empty($photo_coach)) { ?>
-    <img src="<?php echo $photo_coach; ?>" alt="Photo du Coach">
-    <?php } ?>
-</body>
-</html>
+        <!DOCTYPE html>
+        <html lang="fr">
 
-<?php
+        <head>
+            <meta charset="UTF-8">
+            <title>Détails du Coach</title>
+        </head>
+
+        <body>
+            <h1>Détails du Coach</h1>
+            <p>Nom: <?php echo $nom_coach; ?></p>
+            <p>Prénom: <?php echo $prenom_coach; ?></p>
+            <p>Email: <?php echo $email_coach; ?></p>
+            <p>Bureau: <?php echo $bureau_coach; ?></p>
+            <p>CV: <?php echo $cv_coach; ?></p>
+            <!-- Afficher le CV -->
+            <?php //if(!empty($cv_coach)) { ?>
+            <a href="<?php echo $cv_coach; ?>" target="_blank">CV</a>
+            <?php //} ?>
+            <!-- Afficher la photo -->
+            <?php if (!empty($photo_coach)) { ?>
+                <img src="<?php echo $photo_coach; ?>" alt="Photo du Coach">
+            <?php } ?>
+        </body>
+
+        </html>
+
+        <?php
     } else {
         echo "Aucun coach trouvé avec cet identifiant.";
     }
