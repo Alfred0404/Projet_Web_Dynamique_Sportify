@@ -233,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
         <div class="container">
             <h2>Créer un compte coach</h2>
             <form for="register_coach" method="post" action="compte.php">
-                <input type="hidden" name="create_coach" value="1">
+                <input type="hidden" name="register_coach" value="1">
                 <label for="name">Nom :</label>
                 <input type="text" id="name" name="name" required>
                 <label for="prenom">Prénom :</label>
@@ -287,5 +287,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
 
 </html>
 
-
-       
+           
