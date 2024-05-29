@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_name'])) {
 // Vérifier si l'utilisateur est un administrateur ou un coach
 $is_admin = $_SESSION['role'] === 'admin';
 $is_coach = $_SESSION['role'] === 'coach';
+$is_client = $_SESSION['role'] === 'client';
 
 // Fonction pour valider et sécuriser les entrées utilisateur
 function validate($data) {
@@ -20,46 +21,45 @@ function validate($data) {
     return $data;
 }
 
-// Création d'un compte coach (réservé aux administrateurs)
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_coach'])) {
-    if ($is_admin) {
-        $nom = validate($_POST['name']);
-        $prenom = validate($_POST['prenom']);
-        $sexe = validate($_POST['sexe']);
-        $email = validate($_POST['email']);
-        $password = validate($_POST['password']);
-
-        $sql = "INSERT INTO coach (nom_coach, prenom_coach, sexe_coach, email_coach, mdp_coach) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        if ($stmt === false) {
-            die("Erreur de préparation de la requête : " . $conn->error);
-        }
-        $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
-        $stmt->execute();
-        
-        if ($stmt->affected_rows === 1) {
-            echo "Compte coach créé avec succès.";
-        } else {
-            echo "Erreur: " . $sql . "<br>" . $conn->error;
-        }
-    } else {
-        echo "Vous n'avez pas les autorisations nécessaires pour créer un compte coach.";
-    }
-}
-
 // Mise à jour des informations du coach
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
     if ($is_coach) {
         $bureau = validate($_POST['bureau']);
         $specialite = validate($_POST['specialite']);
         $photo = validate($_POST['photo']); // Vous pouvez adapter cette ligne pour gérer le téléchargement de fichiers
+        $telephone = validate($_POST['telephone']);
 
-        $sql = "UPDATE coach SET bureau_coach=?, specialite_coach=?, photo_coach=? WHERE email_coach=?";
+        $sql = "UPDATE coach SET bureau_coach=?, specialite_coach=?, photo_coach=?, telephone_coach=? WHERE email_coach=?";
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
             die("Erreur de préparation de la requête : " . $conn->error);
         }
-        $stmt->bind_param("ssss", $bureau, $specialite, $photo, $_SESSION['email']);
+        $stmt->bind_param("sssss", $bureau, $specialite, $photo, $telephone, $_SESSION['email']);
+        $stmt->execute();
+        
+        if ($stmt->affected_rows === 1) {
+            echo "Informations mises à jour avec succès.";
+        } else {
+            echo "Erreur: " . $sql . "<br>" . $conn->error;
+        }
+    } else {
+        echo "Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
+    }
+}
+
+// Mise à jour des informations du client
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_client'])) {
+    if ($is_client) {
+        $date_naissance = validate($_POST['date_naissance']);
+        $telephone = validate($_POST['telephone']);
+        $profession = validate($_POST['profession']);
+
+        $sql = "UPDATE client SET date_de_naissance=?, num_telephone=?, profession=? WHERE email_client=?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("Erreur de préparation de la requête : " . $conn->error);
+        }
+        $stmt->bind_param("ssss", $date_naissance, $telephone, $profession, $_SESSION['email']);
         $stmt->execute();
         
         if ($stmt->affected_rows === 1) {
@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
 
 // Récupérer les informations du coach
 if ($is_coach) {
-    $sql = "SELECT bureau_coach, specialite_coach, photo_coach FROM coach WHERE email_coach=?";
+    $sql = "SELECT bureau_coach, specialite_coach, photo_coach, telephone_coach FROM coach WHERE email_coach=?";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
         die("Erreur de préparation de la requête : " . $conn->error);
@@ -86,6 +86,23 @@ if ($is_coach) {
     $bureau_coach = $coach_info['bureau_coach'];
     $specialite_coach = $coach_info['specialite_coach'];
     $photo_coach = $coach_info['photo_coach'];
+    $telephone_coach = $coach_info['telephone_coach'];
+}
+
+// Récupérer les informations du client
+if ($is_client) {
+    $sql = "SELECT date_de_naissance, num_telephone, profession FROM client WHERE email_client=?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Erreur de préparation de la requête : " . $conn->error);
+    }
+    $stmt->bind_param("s", $_SESSION['email']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $client_info = $result->fetch_assoc();
+    $date_naissance = $client_info['date_de_naissance'];
+    $telephone = $client_info['num_telephone'];
+    $profession = $client_info['profession'];
 }
 ?>
 
@@ -166,6 +183,12 @@ if ($is_coach) {
         <p><strong>Bureau:</strong> <?php echo $bureau_coach; ?></p>
         <p><strong>Spécialité:</strong> <?php echo $specialite_coach; ?></p>
         <p><strong>Photo:</strong> <img src="<?php echo $photo_coach; ?>" alt="Photo du coach"></p>
+        <p><strong>Téléphone:</strong> <?php echo $telephone_coach; ?></p>
+        <?php endif; ?>
+        <?php if ($is_client): ?>
+        <p><strong>Date de naissance:</strong> <?php echo $date_naissance; ?></p>
+        <p><strong>Numéro de téléphone:</strong> <?php echo $telephone; ?></p>
+        <p><strong>Profession:</strong> <?php echo $profession; ?></p>
         <?php endif; ?>
         <form method="post" action="logout.php">
             <button type="submit">Déconnexion</button>
@@ -173,10 +196,10 @@ if ($is_coach) {
         <form method="get" action="accueil.php">
             <button type="submit" class="btn-back">Retour à l'accueil</button>
         </form>
-    </div>
-    
-    <?php if ($is_admin): ?>
-    <div class="container">
+        </div>
+
+        <?php if ($is_admin): ?>
+        <div class="container">
         <h2>Créer un compte coach</h2>
         <form method="post" action="compte.php">
             <input type="hidden" name="create_coach" value="1">
@@ -192,11 +215,11 @@ if ($is_coach) {
             <input type="password" id="password" name="password" required>
             <button type="submit">Créer un compte coach</button>
         </form>
-    </div>
-    <?php endif; ?>
+        </div>
+        <?php endif; ?>
 
-    <?php if ($is_coach): ?>
-    <div class="container">
+        <?php if ($is_coach): ?>
+        <div class="container">
         <h2>Mettre à jour les informations du coach</h2>
         <form method="post" action="compte.php">
             <input type="hidden" name="update_coach" value="1">
@@ -206,10 +229,28 @@ if ($is_coach) {
             <input type="text" id="specialite" name="specialite" value="<?php echo $specialite_coach; ?>" required>
             <label for="photo">Photo (URL) :</label>
             <input type="text" id="photo" name="photo" value="<?php echo $photo_coach; ?>" required>
+            <label for="telephone">Téléphone :</label>
+            <input type="text" id="telephone" name="telephone" value="<?php echo $telephone_coach; ?>" required>
             <button type="submit">Mettre à jour</button>
         </form>
-    </div>
-    <?php endif; ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if ($is_client): ?>
+        <div class="container">
+        <h2>Mettre à jour les informations du client</h2>
+        <form method="post" action="compte.php">
+            <input type="hidden" name="update_client" value="1">
+            <label for="date_naissance">Date de naissance :</label>
+            <input type="date" id="date_naissance" name="date_naissance" value="<?php echo $date_naissance; ?>" required>
+            <label for="telephone">Numéro de téléphone :</label>
+            <input type="text" id="telephone" name="telephone" value="<?php echo $telephone; ?>" required>
+            <label for="profession">Profession :</label>
+            <input type="text" id="profession" name="profession" value="<?php echo $profession; ?>" required>
+            <button type="submit">Mettre à jour</button>
+        </form>
+        </div>
+        <?php endif; ?>
 </body>
 
 </html>
