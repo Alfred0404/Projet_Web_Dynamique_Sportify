@@ -210,6 +210,7 @@ if ($is_coach) {
         </form>
     </div>
     <?php endif; ?>
+
 </body>
 
 </html>

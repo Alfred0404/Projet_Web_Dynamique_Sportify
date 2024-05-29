@@ -1,18 +1,10 @@
-<?php
-session_start();
-if (!isset($_SESSION['user_name'])) {
-    header("Location: index.php");
-    exit();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../src/css/accueil.css">
-    <title>Accueil</title>
+    <title>Sportify - Accueil</title>
 </head>
 <body>
     <header>
@@ -21,7 +13,7 @@ if (!isset($_SESSION['user_name'])) {
     </header>
     <div class="nav">
         <ul>
-            <li class="nav-item"><a href="#">Accueil</a></li>
+            <li class="nav-item active"><a href="#">Accueil</a></li>
             <li class="nav-item"><a href="parcourir.php">Tout parcourir</a></li>
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
@@ -29,7 +21,7 @@ if (!isset($_SESSION['user_name'])) {
             <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
-    <section class="">
+    <section class="first-section">
         <div class="section-content">
             <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
             <h1>Sportify</h1>
@@ -42,8 +34,8 @@ if (!isset($_SESSION['user_name'])) {
     <footer>
         <p>© 2024 Sportify</p>
         <p>sportify@gmail.com</p>
-        <p>01 38 67 18 52</p>
-        <p>12 rue de la bite - 75015 - Paris</p>
+        <p>01 38 67 18 52</p
+        <p>10 rue Sextius Michel - 75015 - Paris</p>
         <a href="#">Google Maps</a>
     </footer>
 </body>
