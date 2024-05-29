@@ -27,9 +27,12 @@ if (isset($_POST['cancel_rdv'])) {
         exit();
     }
 
-    $sql = "DELETE FROM prise_de_rendez_vous WHERE id_coach = ? AND id_client = ? AND heure_rdv = ?";
+    list($jour_rdv, $heure_rdv) = explode(' ', $date_rdv, 2);
+
+    // Suppression du rendez-vous
+    $sql = "DELETE FROM prise_de_rendez_vous WHERE id_coach = ? AND id_client = ? AND jour_rdv = ? AND heure_rdv = ?";
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "iis", $id_coach, $_SESSION['user_id'], $date_rdv);
+    mysqli_stmt_bind_param($stmt, "iiss", $id_coach, $_SESSION['user_id'], $jour_rdv, $heure_rdv);
 
     if (mysqli_stmt_execute($stmt)) {
         echo "Rendez-vous annulé avec succès";
