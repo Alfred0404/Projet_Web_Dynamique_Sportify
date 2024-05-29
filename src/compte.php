@@ -8,8 +8,9 @@ if (!isset($_SESSION['user_name'])) {
     exit();
 }
 
-// Vérifier si l'utilisateur est un administrateur
+// Vérifier si l'utilisateur est un administrateur ou un coach
 $is_admin = $_SESSION['role'] === 'admin';
+$is_coach = $_SESSION['role'] === 'coach';
 
 // Fonction pour valider et sécuriser les entrées utilisateur
 function validate($data) {
@@ -19,7 +20,7 @@ function validate($data) {
     return $data;
 }
 
-// Création d'un compte coach
+// Création d'un compte coach (réservé aux administrateurs)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_coach'])) {
     if ($is_admin) {
         $nom = validate($_POST['name']);
@@ -44,6 +45,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_coach'])) {
     } else {
         echo "Vous n'avez pas les autorisations nécessaires pour créer un compte coach.";
     }
+}
+
+// Mise à jour des informations du coach
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
+    if ($is_coach) {
+        $bureau = validate($_POST['bureau']);
+        $specialite = validate($_POST['specialite']);
+        $photo = validate($_POST['photo']); // Vous pouvez adapter cette ligne pour gérer le téléchargement de fichiers
+
+        $sql = "UPDATE coach SET bureau_coach=?, specialite_coach=?, photo_coach=? WHERE email_coach=?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("Erreur de préparation de la requête : " . $conn->error);
+        }
+        $stmt->bind_param("ssss", $bureau, $specialite, $photo, $_SESSION['email']);
+        $stmt->execute();
+        
+        if ($stmt->affected_rows === 1) {
+            echo "Informations mises à jour avec succès.";
+        } else {
+            echo "Erreur: " . $sql . "<br>" . $conn->error;
+        }
+    } else {
+        echo "Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
+    }
+}
+
+// Récupérer les informations du coach
+if ($is_coach) {
+    $sql = "SELECT bureau_coach, specialite_coach, photo_coach FROM coach WHERE email_coach=?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Erreur de préparation de la requête : " . $conn->error);
+    }
+    $stmt->bind_param("s", $_SESSION['email']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $coach_info = $result->fetch_assoc();
+    $bureau_coach = $coach_info['bureau_coach'];
+    $specialite_coach = $coach_info['specialite_coach'];
+    $photo_coach = $coach_info['photo_coach'];
 }
 ?>
 
@@ -105,6 +147,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_coach'])) {
         .btn-back:hover {
             background-color: #0056b3;
         }
+        img {
+            width: 100px;
+            height: auto;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -115,6 +162,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_coach'])) {
         <p><strong>Prénom:</strong> <?php echo $_SESSION['prenom']; ?></p>
         <p><strong>Email:</strong> <?php echo $_SESSION['email']; ?></p>
         <p><strong>Rôle:</strong> <?php echo ucfirst($_SESSION['role']); ?></p>
+        <?php if ($is_coach): ?>
+        <p><strong>Bureau:</strong> <?php echo $bureau_coach; ?></p>
+        <p><strong>Spécialité:</strong> <?php echo $specialite_coach; ?></p>
+        <p><strong>Photo:</strong> <img src="<?php echo $photo_coach; ?>" alt="Photo du coach"></p>
+        <?php endif; ?>
         <form method="post" action="logout.php">
             <button type="submit">Déconnexion</button>
         </form>
@@ -139,6 +191,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_coach'])) {
             <label for="password">Mot de passe :</label>
             <input type="password" id="password" name="password" required>
             <button type="submit">Créer un compte coach</button>
+        </form>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($is_coach): ?>
+    <div class="container">
+        <h2>Mettre à jour les informations du coach</h2>
+        <form method="post" action="compte.php">
+            <input type="hidden" name="update_coach" value="1">
+            <label for="bureau">Bureau :</label>
+            <input type="text" id="bureau" name="bureau" value="<?php echo $bureau_coach; ?>" required>
+            <label for="specialite">Spécialité :</label>
+            <input type="text" id="specialite" name="specialite" value="<?php echo $specialite_coach; ?>" required>
+            <label for="photo">Photo (URL) :</label>
+            <input type="text" id="photo" name="photo" value="<?php echo $photo_coach; ?>" required>
+            <button type="submit">Mettre à jour</button>
         </form>
     </div>
     <?php endif; ?>
