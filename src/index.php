@@ -29,6 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
     $stmt->execute();
     
     if ($stmt->affected_rows === 1) {
+        $_SESSION['role'] = $role;
+        $_SESSION['nom'] = $nom;
         header("Location: index.php?success=Account created successfully");
         exit();
     } else {
@@ -59,6 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
             $_SESSION['prenom'] = $row['prenom_' . $table];
             $_SESSION['email'] = $row['email_' . $table];
             $_SESSION['role'] = $role;
+            $_SESSION['nom'] = $row['nom_' . $table];
             header("Location: accueil.php");
             exit();
         } else {
@@ -71,6 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">

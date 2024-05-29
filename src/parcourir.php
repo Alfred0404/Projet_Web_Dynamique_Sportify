@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../src/css/parcourir.css">
     <title>Sportify - Parcourir</title>
+
+    <script>
+        function redirectPage(buttonValue) {
+            if (buttonValue === 'activite_sportive') {
+                window.location.href = 'activites_sportives.php';
+            } else if (buttonValue === 'sport_de_competition') {
+                window.location.href = 'sport_de_competition.php';
+            }
+        }
+    </script>
+
 </head>
 
 <body>
@@ -31,17 +42,17 @@
     </section>
     <section class="services">
         <h1>Nos services</h1>
-        <form class="btns-activite" action="traitement.php" method="post">
-            <button type="submit" name="button_parcourir" value="activite_sportive">
-                <p>Activités sportives</p>
-            </button>
-            <button type="submit" name="button_parcourir" value="les_sports_de_competition">
-                <p>Les Sports de Compétition</p>
-            </button>
-            <button type="submit" name="button_parcourir" value="salles_de_sport_omnes">
-                <p>Salles de sport Omnes</p>
-            </button>
-        </form>
+        <form class="btns-activite" action="traitement.php" method="post" onsubmit="return false;">
+        <button type="button" name="button_parcourir" value="activite_sportive" onclick="redirectPage(this.value)">
+            <p>Activités sportives</p>
+        </button>
+        <button type="button" name="button_parcourir" value="sport_de_competition" onclick="redirectPage(this.value)">
+            <p>Les Sports de Compétition</p>
+        </button>
+        <button type="button" name="button_parcourir" value="salles_de_sport_omnes" onclick="redirectPage(this.value)">
+            <p>Salles de sport Omnes</p>
+        </button>
+    </form>
         <iframe name="hidden_iframe" style="display:none;"></iframe>
     </section>
     <footer>

@@ -3,12 +3,12 @@ $user_name = "root";
 $password = "";
 $database = "sportify";
 $server = "127.0.0.1";
-$port = 3301;
+$port = 3306;
 
 $conn = mysqli_connect($server, $user_name, $password, $database, $port);
 
 if (!$conn) {
-    echo "le port 3301 ne marche pas";
+    echo "le port 3306 ne marche pas";
     $port = 3306;
     $conn = mysqli_connect($server, $user_name, $password, $database, $port);
 
