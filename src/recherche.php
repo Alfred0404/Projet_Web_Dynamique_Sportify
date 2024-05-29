@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     $search_query = validate($_POST['search_query']);
     
     if (empty($search_query)) {
-        $search_error = "Veuillez entrer un nom ou une spécialité pour la recherche.";
+        $search_error = "Veuillez entrer un nom, une spécialité ou un type d'activité pour la recherche.";
     } else {
         // Rechercher uniquement dans la table coach
         $sql_coach = "
@@ -44,18 +44,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
         if ($result_coach->num_rows > 0) {
             $search_result = $result_coach->fetch_all(MYSQLI_ASSOC);
         } else {
-            // Rechercher dans la table activites
+            // Si la recherche dans la table coach ne donne aucun résultat,
+            // rechercher dans la table activites
             $sql_activite = "
                 SELECT 'activite' AS role, nom_activites AS nom, type_activites AS type
                 FROM activites
-                WHERE nom_activites LIKE ?";
+                WHERE nom_activites LIKE ? OR type_activites = ?";
             
             $stmt_activite = $conn->prepare($sql_activite);
             if ($stmt_activite === false) {
                 die("Erreur de préparation de la requête : " . $conn->error);
             }
             $like_query_activite = "%" . $search_query . "%";
-            $stmt_activite->bind_param("s", $like_query_activite);
+            $stmt_activite->bind_param("ss", $like_query_activite, $search_query);
             $stmt_activite->execute();
             $result_activite = $stmt_activite->get_result();
             if ($result_activite->num_rows > 0) {
@@ -67,7 +68,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -79,37 +79,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
+            padding: 20px;
         }
-        .container {
+
+        form {
             background-color: #fff;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
-            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
-        h2 {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input, select {
-            width: 100%;
+
+        input[type="text"] {
+            width: 70%;
             padding: 10px;
-            margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         button {
-            width: 100%;
-            padding: 10px;
+            padding: 10px 20px;
             background-color: #5cb85c;
             border: none;
             color: #fff;
@@ -117,35 +106,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
             border-radius: 5px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #4cae4c;
         }
+
+        .results {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
         .result-item {
             border-bottom: 1px solid #ccc;
             padding: 10px 0;
         }
-        .result-item img {
-            width: 100px;
-            height: auto;
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        strong {
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h2>Recherche Coach</h2>
-        <form method="post" action="recherche.php">
-            <label for="search_query">Nom, Spécialité ou Sport :</label>
-            <input type="text" id="search_query" name="search_query" required>
-            <button type="submit" name="search">Rechercher</button>
-        </form>
-        <?php if (!empty($search_error)): ?>
-            <p style="color: red;"><?php echo $search_error; ?></p>
-        <?php endif; ?>
-    </div>
-    
-    <?php if ($search_result): ?>
-        <div class="container">
+    <!-- Formulaire de recherche -->
+    <form method="post" action="recherche.php">
+        <input type="text" name="search_query" placeholder="Entrez un nom, une spécialité ou un type d'activité" required>
+        <button type="submit" name="search">Rechercher</button>
+    </form>
+
+    <!-- Affichage des résultats de recherche -->
+    <?php if (!empty($search_result)): ?>
+        <div class="results">
             <h2>Résultats de recherche</h2>
             <?php foreach ($search_result as $item): ?>
                 <div class="result-item">
@@ -168,7 +169,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
                 </div>
             <?php endforeach; ?>
         </div>
+    <?php elseif (!empty($search_error)): ?>
+        <p><?php echo $search_error; ?></p>
     <?php endif; ?>
-
 </body>
+
 </html>
