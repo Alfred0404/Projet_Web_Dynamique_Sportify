@@ -44,7 +44,7 @@ function getAvailableSlots($conn, $id_coach) {
 
 // Fonction pour récupérer les créneaux horaires réservés
 function getBookedSlots($conn, $id_coach) {
-    $sql = "SELECT date_rdv
+    $sql = "SELECT jour_rdv, heure_rdv
             FROM prise_de_rendez_vous 
             WHERE id_coach = ?";
     $stmt = mysqli_prepare($conn, $sql);
@@ -54,9 +54,8 @@ function getBookedSlots($conn, $id_coach) {
 
     $bookedSlots = [];
     while ($row = mysqli_fetch_assoc($result)) {
-        $date = new DateTime($row['date_rdv']);
-        $dayOfWeek = $date->format('l');
-        $time = $date->format('H:i');
+        $dayOfWeek = $row['jour_rdv'];
+        $time = $row['heure_rdv'];
         $bookedSlots[$dayOfWeek][] = $time;
     }
 
@@ -164,9 +163,10 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                 const confirmation = confirm(`Voulez-vous réserver le créneau ${jour} de ${heure} à ${parseInt(heure.split(':')[0]) + 1}h ?`);
                 if (confirmation) {
                     const formData = new FormData();
-                    formData.append('id_coach', <?= $id_coach ?>);
-                    formData.append('date_rdv', new Date().toISOString().split('T')[0] + ' ' + heure + ':00');
-
+                    formData.append('id_coach', '<?php echo htmlspecialchars($id_coach); ?>');
+                    formData.append('jour_rdv', jour);
+                    formData.append('heure_rdv', heure);
+                    
                     fetch('rendez_vous.php', {
                         method: 'POST',
                         body: formData
@@ -178,6 +178,7 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                             selectedCell.classList.add('taken');
                             selectedCell.innerText = 'Réservé';
                             document.getElementById('reserve-button').disabled = true;
+                            // Redirection vers la page des rendez-vous
                             window.location.href = 'rendez_vous.php';
                         } else {
                             alert(data);
