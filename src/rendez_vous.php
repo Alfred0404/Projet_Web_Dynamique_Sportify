@@ -149,8 +149,8 @@ if ($is_admin) {
     <section>
         <?php if ($is_admin): ?>
             <h1>Sélectionner un utilisateur</h1>
-            <form method="POST" action="rendez_vous.php">
-                <label for="id_client">Choisir un utilisateur:</label>
+            <form class="select-user-form" method="POST" action="rendez_vous.php">
+                <label for="id_client">Choisir un utilisateur :</label>
                 <select id="id_client" name="id_client" required>
                     <?php foreach ($users as $user): ?>
                         <option value="<?= $user['id_client'] ?>" <?= $user['id_client'] == $id_client ? 'selected' : '' ?>>
@@ -197,7 +197,7 @@ if ($is_admin) {
 
         <?php if ($is_admin): ?>
             <h1>Sélectionner un coach</h1>
-            <form method="GET" action="disponibilites.php">
+            <form method="GET" action="disponibilites.php" class="select-user-form">
                 <label for="id_coach">Choisir un coach :</label>
                 <select id="id_coach" name="id_coach" required>
                     <?php foreach ($coachs as $coach): ?>

@@ -155,11 +155,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
     </header>
     <div class="nav">
         <ul>
-            <li class="nav-item active"><a href="#">Accueil</a></li>
+            <li class="nav-item"><a href="accueil">Accueil</a></li>
             <li class="nav-item"><a href="parcourir.php">Tout parcourir</a></li>
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
-            <li class="nav-item"><a href="#">Votre compte</a></li>
+            <li class="nav-item active"><a href="#">Votre compte</a></li>
             <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
