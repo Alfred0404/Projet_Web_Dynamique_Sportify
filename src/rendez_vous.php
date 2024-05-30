@@ -46,11 +46,11 @@ if (isset($_POST['cancel_rdv'])) {
     mysqli_stmt_bind_param($stmt, "iiss", $id_coach, $id_client, $jour_rdv, $heure_rdv);
 
     if (mysqli_stmt_execute($stmt)) {
-        echo "Rendez-vous annulé avec succès";
+        header("Location: rendez_vous.php");
+        exit();
     } else {
         echo "Erreur lors de l'annulation du rendez-vous : " . mysqli_stmt_error($stmt);
     }
-    exit();
 }
 
 // Ajouter un rendez-vous
@@ -163,7 +163,7 @@ if ($is_admin) {
                     <p>Salle: <?= htmlspecialchars($rdv['nom_salle']) ?></p>
                     <p>Email: <?= htmlspecialchars($rdv['email_coach']) ?></p>
                     <p>Spécialité: <?= htmlspecialchars($rdv['specialite_coach']) ?></p>
-                    <form method="POST" action="rendez_vous.php" style="display: inline;">
+                    <form method="POST" action="rendez_vous.php" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?');">
                         <input type="hidden" name="cancel_rdv" value="1">
                         <input type="hidden" name="id_coach" value="<?= $rdv['id_coach'] ?>">
                         <input type="hidden" name="date_rdv" value="<?= $rdv['jour_rdv'] . ' ' . $rdv['heure_rdv'] ?>">
