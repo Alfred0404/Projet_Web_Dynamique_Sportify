@@ -93,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['cancel_rdv']) && !$is
 $id_client = ($is_admin && isset($_POST['id_client'])) ? validate($_POST['id_client']) : $_SESSION['user_id'];
 $id_coach = $_SESSION['role'] === 'coach' ? $_SESSION['user_id'] : null;
 
-$sql = "SELECT rv.id_coach, rv.jour_rdv, rv.heure_rdv, rv.statut_rdv, c.nom_coach, c.prenom_coach, c.email_coach, c.specialite_coach, s.nom_salle
+$sql = "SELECT rv.id_coach, rv.jour_rdv, rv.heure_rdv, rv.statut_rdv, c.photo_coach, c.nom_coach, c.prenom_coach, c.email_coach, c.specialite_coach, s.nom_salle
         FROM prise_de_rendez_vous rv
         JOIN coach c ON rv.id_coach = c.id_coach
         JOIN salle s ON rv.id_salle = s.id_salle
@@ -169,10 +169,17 @@ if ($is_admin) {
                     <h2>Rendez-vous avec <?= htmlspecialchars($rdv['nom_coach']) ?>
                         <?= htmlspecialchars($rdv['prenom_coach']) ?>
                     </h2>
-                    <p>Date et Heure: <?= htmlspecialchars($rdv['jour_rdv'] . ' ' . $rdv['heure_rdv']) ?></p>
-                    <p>Salle: <?= htmlspecialchars($rdv['nom_salle']) ?></p>
-                    <p>Email: <?= htmlspecialchars($rdv['email_coach']) ?></p>
-                    <p>Spécialité: <?= htmlspecialchars($rdv['specialite_coach']) ?></p>
+                    <div class="infos">
+                        <div class="infos-rdv">
+                            <p>Date et Heure: <?= htmlspecialchars($rdv['jour_rdv'] . ' ' . $rdv['heure_rdv']) ?></p>
+                            <p>Salle: <?= htmlspecialchars($rdv['nom_salle']) ?></p>
+                            <p>Email: <?= htmlspecialchars($rdv['email_coach']) ?></p>
+                            <p>Spécialité: <?= htmlspecialchars($rdv['specialite_coach']) ?></p>
+                        </div>
+                        <div class="img-coach">
+                            <img src=<?= $rdv['photo_coach'] ?> alt="photo-coach">
+                        </div>
+                    </div>
                     <form method="POST" action="rendez_vous.php" style="display: inline;"
                         onsubmit="return confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?');">
                         <input type="hidden" name="cancel_rdv" value="1">
