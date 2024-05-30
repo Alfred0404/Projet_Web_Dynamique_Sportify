@@ -144,12 +144,6 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                     foreach ($hours as $time => $label):
                         echo '<tr>';
                         if ($time == '08:00') {
-                            // if (isset($coach) && is_array($coach)) {
-                            //     echo "".$coach;
-                            // }
-                            // else {
-                            //     echo "coach est null";
-                            // }
                             echo '<td rowspan="9">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</td>';
                             echo '<td rowspan="9">' . htmlspecialchars($coach['specialite_coach']) . '</td>';
                         }
@@ -165,9 +159,11 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                     ?>
                 </tbody>
             </table>
-            <div style="text-align: right; margin-top: 20px;">
-                <button id="reserve-button" disabled>Réserver</button>
-            </div>
+            <?php if (!$is_coach && !$is_admin): ?>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button id="reserve-button" disabled>Réserver</button>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 

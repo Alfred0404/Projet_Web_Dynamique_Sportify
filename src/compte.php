@@ -39,9 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
         $stmt->execute();
 
         if ($stmt->affected_rows === 1) {
-            echo "Informations mises à jour avec succès.";
+            // echo "Informations mises à jour avec succès.";
         } else {
-            echo "Erreur: " . $sql . "<br>" . $conn->error;
+            // echo "Erreur: " . $sql . "<br>" . $conn->error;
         }
     } else {
         echo "Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";

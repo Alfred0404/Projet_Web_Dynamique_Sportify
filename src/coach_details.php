@@ -108,7 +108,6 @@ if (isset($_GET['id'])) {
             </div>
             <section class="first-section">
                 <div class="section-content">
-                    <!-- <h1>Détails du Coach</h1> -->
                     <div class="coach-card">
                         <h1><?php echo ucfirst($nom_coach) . " " . ucfirst($prenom_coach); ?></h1>
                         <div class="container">
@@ -117,14 +116,17 @@ if (isset($_GET['id'])) {
                             <?php } ?>
                             <div class="infos-coach">
                                 <p>Coach</p>
+                                <p>Id : <?php echo $id_coach; ?></p>
                                 <p>Bureau : <?php echo $bureau_coach; ?></p>
                                 <p>Téléphone : (numéro de téléphone)</p>
                                 <p>Email : <?php echo $email_coach; ?></p>
                             </div>
                         </div>
 
-                        <form class="btns-coach" action="rendez_vous.php" method="post">
+                        <form class="btns-coach" action="disponibilites.php" method="get">
                             <button type="submit" name="button_coach" value="rendez-vous">
+                                <!-- send $id_coach -->
+                                <input type="hidden" name="id_coach" value="<?php echo $id_coach; ?>">
                                 <p>Prendre rendez-vous</p>
                             </button>
                             <button type="submit" name="button_coach" value="contacter">

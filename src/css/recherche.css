@@ -91,7 +91,7 @@ section::after {
 }
 
 section {
-    min-height: 100vh;
+    min-height: 76vh;
     height: auto;
     display: flex;
     flex-direction: column;

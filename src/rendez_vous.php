@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['cancel_rdv']) && !$is
     $jour_rdv = $_POST['jour_rdv'] ?? null;
     $heure_rdv = $_POST['heure_rdv'] ?? null;
     $id_client = $_POST['id_client'] ?? $_SESSION['user_id'];
-
+    echo "".$id_coach;
     if ($id_coach === null || $jour_rdv === null || $heure_rdv === null) {
         echo "Paramètres manquants pour la prise du rendez-vous.";
         exit();
@@ -112,7 +112,7 @@ if ($is_admin) {
 }
 
 // Récupérer la liste des coachs pour le formulaire de sélection si l'utilisateur est un admin
-if ($is_admin) {
+if ($is_client) {
     $sql_coachs = "SELECT id_coach, nom_coach, prenom_coach FROM coach";
     $result_coachs = mysqli_query($conn, $sql_coachs);
     $coachs = mysqli_fetch_all($result_coachs, MYSQLI_ASSOC);
@@ -167,9 +167,13 @@ if ($is_admin) {
             <?php foreach ($rendez_vous as $rdv): ?>
                 <div class="rdv-details" data-coach-id="<?= $rdv['id_coach'] ?>"
                     data-date-rdv="<?= $rdv['jour_rdv'] . ' ' . $rdv['heure_rdv'] ?>">
-                    <h2>Rendez-vous avec <?= htmlspecialchars($rdv['nom_coach']) ?>
-                        <?= htmlspecialchars($rdv['prenom_coach']) ?>
-                    </h2>
+                    <?php if ($is_coach): ?>
+                        <h2>Rendez-vous</h2>
+                    <?php else: ?>
+                        <h2>Rendez-vous avec <?= htmlspecialchars($rdv['nom_coach']) ?>
+                            <?= htmlspecialchars($rdv['prenom_coach']) ?>
+                        </h2>
+                    <?php endif; ?>
                     <div class="infos">
                         <div class="infos-rdv">
                             <p>Date et Heure: <?= htmlspecialchars($rdv['jour_rdv'] . ' ' . $rdv['heure_rdv']) ?></p>
@@ -187,7 +191,10 @@ if ($is_admin) {
                         <input type="hidden" name="id_coach" value="<?= $rdv['id_coach'] ?>">
                         <input type="hidden" name="date_rdv" value="<?= $rdv['jour_rdv'] . ' ' . $rdv['heure_rdv'] ?>">
                         <input type="hidden" name="id_client" value="<?= $id_client ?>">
-                        <button type="submit">Annuler le RDV</button>
+                        <?php if (!$is_coach): ?>
+                            <button type="submit">Annuler le RDV</button>
+                        <?php endif ?>
+
                     </form>
                 </div>
             <?php endforeach; ?>
@@ -227,7 +234,7 @@ if ($is_admin) {
             </form>
         <?php elseif ($is_coach): ?>
             <h1>Consulter les disponibilités</h1>
-            <form action="disponibilites.php" method="GET">
+            <form action="disponibilites.php" method="GET" class="select-rdv-form">
                 <label for="id_coach">Choisir un coach:</label>
                 <select id="id_coach" name="id_coach" required>
                     <?php

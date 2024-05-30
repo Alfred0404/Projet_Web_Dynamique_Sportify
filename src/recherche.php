@@ -106,7 +106,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
         <!-- Affichage des résultats de recherche -->
         <?php if (!empty($search_result)): ?>
             <div class="results">
-                <!-- <h2>Résultats de recherche</h2> -->
                 <?php foreach ($search_result as $item): ?>
                     <div class="result-item">
                         <?php if ($item['role'] === 'coach'): ?>
