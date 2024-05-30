@@ -1,20 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../src/css/rendez_vous.css">
-    <title>Sportify - Rendez-vous</title>
+    <title>Rendez-vous</title>
+    <link rel="stylesheet" href="css/rendez_vous.css">
 </head>
 
 <body>
     <header>
-        <h1 class="title">Sportify</h1>
-        <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
+        <h1>Sportify</h1>
     </header>
 
-    </div>
     <div class="nav">
         <ul>
             <li class="nav-item"><a href="accueil.php">Accueil</a></li>

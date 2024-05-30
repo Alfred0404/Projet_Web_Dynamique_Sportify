@@ -1,21 +1,7 @@
 <?php
-$user_name = "root";
-$password = "";
-$database = "sportify";
-$server = "127.0.0.1";
-$port = 3301;
+session_start();
 
-$conn = mysqli_connect($server, $user_name, $password, $database, $port);
-
-if (!$conn) {
-    echo "le port 3301 ne marche pas";
-    $port = 3306;
-    $conn = mysqli_connect($server, $user_name, $password, $database, $port);
-
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
-}
+include "db_connection.php";
 // echo "<p>Connection to the Server opened successfully</p>";
 
 // Optionnel : sélection de la base de données

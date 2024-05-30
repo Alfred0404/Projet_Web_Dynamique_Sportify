@@ -1,20 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../src/css/accueil.css">
     <title>Sportify - Accueil</title>
 </head>
-
 <body>
     <header>
         <h1 class="title">Sportify</h1>
         <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
     </header>
-
-    </div>
     <div class="nav">
         <ul>
             <li class="nav-item active"><a href="#">Accueil</a></li>
@@ -22,9 +18,11 @@
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
     <section class="first-section">
+
         <div class="section-content">
             <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
             <h1>Sportify</h1>
@@ -42,5 +40,4 @@
         <a class="lien-gmaps" href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google Maps</a>
     </footer>
 </body>
-
 </html>
