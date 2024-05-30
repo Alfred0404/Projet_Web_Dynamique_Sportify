@@ -157,22 +157,9 @@ if ($is_admin) {
                 </select>
                 <button type="submit">Voir les Rendez-vous</button>
             </form>
-
-            <h1>Sélectionner un coach</h1>
-            <form method="GET" action="disponibilites.php">
-                <label for="id_coach">Choisir un coach:</label>
-                <select id="id_coach" name="id_coach" required>
-                    <?php foreach ($coachs as $coach): ?>
-                        <option value="<?= $coach['ID_coach'] ?>">
-                            <?= htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <button type="submit">Voir les Disponibilités</button>
-            </form>
         <?php endif; ?>
 
-        <h1>Vos Rendez-vous Confirmés</h1>
+        <h1>Rendez-vous client confirmés</h1>
         <?php if (count($rendez_vous) > 0): ?>
             <?php foreach ($rendez_vous as $rdv): ?>
                 <div class="rdv-details" data-coach-id="<?= $rdv['id_coach'] ?>" data-date-rdv="<?= $rdv['jour_rdv'] . ' ' . $rdv['heure_rdv'] ?>">
@@ -194,7 +181,18 @@ if ($is_admin) {
             <p>Vous n'avez aucun rendez-vous confirmé.</p>
         <?php endif; ?>
 
-        <?php if (!$is_admin && !$is_coach): ?>
+        <?php if ($is_admin): ?>
+            <h1>Sélectionner un coach</h1>
+            <form method="GET" action="disponibilites.php">
+                <label for="id_coach">Choisir un coach:</label>
+                <select id="id_coach" name="id_coach" required>
+                    <?php foreach ($coachs as $coach): ?>
+                        <option value="<?= $coach['ID_coach'] ?>"><?= htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) ?></option>
+                    <?php endforeach; ?>
+                </select><br>
+                <button type="submit">Voir les Disponibilités</button>
+            </form>
+        <?php elseif (!$is_admin && !$is_coach): ?>
             <h1>Prendre un Nouveau Rendez-vous</h1>
             <form action="disponibilites.php" method="GET">
                 <input type="hidden" name="id_client" value="<?= $id_client ?>">
