@@ -1,20 +1,30 @@
 <?php
 session_start();
-$user_name = "root";
-$password = "";
-$database = "sportify";
-$server = "127.0.0.1";
-$port = 3306;
+include "db_connection.php";
 
-$conn = mysqli_connect($server, $user_name, $password, $database, $port);
+// Initialiser les messages d'erreur ou de succès
+$message = "";
 
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+// Démarrer le tampon de sortie pour capturer les erreurs
+ob_start();
+
+// Vérifier si l'utilisateur est connecté
+if (!isset($_SESSION['user_name'])) {
+    header("Location: index.php");
+    exit();
 }
 
-if (!isset($_SESSION['user_id'])) {
-    echo "Veuillez vous <a href='login.php'>connecter</a> pour voir vos rendez-vous.";
-    exit();
+// Vérifier le rôle de l'utilisateur
+$is_admin = $_SESSION['role'] === 'admin';
+$is_coach = $_SESSION['role'] === 'coach';
+$is_client = $_SESSION['role'] === 'client';
+
+// Fonction pour valider et sécuriser les entrées utilisateur
+function validate($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
 }
 
 $id_coach = $_GET['id_coach'];
