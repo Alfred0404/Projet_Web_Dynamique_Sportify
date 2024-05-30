@@ -26,9 +26,10 @@ if (isset($_POST['enter'])) {
     }
 }
 
-function loginForm($id_coach) {
+function loginForm($id_coach)
+{
     echo
-    '<div id="loginform">
+        '<div id="loginform">
     <p>Veuillez saisir votre nom pour continuer!</p>
     <form action="coach_details.php?id=' . $id_coach . '" method="post">
     <label for="name">Nom: </label>
@@ -44,15 +45,22 @@ if (isset($_GET['id'])) {
     $id_coach = intval($_GET['id']);
 
     // Connexion à la base de données
-    $servername = "localhost";
-    $username = "root";
+    $user_name = "root";
     $password = "";
-    $dbname = "Sportify";
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $database = "sportify";
+    $server = "127.0.0.1";
+    $port = 3301;
 
-    // Vérifier la connexion
-    if ($conn->connect_error) {
-        die("Connexion échouée: " . $conn->connect_error);
+    $conn = mysqli_connect($server, $user_name, $password, $database, $port);
+
+    if (!$conn) {
+        echo "le port 3301 ne marche pas";
+        $port = 3306;
+        $conn = mysqli_connect($server, $user_name, $password, $database, $port);
+
+        if (!$conn) {
+            die("Connection failed: " . mysqli_connect_error());
+        }
     }
 
     // Récupérer les informations du coach
@@ -69,96 +77,82 @@ if (isset($_GET['id'])) {
         $bureau_coach = $row["bureau_coach"];
         $photo_coach = $row["photo_coach"];
         ?>
+        ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Détails du Coach</title>
-    <link rel="stylesheet" href="../src/css/coach_details.css" />
-</head>
-<body>
-    <h1>Détails du Coach</h1>
-    <p>Nom: <?php echo $nom_coach; ?></p>
-    <p>Prénom: <?php echo $prenom_coach; ?></p>
-    <p>Email: <?php echo $email_coach; ?></p>
-    <p>Bureau: <?php echo $bureau_coach; ?></p>
-    <p>CV: <?php echo $cv_coach; ?></p>
+        <!DOCTYPE html>
+        <html lang="fr">
 
-    <!-- Afficher la photo -->
-    <?php if (!empty($photo_coach)) { ?>
-    <img src="<?php echo $photo_coach; ?>" alt="Photo du Coach">
-    <?php } ?>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="../src/css/coach_details.css">
+            <script src="js/activites_sportives.js"></script>
+            <title>Sportify - Parcourir</title>
+        </head>
 
-    <!-- Chatroom -->
-    <?php
-    if (!isset($_SESSION['name'])) {
-        loginForm($id_coach);
-    } else {
-    ?>
-        <div id="wrapper">
-            <div id="menu">
-                <p class="welcome">Bienvenue, <b><?php echo $_SESSION['name']; ?></b></p>
-                <p class="logout"><a id="exit" href="#">Quitter la conversation</a></p>
+        <body>
+            <header>
+                <h1 class="title">Sportify</h1>
+                <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
+            </header>
+
             </div>
-            <div id="chatbox">
-            <?php
-            if (file_exists("log.html") && filesize("log.html") > 0) {
-                $contents = file_get_contents("log.html");
-                echo $contents;
-            }
-            ?>
+            <div class="nav">
+                <ul>
+                    <li class="nav-item"><a href="accueil.php">Accueil</a></li>
+                    <li class="nav-item active"><a href="#">Tout parcourir</a></li>
+                    <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
+                    <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
+                    <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+                </ul>
             </div>
+            <section class="first-section">
+                <div class="section-content">
+                    <!-- <h1>Détails du Coach</h1> -->
+                    <div class="coach-card">
+                        <h1><?php echo ucfirst($nom_coach) . " " . ucfirst($prenom_coach); ?></h1>
+                        <div class="container">
+                            <?php if (!empty($photo_coach)) { ?>
+                                <img class="photo-coach" src="<?php echo $photo_coach; ?>" alt="Photo du Coach">
+                            <?php } ?>
+                            <div class="infos-coach">
+                                <p>Coach</p>
+                                <p>Bureau : <?php echo $bureau_coach; ?></p>
+                                <p>Téléphone : (numéro de téléphone)</p>
+                                <p>Email : <?php echo $email_coach; ?></p>
+                            </div>
+                        </div>
 
-            <form name="message" action="">
-                <input name="usermsg" type="text" id="usermsg" />
-                <input name="submitmsg" type="submit" id="submitmsg" value="Envoyer" />
-            </form>
-        </div>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script type="text/javascript">
-        // jQuery Document
-        $(document).ready(function () {
-            $("#submitmsg").click(function () {
-                var clientmsg = $("#usermsg").val();
-                $.post("post.php?id=<?php echo $id_coach; ?>", { text: clientmsg });
-                $("#usermsg").val("");
-                return false;
-            });
+                        <form class="btns-coach" action="rendez_vous.php" method="post">
+                            <button type="submit" name="button_coach" value="rendez-vous">
+                                <p>Prendre rendez-vous</p>
+                            </button>
+                            <button type="submit" name="button_coach" value="contacter">
+                                <p>Contacter le coach</p>
+                            </button>
+                            <button type="submit" name="button_coach" value="cv">
+                                <?php //if(!empty($cv_coach)) { ?>
+                                <a href="<?php echo $cv_coach; ?>" target="_blank">Voir son CV</a>
+                                <?php //} ?>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            <footer>
+                <p>© 2024 Sportify</p>
+                <p>sportify@gmail.com</p>
+                <p>01 38 67 18 52</p>
+                <p>10 rue Sextius Michel - 75015 - Paris</p>
+                <a class="lien-gmaps"
+                    href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google
+                    Maps</a>
+            </footer>
+        </body>
 
-            function loadLog() {
-                var oldscrollHeight = $("#chatbox").prop("scrollHeight") - 20;
-                $.ajax({
-                    url: "log.html",
-                    cache: false,
-                    success: function (html) {
-                        $("#chatbox").html(html);
+        </html>
 
-                        var newscrollHeight = $("#chatbox").prop("scrollHeight") - 20;
-                        if (newscrollHeight > oldscrollHeight) {
-                            $("#chatbox").animate({ scrollTop: newscrollHeight }, 'normal');
-                        }
-                    }
-                });
-            }
-
-            setInterval(loadLog, 2500);
-
-            $("#exit").click(function () {
-                var exit = confirm("Êtes-vous sûr de vouloir quitter la conversation?");
-                if (exit == true) {
-                    window.location = "coach_details.php?logout=true&id=<?php echo $id_coach; ?>";
-                }
-            });
-        });
-        </script>
-    <?php
-    }
-    ?>
-</body>
-</html>
-
-<?php
+        <?php
     } else {
         echo "Aucun coach trouvé avec cet identifiant.";
     }

@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
         }
         $stmt->bind_param("sssss", $bureau, $specialite, $photo, $telephone, $_SESSION['email']);
         $stmt->execute();
-        
+
         if ($stmt->affected_rows === 1) {
             echo "Informations mises à jour avec succès.";
         } else {
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_client'])) {
         }
         $stmt->bind_param("ssss", $date_naissance, $telephone, $profession, $_SESSION['email']);
         $stmt->execute();
-        
+
         if ($stmt->affected_rows === 1) {
             echo "Informations mises à jour avec succès.";
         } else {
@@ -125,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
         }
         $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
         $stmt->execute();
-        
+
         if ($stmt->affected_rows === 1) {
             echo "Compte coach créé avec succès.";
         } else {
@@ -286,5 +286,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
 </body>
 
 </html>
-
-           

@@ -1,38 +1,3 @@
-<!-- 
-<?php
-$user_name = "root";
-$password = "";
-$database = "test1";
-$server = "127.0.0.1";
-$port = 3306;
-
-$conn = mysqli_connect($server, $user_name, $password, $database, $port);
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-// echo "<p>Connection to the Server opened successfully</p>";
-
-// Optionnel : sélection de la base de données
-if (!mysqli_select_db($conn, $database)) {
-    die("Database selection failed: " . mysqli_error($conn));
-}
-// echo "Database selected successfully";
-
-// Requête SQL pour sélectionner toutes les lignes de la table utilisateurs
-// $sql = "SELECT id, titre, auteur FROM livres";
-// $result = mysqli_query($conn, $sql);
-
-// if (mysqli_num_rows($result) > 0) {
-//     // Affichage des résultats
-//     while ($row = mysqli_fetch_assoc($result)) {
-//         echo "ID: " . $row["id"] . " - titre: " . $row["titre"] . " - auteur: " . $row["auteur"] . "<br>";
-//     }
-// } else {
-//     echo "0 résultats";
-// }
-?> -->
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -72,8 +37,7 @@ if (!mysqli_select_db($conn, $database)) {
         <p>sportify@gmail.com</p>
         <p>01 38 67 18 52</p>
         <p>10 rue Sextius Michel - 75015 - Paris</p>
-        <a href="#">Google Maps</a>
+        <a class="lien-gmaps" href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google Maps</a>
     </footer>
 </body>
 </html>
-

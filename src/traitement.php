@@ -1,21 +1,7 @@
 <?php
-$user_name = "root";
-$password = "";
-$database = "sportify";
-$server = "127.0.0.1";
-$port = 3306;
+session_start();
 
-$conn = mysqli_connect($server, $user_name, $password, $database, $port);
-
-if (!$conn) {
-    echo "le port 3301 ne marche pas";
-    $port = 3306;
-    $conn = mysqli_connect($server, $user_name, $password, $database, $port);
-
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
-}
+include "db_connection.php";
 // echo "<p>Connection to the Server opened successfully</p>";
 
 // Optionnel : sélection de la base de données
@@ -37,10 +23,10 @@ if (mysqli_num_rows($result) > 0) {
     echo "0 résultats";
 }
 
-if (isset($_POST['button_parcourir'])) {
-    $button_parcourir = $_POST['button_parcourir'];
-    // Effectuer les actions nécessaires avec le texte du bouton
-    echo "Le texte du bouton cliqué est : " . htmlspecialchars($button_parcourir);
-} else {
-    echo "Aucun texte de bouton reçu.";
-}
+// if (isset($_POST['button_parcourir'])) {
+//     $button_parcourir = $_POST['button_parcourir'];
+//     // Effectuer les actions nécessaires avec le texte du bouton
+//     echo "Le texte du bouton cliqué est : " . htmlspecialchars($button_parcourir);
+// } else {
+//     echo "Aucun texte de bouton reçu.";
+// }
