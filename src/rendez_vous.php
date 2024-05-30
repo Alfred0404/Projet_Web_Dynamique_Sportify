@@ -17,7 +17,8 @@ $is_coach = $_SESSION['role'] === 'coach';
 $is_client = $_SESSION['role'] === 'client';
 
 // Fonction pour valider et sécuriser les entrées utilisateur
-function validate($data) {
+function validate($data)
+{
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -131,6 +132,7 @@ if ($is_admin) {
 <body>
     <header>
         <h1>Sportify</h1>
+        <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
     </header>
 
     <div class="nav">
@@ -162,13 +164,17 @@ if ($is_admin) {
         <h1>Rendez-vous client confirmés</h1>
         <?php if (count($rendez_vous) > 0): ?>
             <?php foreach ($rendez_vous as $rdv): ?>
-                <div class="rdv-details" data-coach-id="<?= $rdv['id_coach'] ?>" data-date-rdv="<?= $rdv['jour_rdv'] . ' ' . $rdv['heure_rdv'] ?>">
-                    <h2>Rendez-vous avec <?= htmlspecialchars($rdv['nom_coach']) ?> <?= htmlspecialchars($rdv['prenom_coach']) ?></h2>
+                <div class="rdv-details" data-coach-id="<?= $rdv['id_coach'] ?>"
+                    data-date-rdv="<?= $rdv['jour_rdv'] . ' ' . $rdv['heure_rdv'] ?>">
+                    <h2>Rendez-vous avec <?= htmlspecialchars($rdv['nom_coach']) ?>
+                        <?= htmlspecialchars($rdv['prenom_coach']) ?>
+                    </h2>
                     <p>Date et Heure: <?= htmlspecialchars($rdv['jour_rdv'] . ' ' . $rdv['heure_rdv']) ?></p>
                     <p>Salle: <?= htmlspecialchars($rdv['nom_salle']) ?></p>
                     <p>Email: <?= htmlspecialchars($rdv['email_coach']) ?></p>
                     <p>Spécialité: <?= htmlspecialchars($rdv['specialite_coach']) ?></p>
-                    <form method="POST" action="rendez_vous.php" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?');">
+                    <form method="POST" action="rendez_vous.php" style="display: inline;"
+                        onsubmit="return confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?');">
                         <input type="hidden" name="cancel_rdv" value="1">
                         <input type="hidden" name="id_coach" value="<?= $rdv['id_coach'] ?>">
                         <input type="hidden" name="date_rdv" value="<?= $rdv['jour_rdv'] . ' ' . $rdv['heure_rdv'] ?>">
@@ -184,19 +190,21 @@ if ($is_admin) {
         <?php if ($is_admin): ?>
             <h1>Sélectionner un coach</h1>
             <form method="GET" action="disponibilites.php">
-                <label for="id_coach">Choisir un coach:</label>
+                <label for="id_coach">Choisir un coach :</label>
                 <select id="id_coach" name="id_coach" required>
                     <?php foreach ($coachs as $coach): ?>
-                        <option value="<?= $coach['id_coach'] ?>"><?= htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) ?></option>
+                        <option value="<?= $coach['id_coach'] ?>">
+                            <?= htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) ?>
+                        </option>
                     <?php endforeach; ?>
                 </select><br>
-                <button type="submit">Voir les Disponibilités</button>
+                <button type="submit">Voir les disponibilités</button>
             </form>
         <?php elseif (!$is_admin && !$is_coach): ?>
-            <h1>Prendre un Nouveau Rendez-vous</h1>
-            <form action="disponibilites.php" method="GET">
+            <h1>Prendre un nouveau rendez-vous</h1>
+            <form action="disponibilites.php" method="GET" class="select-rdv-form">
                 <input type="hidden" name="id_client" value="<?= $id_client ?>">
-                <label for="id_coach">Choisir un coach:</label>
+                <label for="id_coach">Choisir un coach :</label>
                 <select id="id_coach" name="id_coach" required>
                     <?php
                     $sql = "SELECT * FROM coach";
@@ -207,10 +215,10 @@ if ($is_admin) {
                     }
                     ?>
                 </select><br>
-                <button type="submit">Voir les Disponibilités</button>
+                <button type="submit">Voir les disponibilités</button>
             </form>
         <?php elseif ($is_coach): ?>
-            <h1>Consulter les Disponibilités</h1>
+            <h1>Consulter les disponibilités</h1>
             <form action="disponibilites.php" method="GET">
                 <label for="id_coach">Choisir un coach:</label>
                 <select id="id_coach" name="id_coach" required>
@@ -223,13 +231,18 @@ if ($is_admin) {
                     }
                     ?>
                 </select><br>
-                <button type="submit">Voir les Disponibilités</button>
+                <button type="submit">Voir les disponibilités</button>
             </form>
         <?php endif; ?>
     </section>
-
     <footer>
-        <p>&copy; 2024 Sportify</p>
+        <p>© 2024 Sportify</p>
+        <p>sportify@gmail.com</p>
+        <p>01 38 67 18 52</p>
+        <p>10 rue Sextius Michel - 75015 - Paris</p>
+        <a class="lien-gmaps"
+            href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google
+            Maps</a>
     </footer>
 </body>
 
