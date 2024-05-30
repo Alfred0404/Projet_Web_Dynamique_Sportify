@@ -104,6 +104,7 @@ if (isset($_GET['id'])) {
                     <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
                     <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
                     <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+                    <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
                 </ul>
             </div>
             <section class="first-section">

@@ -142,6 +142,7 @@ if ($is_admin) {
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
             <li class="nav-item active"><a href="#">Rendez-vous</a></li>
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
 

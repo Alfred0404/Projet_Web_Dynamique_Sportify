@@ -20,7 +20,8 @@ $is_coach = $_SESSION['role'] === 'coach';
 $is_client = $_SESSION['role'] === 'client';
 
 // Fonction pour valider et sécuriser les entrées utilisateur
-function validate($data) {
+function validate($data)
+{
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -30,7 +31,8 @@ function validate($data) {
 $id_coach = $_GET['id_coach'];
 
 // Fonction pour récupérer les créneaux horaires disponibles
-function getAvailableSlots($conn, $id_coach) {
+function getAvailableSlots($conn, $id_coach)
+{
     $sql = "SELECT j.nom_jour, d.heure_debut, d.heure_fin, d.id_disponibilite
             FROM disponibilite d
             JOIN jour j ON d.id_jour = j.id_jour
@@ -53,7 +55,8 @@ function getAvailableSlots($conn, $id_coach) {
 }
 
 // Fonction pour récupérer les créneaux horaires réservés
-function getBookedSlots($conn, $id_coach) {
+function getBookedSlots($conn, $id_coach)
+{
     $sql = "SELECT jour_rdv, heure_rdv
             FROM prise_de_rendez_vous
             WHERE id_coach = ?";
@@ -106,6 +109,7 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
             <li><a href="recherche.php">Rechercher</a></li>
             <li><a href="rendez_vous.php">Rendez-vous</a></li>
             <li><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
 
@@ -126,8 +130,15 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
             <tbody>
                 <?php
                 $hours = [
-                    '08:00' => '8h-9h', '09:00' => '9h-10h', '10:00' => '10h-11h', '11:00' => '11h-12h',
-                    '12:00' => '12h-13h', '13:00' => '13h-14h', '14:00' => '14h-15h', '15:00' => '15h-16h', '16:00' => '16h-17h'
+                    '08:00' => '8h-9h',
+                    '09:00' => '9h-10h',
+                    '10:00' => '10h-11h',
+                    '11:00' => '11h-12h',
+                    '12:00' => '12h-13h',
+                    '13:00' => '13h-14h',
+                    '14:00' => '14h-15h',
+                    '15:00' => '15h-16h',
+                    '16:00' => '16h-17h'
                 ];
                 foreach ($hours as $time => $label):
                     echo '<tr>';
@@ -187,20 +198,20 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                         method: 'POST',
                         body: formData
                     })
-                    .then(response => response.text())
-                    .then(data => {
-                        if (data.includes("Rendez-vous pris avec succès!")) {
-                            selectedCell.classList.remove('available');
-                            selectedCell.classList.add('taken');
-                            selectedCell.innerText = 'Réservé';
-                            document.getElementById('reserve-button').disabled = true;
-                            // Redirection vers la page des rendez-vous
-                            window.location.href = 'rendez_vous.php';
-                        } else {
-                            alert(data);
-                        }
-                    })
-                    .catch(error => console.error('Erreur:', error));
+                        .then(response => response.text())
+                        .then(data => {
+                            if (data.includes("Rendez-vous pris avec succès!")) {
+                                selectedCell.classList.remove('available');
+                                selectedCell.classList.add('taken');
+                                selectedCell.innerText = 'Réservé';
+                                document.getElementById('reserve-button').disabled = true;
+                                // Redirection vers la page des rendez-vous
+                                window.location.href = 'rendez_vous.php';
+                            } else {
+                                alert(data);
+                            }
+                        })
+                        .catch(error => console.error('Erreur:', error));
                 }
             }
         });
