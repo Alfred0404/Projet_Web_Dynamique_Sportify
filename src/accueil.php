@@ -2,7 +2,7 @@
 <?php
 $user_name = "root";
 $password = "";
-$database = "test1";
+$database = "sportify";
 $server = "127.0.0.1";
 $port = 3306;
 
