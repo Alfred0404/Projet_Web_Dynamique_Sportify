@@ -77,7 +77,6 @@ if (isset($_GET['id'])) {
         $bureau_coach = $row["bureau_coach"];
         $photo_coach = $row["photo_coach"];
         ?>
-        ?>
 
         <!DOCTYPE html>
         <html lang="fr">

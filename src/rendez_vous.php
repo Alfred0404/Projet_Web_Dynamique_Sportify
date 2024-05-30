@@ -131,7 +131,7 @@ if ($is_admin) {
 
 <body>
     <header>
-        <h1>Sportify</h1>
+        <h1 class="title">Sportify</h1>
         <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
     </header>
 
