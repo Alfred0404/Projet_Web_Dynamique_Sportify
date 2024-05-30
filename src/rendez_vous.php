@@ -92,10 +92,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['cancel_rdv']) && !$is
 $id_client = ($is_admin && isset($_POST['id_client'])) ? validate($_POST['id_client']) : $_SESSION['user_id'];
 $id_coach = $_SESSION['role'] === 'coach' ? $_SESSION['user_id'] : null;
 
-$sql = "SELECT rv.id_coach, rv.jour_rdv, rv.heure_rdv, rv.statut_rdv, c.nom_coach, c.prenom_coach, c.email_coach, c.specialite_coach, s.nom_salle 
-        FROM prise_de_rendez_vous rv 
-        JOIN coach c ON rv.id_coach = c.ID_coach 
-        JOIN salle s ON rv.id_salle = s.id_salle 
+$sql = "SELECT rv.id_coach, rv.jour_rdv, rv.heure_rdv, rv.statut_rdv, c.nom_coach, c.prenom_coach, c.email_coach, c.specialite_coach, s.nom_salle
+        FROM prise_de_rendez_vous rv
+        JOIN coach c ON rv.id_coach = c.id_coach
+        JOIN salle s ON rv.id_salle = s.id_salle
         WHERE rv.id_client = ? OR rv.id_coach = ?";
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "ii", $id_client, $id_coach);
@@ -112,12 +112,12 @@ if ($is_admin) {
 
 // Récupérer la liste des coachs pour le formulaire de sélection si l'utilisateur est un admin
 if ($is_admin) {
-    $sql_coachs = "SELECT ID_coach, nom_coach, prenom_coach FROM coach";
+    $sql_coachs = "SELECT id_coach, nom_coach, prenom_coach FROM coach";
     $result_coachs = mysqli_query($conn, $sql_coachs);
     $coachs = mysqli_fetch_all($result_coachs, MYSQLI_ASSOC);
 }
 ?>
-              
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -187,7 +187,7 @@ if ($is_admin) {
                 <label for="id_coach">Choisir un coach:</label>
                 <select id="id_coach" name="id_coach" required>
                     <?php foreach ($coachs as $coach): ?>
-                        <option value="<?= $coach['ID_coach'] ?>"><?= htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) ?></option>
+                        <option value="<?= $coach['id_coach'] ?>"><?= htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) ?></option>
                     <?php endforeach; ?>
                 </select><br>
                 <button type="submit">Voir les Disponibilités</button>
@@ -203,7 +203,7 @@ if ($is_admin) {
                     $result = mysqli_query($conn, $sql);
 
                     while ($coach = mysqli_fetch_assoc($result)) {
-                        echo '<option value="' . $coach['ID_coach'] . '">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</option>';
+                        echo '<option value="' . $coach['id_coach'] . '">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</option>';
                     }
                     ?>
                 </select><br>
@@ -219,7 +219,7 @@ if ($is_admin) {
                     $result = mysqli_query($conn, $sql);
 
                     while ($coach = mysqli_fetch_assoc($result)) {
-                        echo '<option value="' . $coach['ID_coach'] . '">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</option>';
+                        echo '<option value="' . $coach['id_coach'] . '">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</option>';
                     }
                     ?>
                 </select><br>
@@ -227,23 +227,10 @@ if ($is_admin) {
             </form>
         <?php endif; ?>
     </section>
+
     <footer>
-        <p>© 2024 Sportify</p>
-        <p>sportify@gmail.com</p>
-        <p>01 38 67 18 52</p>
-        <p>10 rue Sextius Michel - 75015 - Paris</p>
-        <a class="lien-gmaps" href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google Maps</a>
+        <p>&copy; 2024 Sportify</p>
     </footer>
 </body>
 
 </html>
-
-<?php
-if (isset($_POST['button_coach'])) {
-    $button_parcourir = $_POST['button_coach'];
-    // Effectuer les actions nécessaires avec le texte du bouton
-    echo "Le texte du bouton cliqué est : " . htmlspecialchars($button_coach);
-} else {
-    echo "Aucun texte de bouton reçu.";
-}
-?>

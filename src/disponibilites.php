@@ -32,7 +32,7 @@ $id_coach = $_GET['id_coach'];
 // Fonction pour récupérer les créneaux horaires disponibles
 function getAvailableSlots($conn, $id_coach) {
     $sql = "SELECT j.nom_jour, d.heure_debut, d.heure_fin, d.id_disponibilite
-            FROM disponibilite d 
+            FROM disponibilite d
             JOIN jour j ON d.id_jour = j.id_jour
             WHERE d.id_coach = ?";
     $stmt = mysqli_prepare($conn, $sql);
@@ -55,7 +55,7 @@ function getAvailableSlots($conn, $id_coach) {
 // Fonction pour récupérer les créneaux horaires réservés
 function getBookedSlots($conn, $id_coach) {
     $sql = "SELECT jour_rdv, heure_rdv
-            FROM prise_de_rendez_vous 
+            FROM prise_de_rendez_vous
             WHERE id_coach = ?";
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "i", $id_coach);
@@ -132,6 +132,12 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                 foreach ($hours as $time => $label):
                     echo '<tr>';
                     if ($time == '08:00') {
+                        // if (isset($coach) && is_array($coach)) {
+                        //     echo "".$coach;
+                        // }
+                        // else {
+                        //     echo "coach est null";
+                        // }
                         echo '<td rowspan="9">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</td>';
                         echo '<td rowspan="9">' . htmlspecialchars($coach['specialite_coach']) . '</td>';
                     }
@@ -176,7 +182,7 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                     formData.append('id_coach', '<?php echo htmlspecialchars($id_coach); ?>');
                     formData.append('jour_rdv', jour);
                     formData.append('heure_rdv', heure);
-                    
+
                     fetch('rendez_vous.php', {
                         method: 'POST',
                         body: formData
