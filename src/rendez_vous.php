@@ -51,7 +51,7 @@ if (isset($_POST['cancel_rdv'])) {
 }
 
 // Ajouter un rendez-vous
-if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['cancel_rdv']) && !$is_admin) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['cancel_rdv']) && !$is_admin && !$is_coach) {
     $id_coach = $_POST['id_coach'] ?? null;
     $jour_rdv = $_POST['jour_rdv'] ?? null;
     $heure_rdv = $_POST['heure_rdv'] ?? null;
@@ -90,14 +90,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['cancel_rdv']) && !$is
 
 // Récupérer les rendez-vous de l'utilisateur sélectionné ou connecté
 $id_client = ($is_admin && isset($_POST['id_client'])) ? validate($_POST['id_client']) : $_SESSION['user_id'];
+$id_coach = $_SESSION['role'] === 'coach' ? $_SESSION['user_id'] : null;
 
 $sql = "SELECT rv.id_coach, rv.jour_rdv, rv.heure_rdv, rv.statut_rdv, c.nom_coach, c.prenom_coach, c.email_coach, c.specialite_coach, s.nom_salle 
         FROM prise_de_rendez_vous rv 
         JOIN coach c ON rv.id_coach = c.ID_coach 
         JOIN salle s ON rv.id_salle = s.id_salle 
-        WHERE rv.id_client = ?";
+        WHERE rv.id_client = ? OR rv.id_coach = ?";
 $stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "i", $id_client);
+mysqli_stmt_bind_param($stmt, "ii", $id_client, $id_coach);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $rendez_vous = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -107,6 +108,13 @@ if ($is_admin) {
     $sql_users = "SELECT id_client, nom_client, prenom_client FROM client";
     $result_users = mysqli_query($conn, $sql_users);
     $users = mysqli_fetch_all($result_users, MYSQLI_ASSOC);
+}
+
+// Récupérer la liste des coachs pour le formulaire de sélection si l'utilisateur est un admin
+if ($is_admin) {
+    $sql_coachs = "SELECT ID_coach, nom_coach, prenom_coach FROM coach";
+    $result_coachs = mysqli_query($conn, $sql_coachs);
+    $coachs = mysqli_fetch_all($result_coachs, MYSQLI_ASSOC);
 }
 ?>
 
@@ -149,6 +157,19 @@ if ($is_admin) {
                 </select>
                 <button type="submit">Voir les Rendez-vous</button>
             </form>
+
+            <h1>Sélectionner un coach</h1>
+            <form method="GET" action="disponibilites.php">
+                <label for="id_coach">Choisir un coach:</label>
+                <select id="id_coach" name="id_coach" required>
+                    <?php foreach ($coachs as $coach): ?>
+                        <option value="<?= $coach['ID_coach'] ?>">
+                            <?= htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <button type="submit">Voir les Disponibilités</button>
+            </form>
         <?php endif; ?>
 
         <h1>Vos Rendez-vous Confirmés</h1>
@@ -173,7 +194,7 @@ if ($is_admin) {
             <p>Vous n'avez aucun rendez-vous confirmé.</p>
         <?php endif; ?>
 
-        <?php if (!$is_admin): ?>
+        <?php if (!$is_admin && !$is_coach): ?>
             <h1>Prendre un Nouveau Rendez-vous</h1>
             <form action="disponibilites.php" method="GET">
                 <input type="hidden" name="id_client" value="<?= $id_client ?>">
@@ -190,7 +211,7 @@ if ($is_admin) {
                 </select><br>
                 <button type="submit">Voir les Disponibilités</button>
             </form>
-        <?php else: ?>
+        <?php elseif ($is_coach): ?>
             <h1>Consulter les Disponibilités</h1>
             <form action="disponibilites.php" method="GET">
                 <label for="id_coach">Choisir un coach:</label>
