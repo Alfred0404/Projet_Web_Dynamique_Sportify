@@ -1,58 +1,151 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
+    background-color: #000;
+    color: #fff;
+}
+
+a {
+    text-decoration: none;
+    color: #000000;
+}
+
+li {
+    list-style: none;
 }
 
 header {
-    background-color: #4CAF50;
-    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 10px;
-    text-align: center;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-left: 30px;
+}
+
+header img {
+    height: 50px;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.nav {
+    padding-block-start: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky;
+    align-self: flex-start;
+    top: 20px;
+    overflow-y: auto;
+    z-index: 10;
 }
 
 .nav ul {
-    list-style-type: none;
-    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+}
+
+li.nav-item.active {
+    background: #ff9e01;
+    color: #000;
+    border-radius: 32px;
+}
+
+.nav-item {
     margin: 0;
-    background-color: #333;
+    background: #fff;
+    color: #000;
+    width: auto;
+    padding: 10px 10px;
+    border-radius: 32px;
 }
 
-.nav ul li {
-    display: inline;
-    margin-right: 10px;
+section::before {
+    content: "";
+    width: 100%;
+    height: 50px;
+    background:
+        linear-gradient(rgba(0, 0, 0, 1),
+            rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0));
+
+    /* create a new stacking context */
+    position: absolute;
 }
 
-.nav ul li a {
-    color: white;
-    text-decoration: none;
-    padding: 10px 20px;
-    display: inline-block;
-}
-
-.nav ul li a:hover {
-    background-color: #111;
+section::after {
+    content: "";
 }
 
 section {
-    padding: 20px;
+    height: 76vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0.7)),
+        url(../../assets/background.jpg);
+    background-size: cover;
+    z-index: -2;
+}
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 table {
+    margin-top: 3%;
     width: 100%;
     border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
     border: 1px solid #ddd;
+    color: #ddd;
+    transition: all 0.2s ease;
     padding: 8px;
     text-align: center;
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.9px);
+    -webkit-backdrop-filter: blur(4.9px);
 }
 
-th {
-    background-color: #f2f2f2;
+.available:hover {
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.9px);
+    -webkit-backdrop-filter: blur(4.9px);
 }
 
 .available {
-    background-color: #f9f9f9;
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.9px);
+    -webkit-backdrop-filter: blur(4.9px);
     cursor: pointer;
 }
 
@@ -63,7 +156,11 @@ th {
 }
 
 .unavailable {
-    background-color: #dddddd;
+    cursor: not-allowed;
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.9px);
+    -webkit-backdrop-filter: blur(4.9px);
 }
 
 .selected {
@@ -71,15 +168,40 @@ th {
     color: white;
 }
 
+.selected:hover {
+    background-color: #57c55b;
+    color: white;
+}
+
 #reserve-button {
     background-color: #4CAF50;
+    width: 200px;
     color: white;
     border: none;
+    border-radius: 6px;
     padding: 10px 20px;
     cursor: pointer;
 }
 
 #reserve-button:disabled {
-    background-color: #ddd;
+    background-color: #d63f3f;
     cursor: not-allowed;
+}
+
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background: #000;
+    color: #fff;
+    height: 100px;
+}
+
+.lien-gmaps {
+    color: #fff;
+}
+
+footer p,
+a {
+    margin: 40px 20px;
 }

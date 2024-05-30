@@ -99,73 +99,75 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
 
 <body>
     <header>
-        <h1>Sportify - Disponibilités</h1>
+        <h1 class="title">Sportify</h1>
+        <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
     </header>
 
     <div class="nav">
         <ul>
-            <li><a href="accueil.php">Accueil</a></li>
-            <li><a href="parcourir.php">Tout parcourir</a></li>
-            <li><a href="recherche.php">Rechercher</a></li>
-            <li><a href="rendez_vous.php">Rendez-vous</a></li>
-            <li><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="accueil.php">Accueil</a></li>
+            <li class="nav-item"><a href="parcourir.php">Tout parcourir</a></li>
+            <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
+            <li class="nav-item active"><a href="#">Rendez-vous</a></li>
+            <li class="nav-item"><a href="compte.php">Votre compte</a></li>
             <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
 
     <section>
-        <h1>Disponibilités</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Coach</th>
-                    <th>Spécialité</th>
-                    <th>Lundi</th>
-                    <th>Mardi</th>
-                    <th>Mercredi</th>
-                    <th>Jeudi</th>
-                    <th>Vendredi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $hours = [
-                    '08:00' => '8h-9h',
-                    '09:00' => '9h-10h',
-                    '10:00' => '10h-11h',
-                    '11:00' => '11h-12h',
-                    '12:00' => '12h-13h',
-                    '13:00' => '13h-14h',
-                    '14:00' => '14h-15h',
-                    '15:00' => '15h-16h',
-                    '16:00' => '16h-17h'
-                ];
-                foreach ($hours as $time => $label):
-                    echo '<tr>';
-                    if ($time == '08:00') {
-                        // if (isset($coach) && is_array($coach)) {
-                        //     echo "".$coach;
-                        // }
-                        // else {
-                        //     echo "coach est null";
-                        // }
-                        echo '<td rowspan="9">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</td>';
-                        echo '<td rowspan="9">' . htmlspecialchars($coach['specialite_coach']) . '</td>';
-                    }
-                    foreach (['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'] as $jour):
-                        $isBooked = isset($bookedSlots[$jour]) && in_array($time, $bookedSlots[$jour]);
-                        $isLunchTime = $time == '12:00';
-                        $class = $isBooked ? 'taken' : ($isLunchTime ? 'unavailable' : 'available');
-                        $content = $isLunchTime ? 'Pause Déjeuner' : $label;
-                        echo '<td class="' . $class . '" data-jour="' . $jour . '" data-heure="' . $time . '">' . $content . '</td>';
+        <div class="section-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Coach</th>
+                        <th>Spécialité</th>
+                        <th>Lundi</th>
+                        <th>Mardi</th>
+                        <th>Mercredi</th>
+                        <th>Jeudi</th>
+                        <th>Vendredi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $hours = [
+                        '08:00' => '8h-9h',
+                        '09:00' => '9h-10h',
+                        '10:00' => '10h-11h',
+                        '11:00' => '11h-12h',
+                        '12:00' => '12h-13h',
+                        '13:00' => '13h-14h',
+                        '14:00' => '14h-15h',
+                        '15:00' => '15h-16h',
+                        '16:00' => '16h-17h'
+                    ];
+                    foreach ($hours as $time => $label):
+                        echo '<tr>';
+                        if ($time == '08:00') {
+                            // if (isset($coach) && is_array($coach)) {
+                            //     echo "".$coach;
+                            // }
+                            // else {
+                            //     echo "coach est null";
+                            // }
+                            echo '<td rowspan="9">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</td>';
+                            echo '<td rowspan="9">' . htmlspecialchars($coach['specialite_coach']) . '</td>';
+                        }
+                        foreach (['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'] as $jour):
+                            $isBooked = isset($bookedSlots[$jour]) && in_array($time, $bookedSlots[$jour]);
+                            $isLunchTime = $time == '12:00';
+                            $class = $isBooked ? 'taken' : ($isLunchTime ? 'unavailable' : 'available');
+                            $content = $isLunchTime ? 'Pause Déjeuner' : $label;
+                            echo '<td class="' . $class . '" data-jour="' . $jour . '" data-heure="' . $time . '">' . $content . '</td>';
+                        endforeach;
+                        echo '</tr>';
                     endforeach;
-                    echo '</tr>';
-                endforeach;
-                ?>
-            </tbody>
-        </table>
-        <div style="text-align: right; margin-top: 20px;">
-            <button id="reserve-button" disabled>Réserver</button>
+                    ?>
+                </tbody>
+            </table>
+            <div style="text-align: right; margin-top: 20px;">
+                <button id="reserve-button" disabled>Réserver</button>
+            </div>
         </div>
     </section>
 
@@ -216,6 +218,15 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
             }
         });
     </script>
+    <footer>
+        <p>© 2024 Sportify</p>
+        <p>sportify@gmail.com</p>
+        <p>01 38 67 18 52</p>
+        <p>10 rue Sextius Michel - 75015 - Paris</p>
+        <a class="lien-gmaps"
+            href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google
+            Maps</a>
+    </footer>
 </body>
 
 </html>
