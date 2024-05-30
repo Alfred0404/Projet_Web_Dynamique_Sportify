@@ -55,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
     if ($result->num_rows === 1) {
         $row = $result->fetch_assoc();
         if ($password == $row['mdp_' . $table]) {
+            $_SESSION['user_id'] = $row['id_' . $table];
             $_SESSION['user_name'] = $row['nom_' . $table];
             $_SESSION['prenom'] = $row['prenom_' . $table];
             $_SESSION['email'] = $row['email_' . $table];
