@@ -5,9 +5,6 @@ include "db_connection.php";
 // Initialiser les messages d'erreur ou de succès
 $message = "";
 
-// Démarrer le tampon de sortie pour capturer les erreurs
-ob_start();
-
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_name'])) {
     header("Location: index.php");
@@ -54,7 +51,7 @@ if (isset($_POST['cancel_rdv'])) {
 }
 
 // Ajouter un rendez-vous
-if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['cancel_rdv'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['cancel_rdv']) && !$is_admin) {
     $id_coach = $_POST['id_coach'] ?? null;
     $jour_rdv = $_POST['jour_rdv'] ?? null;
     $heure_rdv = $_POST['heure_rdv'] ?? null;
@@ -176,22 +173,40 @@ if ($is_admin) {
             <p>Vous n'avez aucun rendez-vous confirmé.</p>
         <?php endif; ?>
 
-        <h1>Prendre un Nouveau Rendez-vous</h1>
-        <form action="disponibilites.php" method="GET">
-            <input type="hidden" name="id_client" value="<?= $id_client ?>">
-            <label for="id_coach">Choisir un coach:</label>
-            <select id="id_coach" name="id_coach" required>
-                <?php
-                $sql = "SELECT * FROM coach";
-                $result = mysqli_query($conn, $sql);
+        <?php if (!$is_admin): ?>
+            <h1>Prendre un Nouveau Rendez-vous</h1>
+            <form action="disponibilites.php" method="GET">
+                <input type="hidden" name="id_client" value="<?= $id_client ?>">
+                <label for="id_coach">Choisir un coach:</label>
+                <select id="id_coach" name="id_coach" required>
+                    <?php
+                    $sql = "SELECT * FROM coach";
+                    $result = mysqli_query($conn, $sql);
 
-                while ($coach = mysqli_fetch_assoc($result)) {
-                    echo '<option value="' . $coach['ID_coach'] . '">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</option>';
-                }
-                ?>
-            </select><br>
-            <button type="submit">Voir les Disponibilités</button>
-        </form>
+                    while ($coach = mysqli_fetch_assoc($result)) {
+                        echo '<option value="' . $coach['ID_coach'] . '">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</option>';
+                    }
+                    ?>
+                </select><br>
+                <button type="submit">Voir les Disponibilités</button>
+            </form>
+        <?php else: ?>
+            <h1>Consulter les Disponibilités</h1>
+            <form action="disponibilites.php" method="GET">
+                <label for="id_coach">Choisir un coach:</label>
+                <select id="id_coach" name="id_coach" required>
+                    <?php
+                    $sql = "SELECT * FROM coach";
+                    $result = mysqli_query($conn, $sql);
+
+                    while ($coach = mysqli_fetch_assoc($result)) {
+                        echo '<option value="' . $coach['ID_coach'] . '">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</option>';
+                    }
+                    ?>
+                </select><br>
+                <button type="submit">Voir les Disponibilités</button>
+            </form>
+        <?php endif; ?>
     </section>
 
     <footer>
