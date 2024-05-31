@@ -164,6 +164,25 @@ if ($is_client) {
     }
 }
 
+// Récupérer les informations de paiement pour le client
+if ($is_client) {
+    $sql = "SELECT facture, date_paiement, type_carte, numero_carte, nom_carte FROM paiement WHERE id_client=?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Erreur de préparation de la requête : " . $conn->error);
+    }
+    $stmt->bind_param("i", $_SESSION['user_id']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $paiements = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $paiements[] = $row;
+        }
+    }
+    $stmt->close();
+}
+
 // Inscription d'un nouveau coach
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
     if ($is_admin) {
@@ -243,6 +262,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 
@@ -311,6 +346,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
 
                 <input type="submit" name="update_carte_bancaire" value="Mettre à jour">
             </form>
+
+            <h2>Mes Factures</h2>
+            <table>
+                <tr>
+                    <th>Facture</th>
+                    <th>Date de Paiement</th>
+                    <th>Type de Carte</th>
+                    <th>Numéro de Carte</th>
+                    <th>Nom sur la Carte</th>
+                </tr>
+                <?php foreach ($paiements as $paiement): ?>
+                    <tr>
+                        <td><?php echo $paiement['facture']; ?></td>
+                        <td><?php echo $paiement['date_paiement']; ?></td>
+                        <td><?php echo $paiement['type_carte']; ?></td>
+                        <td><?php echo $paiement['numero_carte']; ?></td>
+                        <td><?php echo $paiement['nom_carte']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
         <?php endif; ?>
 
         <?php if ($is_admin): ?>
