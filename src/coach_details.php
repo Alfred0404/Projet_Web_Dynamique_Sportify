@@ -87,6 +87,47 @@ if (isset($_GET['id'])) {
             <link rel="stylesheet" href="../src/css/coach_details.css">
             <script src="js/activites_sportives.js"></script>
             <title>Sportify - Parcourir</title>
+            <style>
+                .cv-section {
+                    margin-top: 20px;
+                }
+                .cv-section button {
+                    background-color: #ff9e01;
+                    color: #000;
+                    padding: 10px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+                .cv-section button:hover {
+                    background-color: #e68900;
+                }
+                .cv-content {
+                    display: none;
+                    margin-top: 10px;
+                    background-color: #fff;
+                    padding: 20px;
+                    border-radius: 5px;
+                    color: #000;
+                }
+                .cv-content pre {
+                    white-space: pre-wrap;
+                }
+                .cv-content table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                .cv-content table, .cv-content th, .cv-content td {
+                    border: 1px solid #ddd;
+                }
+                .cv-content th, .cv-content td {
+                    padding: 8px;
+                    text-align: left;
+                }
+                .cv-content th {
+                    background-color: #f2f2f2;
+                }
+            </style>
         </head>
 
         <body>
@@ -132,12 +173,41 @@ if (isset($_GET['id'])) {
                             <button type="submit" name="button_coach" value="contacter">
                                 <p>Contacter le coach</p>
                             </button>
-                            <button type="submit" name="button_coach" value="cv">
-                                <?php //if(!empty($cv_coach)) { ?>
-                                <a href="<?php echo $cv_coach; ?>" target="_blank">Voir son CV</a>
-                                <?php //} ?>
-                            </button>
                         </form>
+
+                        <div class="cv-section">
+                            <button onclick="toggleCV()">Voir le CV</button>
+                            <div id="cv-content" class="cv-content">
+                                <?php
+                                if (isset($cv_coach)) {
+                                    $cv_path = "cvs/" . htmlspecialchars($cv_coach);
+                                    if (file_exists($cv_path)) {
+                                        $cv_content = file_get_contents($cv_path);
+                                        $xml = simplexml_load_string($cv_content);
+                                        if ($xml) {
+                                            echo "<table>";
+                                            echo "<tr><th>Section</th><th>Information</th></tr>";
+                                            echo "<tr><td>Prénom</td><td>{$xml->PersonalInformation->FirstName}</td></tr>";
+                                            echo "<tr><td>Nom</td><td>{$xml->PersonalInformation->LastName}</td></tr>";
+                                            echo "<tr><td>Date de Naissance</td><td>{$xml->PersonalInformation->DateOfBirth}</td></tr>";
+                                            echo "<tr><td>Email</td><td>{$xml->PersonalInformation->Email}</td></tr>";
+                                            echo "<tr><td>Numéro de Téléphone</td><td>{$xml->PersonalInformation->PhoneNumber}</td></tr>";
+                                            echo "<tr><td>Adresse</td><td>{$xml->PersonalInformation->Address->Street}, {$xml->PersonalInformation->Address->City}, {$xml->PersonalInformation->Address->PostalCode}, {$xml->PersonalInformation->Address->Country}</td></tr>";
+                                            echo "<tr><td>Résumé Professionnel</td><td>{$xml->ProfessionalSummary->Summary}</td></tr>";
+                                            echo "<tr><td>Diplôme</td><td>{$xml->Education->Degree->Title}</td></tr>";
+                                            echo "<tr><td>Compétences</td><td>{$xml->Skills->Skill}</td></tr>";
+                                            echo "<tr><td>Langues</td><td>{$xml->Languages->Language->Name} ({$xml->Languages->Language->Proficiency})</td></tr>";
+                                            echo "</table>";
+                                        } else {
+                                            echo "<p>Le contenu du CV n'est pas valide.</p>";
+                                        }
+                                    } else {
+                                        echo "<p>Le CV n'a pas été trouvé.</p>";
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -150,6 +220,16 @@ if (isset($_GET['id'])) {
                     href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google
                     Maps</a>
             </footer>
+            <script>
+                function toggleCV() {
+                    var element = document.getElementById("cv-content");
+                    if (element.style.display === "none" || element.style.display === "") {
+                        element.style.display = "block";
+                    } else {
+                        element.style.display = "none";
+                    }
+                }
+            </script>
         </body>
 
         </html>
