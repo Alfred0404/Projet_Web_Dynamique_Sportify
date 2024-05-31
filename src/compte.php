@@ -22,12 +22,91 @@ function validate($data)
     return $data;
 }
 
+// Sauvegarde du CV
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_cv'])) {
+    if ($is_coach) {
+        $firstName = validate($_POST['FirstName']);
+        $lastName = validate($_POST['LastName']);
+        $dateOfBirth = validate($_POST['DateOfBirth']);
+        $email = validate($_POST['Email']);
+        $phoneNumber = validate($_POST['PhoneNumber']);
+        $street = validate($_POST['Street']);
+        $city = validate($_POST['City']);
+        $postalCode = validate($_POST['PostalCode']);
+        $country = validate($_POST['Country']);
+        $summary = validate($_POST['Summary']);
+        $degreeTitle = validate($_POST['DegreeTitle']);
+        $skills = validate($_POST['Skills']);
+        $languageName = validate($_POST['LanguageName']);
+        $proficiency = validate($_POST['Proficiency']);
+
+        // Création du fichier XML
+        $cvFileName = "cv_{$lastName}_{$firstName}.xml";
+        $xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> 
+        <CoachCV>
+            <PersonalInformation>
+                <FirstName>{$firstName}</FirstName>
+                <LastName>{$lastName}</LastName>
+                <DateOfBirth>{$dateOfBirth}</DateOfBirth>
+                <Email>{$email}</Email>
+                <PhoneNumber>{$phoneNumber}</PhoneNumber>
+                <Address>
+                    <Street>{$street}</Street>
+                    <City>{$city}</City>
+                    <PostalCode>{$postalCode}</PostalCode>
+                    <Country>{$country}</Country>
+                </Address>
+            </PersonalInformation>
+            <ProfessionalSummary>
+                <Summary>{$summary}</Summary>
+            </ProfessionalSummary>
+            <Education>
+                <Degree>
+                    <Title>{$degreeTitle}</Title>
+                </Degree>
+            </Education>
+            <Skills>
+                <Skill>{$skills}</Skill>
+            </Skills>
+            <Languages>
+                <Language>
+                    <Name>{$languageName}</Name>
+                    <Proficiency>{$proficiency}</Proficiency>
+                </Language>
+            </Languages>
+        </CoachCV>";
+
+        // Vérifier si le dossier cvs existe, sinon le créer
+        if (!file_exists('cvs')) {
+            mkdir('cvs', 0777, true);
+        }
+
+        // Enregistrement du fichier XML
+        file_put_contents("cvs/{$cvFileName}", $xmlContent);
+
+        // Mise à jour du chemin du CV dans la base de données
+        $sql = "UPDATE coach SET cv_coach=? WHERE email_coach=?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("Erreur de préparation de la requête : " . $conn->error);
+        }
+        $stmt->bind_param("ss", $cvFileName, $_SESSION['email']);
+        $stmt->execute();
+
+        if ($stmt->affected_rows === 1) {
+            echo "CV mis à jour avec succès.";
+        } 
+    } else {
+        echo "Vous n'avez pas les autorisations nécessaires pour sauvegarder le CV.";
+    }
+}
+
 // Mise à jour des informations du coach
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
     if ($is_coach) {
         $bureau = validate($_POST['bureau']);
         $specialite = validate($_POST['specialite']);
-        $photo = validate($_POST['photo']); // Vous pouvez adapter cette ligne pour gérer le téléchargement de fichiers
+        $photo = validate($_POST['photo']);
         $telephone = validate($_POST['telephone']);
 
         $sql = "UPDATE coach SET bureau_coach=?, specialite_coach=?, photo_coach=?, telephone_coach=? WHERE email_coach=?";
@@ -39,9 +118,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
         $stmt->execute();
 
         if ($stmt->affected_rows === 1) {
-            // echo "Informations mises à jour avec succès.";
+            echo "Informations mises à jour avec succès.";
         } else {
-            // echo "Erreur: " . $sql . "<br>" . $conn->error;
+            echo "Erreur: " . $sql . "<br>" . $conn->error;
         }
     } else {
         echo "Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
@@ -75,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_client'])) {
 
 // Récupérer les informations du coach
 if ($is_coach) {
-    $sql = "SELECT bureau_coach, specialite_coach, photo_coach, telephone_coach FROM coach WHERE email_coach=?";
+    $sql = "SELECT bureau_coach, specialite_coach, photo_coach, telephone_coach, cv_coach FROM coach WHERE email_coach=?";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
         die("Erreur de préparation de la requête : " . $conn->error);
@@ -89,6 +168,7 @@ if ($is_coach) {
         $specialite_coach = $coach_info['specialite_coach'];
         $photo_coach = $coach_info['photo_coach'];
         $telephone_coach = $coach_info['telephone_coach'];
+        $cv_coach = $coach_info['cv_coach'];
     }
 }
 
@@ -146,6 +226,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/compte.css">
     <title>Votre compte</title>
+    <style>
+        .cv-container {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-top: 10px;
+            display: none;
+            color: #000;
+        }
+
+        .cv-container h3,
+        .cv-container h4 {
+            color: #1406b8;
+        }
+
+        .cv-container p {
+            color: #000;
+        }
+
+        .cv-container pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
 </head>
 
 <body>
@@ -175,6 +279,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
                 <p><strong>Spécialité :</strong> <?php echo $specialite_coach ?? ''; ?></p>
                 <p><strong>Photo :</strong> <img src="<?php echo $photo_coach ?? ''; ?>" alt="Photo du coach"></p>
                 <p><strong>Téléphone :</strong> <?php echo $telephone_coach ?? ''; ?></p>
+                <button onclick="toggleDropdown('cv-view')">Voir le CV</button>
+                <div id="cv-view" class="cv-container">
+                    <?php
+                    if (isset($cv_coach)) {
+                        $cv_path = "cvs/" . htmlspecialchars($cv_coach);
+                        if (file_exists($cv_path)) {
+                            $cv_content = file_get_contents($cv_path);
+                            $xml = simplexml_load_string($cv_content);
+
+                            // Affichage du CV en HTML
+                            echo "<h3>Informations Personnelles</h3>";
+                            echo "<p><strong>Prénom:</strong> " . htmlspecialchars($xml->PersonalInformation->FirstName) . "</p>";
+                            echo "<p><strong>Nom:</strong> " . htmlspecialchars($xml->PersonalInformation->LastName) . "</p>";
+                            echo "<p><strong>Date de naissance:</strong> " . htmlspecialchars($xml->PersonalInformation->DateOfBirth) . "</p>";
+                            echo "<p><strong>Email:</strong> " . htmlspecialchars($xml->PersonalInformation->Email) . "</p>";
+                            echo "<p><strong>Téléphone:</strong> " . htmlspecialchars($xml->PersonalInformation->PhoneNumber) . "</p>";
+                            echo "<h4>Adresse</h4>";
+                            echo "<p><strong>Rue:</strong> " . htmlspecialchars($xml->PersonalInformation->Address->Street) . "</p>";
+                            echo "<p><strong>Ville:</strong> " . htmlspecialchars($xml->PersonalInformation->Address->City) . "</p>";
+                            echo "<p><strong>Code postal:</strong> " . htmlspecialchars($xml->PersonalInformation->Address->PostalCode) . "</p>";
+                            echo "<p><strong>Pays:</strong> " . htmlspecialchars($xml->PersonalInformation->Address->Country) . "</p>";
+                            echo "<h3>Résumé Professionnel</h3>";
+                            echo "<p>" . htmlspecialchars($xml->ProfessionalSummary->Summary) . "</p>";
+                            echo "<h3>Éducation</h3>";
+                            echo "<p><strong>Diplôme:</strong> " . htmlspecialchars($xml->Education->Degree->Title) . "</p>";
+                            echo "<h3>Compétences</h3>";
+                            echo "<p>" . htmlspecialchars($xml->Skills->Skill) . "</p>";
+                            echo "<h3>Langues</h3>";
+                            foreach ($xml->Languages->Language as $language) {
+                                echo "<p><strong>Langue:</strong> " . htmlspecialchars($language->Name) . "</p>";
+                                echo "<p><strong>Niveau:</strong> " . htmlspecialchars($language->Proficiency) . "</p>";
+                            }
+                        } else {
+                            echo "<p>Le CV n'a pas été trouvé.</p>";
+                        }
+                    }
+                    ?>
+                </div>
             <?php endif; ?>
             <?php if ($is_client): ?>
                 <p><strong>Date de naissance :</strong> <?php echo $date_naissance ?? ''; ?></p>
@@ -227,6 +369,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
                     <button type="submit">Mettre à jour</button>
                 </form>
             </div>
+
+            <div class="container update">
+                <h2>Remplir le CV</h2>
+                <button onclick="toggleDropdown('cv-form')">Remplir mon CV</button>
+                <div id="cv-form" class="cv-container">
+                    <form method="post" action="compte.php">
+                        <input type="hidden" name="save_cv" value="1">
+                        <label for="FirstName">Prénom :</label>
+                        <input type="text" id="FirstName" name="FirstName" required>
+                        <label for="LastName">Nom :</label>
+                        <input type="text" id="LastName" name="LastName" required>
+                        <label for="DateOfBirth">Date de naissance :</label>
+                        <input type="date" id="DateOfBirth" name="DateOfBirth" required>
+                        <label for="Email">Email :</label>
+                        <input type="email" id="Email" name="Email" required>
+                        <label for="PhoneNumber">Numéro de téléphone :</label>
+                        <input type="text" id="PhoneNumber" name="PhoneNumber" required>
+                        <label for="Street">Rue :</label>
+                        <input type="text" id="Street" name="Street" required>
+                        <label for="City">Ville :</label>
+                        <input type="text" id="City" name="City" required>
+                        <label for="PostalCode">Code postal :</label>
+                        <input type="text" id="PostalCode" name="PostalCode" required>
+                        <label for="Country">Pays :</label>
+                        <input type="text" id="Country" name="Country" required>
+                        <label for="Summary">Résumé professionnel :</label>
+                        <textarea id="Summary" name="Summary" required></textarea>
+                        <label for="DegreeTitle">Diplôme :</label>
+                        <input type="text" id="DegreeTitle" name="DegreeTitle" required>
+                        <label for="Skills">Compétences :</label>
+                        <textarea id="Skills" name="Skills" required></textarea>
+                        <label for="LanguageName">Langue :</label>
+                        <input type="text" id="LanguageName" name="LanguageName" required>
+                        <label for="Proficiency">Niveau :</label>
+                        <input type="text" id="Proficiency" name="Proficiency" required>
+                        <button type="submit">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
         <?php endif; ?>
 
         <?php if ($is_client): ?>
@@ -255,7 +436,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
             href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google
             Maps</a>
     </footer>
-
+    <script>
+        function toggleDropdown(id) {
+            var element = document.getElementById(id);
+            if (element.style.display === "none") {
+                element.style.display = "block";
+            } else {
+                element.style.display = "none";
+            }
+        }
+    </script>
 </body>
 
 </html>
