@@ -64,6 +64,13 @@ li.nav-item.active {
     background: #ff9e01;
     color: #000;
     border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+        color: #000;
+    }
 }
 
 .nav-item {
@@ -73,6 +80,14 @@ li.nav-item.active {
     width: auto;
     padding: 10px 10px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ff9e01;
+        color: #000;
+    }
 }
 
 section::before {
@@ -105,7 +120,10 @@ section {
 
 .container {
     z-index: 20;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.9px);
+    -webkit-backdrop-filter: blur(4.9px);
     width: 40%;
     padding: 50px;
     border-radius: 12px;
@@ -130,14 +148,34 @@ section {
         margin-top: 20px;
         cursor: pointer;
         width: 30%;
+        transition: all 0.3s ease;
+        color: #000;
 
         &.btn-logout {
             background: #e13636;
-            color: #ffffff;
+            color: #000;
+
+            &:hover {
+                transition: all 0.3s ease;
+                background: #e46464;
+                color: #000;
+            }
         }
 
         &.btn-back {
-            background: #2bda3c;
+            background: #ff9e01;
+            color: #000;
+
+            &:hover {
+                transition: all 0.3s ease;
+                background: #ffdba2;
+                color: #000;
+            }
+        }
+
+        &:hover {
+            transition: all 0.3s ease;
+            background: #ffdba2;
             color: #000;
         }
     }
@@ -162,6 +200,10 @@ section {
             margin-bottom: 30px;
         }
     }
+}
+
+select {
+    cursor: pointer;
 }
 
 .connect {
@@ -198,9 +240,14 @@ input {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background: #2bda3c;
+        background: #ff9e01;
         width: 100%;
 
+        &:hover {
+            transition: all 0.3s ease;
+            background: #ffdba2;
+            color: #000;
+        }
     }
 }
 

@@ -64,6 +64,13 @@ li.nav-item.active {
     background: #ff9e01;
     color: #000;
     border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+        color: #000;
+    }
 }
 
 .nav-item {
@@ -73,6 +80,14 @@ li.nav-item.active {
     width: auto;
     padding: 10px 10px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ff9e01;
+        color: #000;
+    }
 }
 
 section::before {
@@ -164,23 +179,29 @@ td {
 }
 
 .selected {
-    background-color: #4CAF50;
-    color: white;
-}
+    background: #ff9e01;
+    transition: all 0.3s ease;
+    color: #000;
 
-.selected:hover {
-    background-color: #57c55b;
-    color: white;
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+    }
 }
 
 #reserve-button {
-    background-color: #4CAF50;
+    background: #ff9e01;
     width: 200px;
-    color: white;
+    color: #000;
     border: none;
     border-radius: 6px;
     padding: 10px 20px;
     cursor: pointer;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+    }
 }
 
 #reserve-button:disabled {

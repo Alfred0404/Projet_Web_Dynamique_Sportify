@@ -112,7 +112,7 @@ if ($is_admin) {
 }
 
 // Récupérer la liste des coachs pour le formulaire de sélection si l'utilisateur est un admin
-if ($is_client) {
+if ($is_client || $is_admin) {
     $sql_coachs = "SELECT id_coach, nom_coach, prenom_coach FROM coach";
     $result_coachs = mysqli_query($conn, $sql_coachs);
     $coachs = mysqli_fetch_all($result_coachs, MYSQLI_ASSOC);
@@ -192,7 +192,7 @@ if ($is_client) {
                         <input type="hidden" name="date_rdv" value="<?= $rdv['jour_rdv'] . ' ' . $rdv['heure_rdv'] ?>">
                         <input type="hidden" name="id_client" value="<?= $id_client ?>">
                         <?php if (!$is_coach): ?>
-                            <button type="submit">Annuler le RDV</button>
+                            <button class="cancel-rdv" type="submit">Annuler le RDV</button>
                         <?php endif ?>
 
                     </form>

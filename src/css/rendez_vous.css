@@ -65,6 +65,13 @@ li.nav-item.active {
     background: #ff9e01;
     color: #000;
     border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+        color: #000;
+    }
 }
 
 .nav-item {
@@ -74,6 +81,14 @@ li.nav-item.active {
     width: auto;
     padding: 10px 10px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ff9e01;
+        color: #000;
+    }
 }
 
 section::before {
@@ -215,9 +230,12 @@ section p {
         font-weight: 600;
         margin-top: 20px;
         cursor: pointer;
+        transition: all 0.3s ease;
 
         &:hover {
+            transition: all 0.3s ease;
             background: #ffdba2;
+            color: #000;
         }
     }
 
@@ -228,6 +246,16 @@ section p {
         border: none;
 
     }
+}
+
+.cancel-rdv {
+    transition: all 0.3s ease;
+}
+
+.cancel-rdv:hover {
+    transition: all 0.3s ease;
+    background: #ffdba2;
+    color: #000;
 }
 
 .select-user-form {
@@ -248,6 +276,10 @@ section p {
     margin: 10px 0;
     border-radius: 5px;
     border: none;
+}
+
+select {
+    cursor: pointer;
 }
 
 footer {

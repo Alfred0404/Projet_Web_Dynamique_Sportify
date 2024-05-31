@@ -65,6 +65,13 @@ li.nav-item.active {
     background: #ff9e01;
     color: #000;
     border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+        color: #000;
+    }
 }
 
 .nav-item {
@@ -74,6 +81,14 @@ li.nav-item.active {
     width: auto;
     padding: 10px 10px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ff9e01;
+        color: #000;
+    }
 }
 
 section::before {
@@ -139,6 +154,14 @@ section {
     background: #fff;
     color: #000;
     font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ff9e01;
+        color: #000;
+    }
 }
 
 section img {
@@ -243,7 +266,6 @@ section p {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* gap: 10px; */
 
     & p {
         font-size: 16px;
@@ -266,10 +288,12 @@ section p {
     cursor: pointer;
     width: 30%;
     height: 50px;
+    transition: all 0.3s ease;
 }
 
 .coach-link:hover {
-    background: #ffb237;
+    transition: all 0.3s ease;
+    background: #ffdba2;
     color: #fff;
     cursor: pointer;
 }

@@ -67,6 +67,7 @@ if (isset($_GET['id'])) {
     $sql = "SELECT nom_coach, prenom_coach, email_coach, cv_coach, bureau_coach, photo_coach FROM coach WHERE id_coach = $id_coach";
     $result = $conn->query($sql);
 
+
     // Vérifier si le coach existe
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();

@@ -64,6 +64,13 @@ li.nav-item.active {
     background: #ff9e01;
     color: #000;
     border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+        color: #000;
+    }
 }
 
 .nav-item {
@@ -73,6 +80,14 @@ li.nav-item.active {
     width: auto;
     padding: 10px 10px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ff9e01;
+        color: #000;
+    }
 }
 
 section::before {
@@ -141,6 +156,7 @@ section p {
 }
 
 .bulletin {
+    height: auto;
     background: black;
 }
 
@@ -153,6 +169,38 @@ section p {
     top: 100px;
 }
 
+.liste-bulletin {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 200px;
+    padding: 20px;
+    width: 52%;
+}
+
+.liste-bulletin h1 {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: black;
+    color: white;
+    border-radius: 16px;
+    padding: 20px;
+    border: 2px solid white;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    font-weight: 200;
+}
+
+.card p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
 
 footer {
     display: flex;
