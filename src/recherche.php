@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     } else {
         // Rechercher uniquement dans la table coach
         $sql_coach = "
-            SELECT 'coach' AS role, nom_coach AS nom, prenom_coach AS prenom, email_coach AS email, bureau_coach AS bureau, specialite_coach AS specialite, photo_coach AS photo, telephone_coach AS telephone
+            SELECT 'coach' AS role, id_coach, nom_coach AS nom, prenom_coach AS prenom, email_coach AS email, bureau_coach AS bureau, specialite_coach AS specialite, photo_coach AS photo, telephone_coach AS telephone
             FROM coach
             WHERE nom_coach LIKE ? OR specialite_coach LIKE ?";
 
@@ -120,10 +120,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
                             </div>
                             <div class="photo-coach">
                                 <?php if (!empty($item['photo'])): ?>
-                                    <p><img src="<?php echo htmlspecialchars($item['photo']); ?>" alt="Photo du coach">
-                                    </p>
-                                </div>
-                            <?php endif; ?>
+                                    <img src="<?php echo htmlspecialchars($item['photo']); ?>" alt="Photo du coach">
+                                <?php endif; ?>
+                            </div>
+                            <div class="coach-link">
+                                <a href="coach_details.php?id=<?php echo $item['id_coach']; ?>">Voir le profil</a>
+                            </div>
                         <?php elseif ($item['role'] === 'activite'): ?>
                             <p><strong>Rôle:</strong> Activité</p>
                             <p><strong>Nom:</strong> <?php echo htmlspecialchars($item['nom']); ?></p>

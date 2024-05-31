@@ -64,6 +64,7 @@ header img {
 li.nav-item.active {
     background: #ff9e01;
     color: #000;
+    border-radius: 8px;
 }
 
 .nav-item {
@@ -72,7 +73,7 @@ li.nav-item.active {
     color: #000;
     width: auto;
     padding: 10px 10px;
-    border-radius: 32px;
+    border-radius: 8px;
 }
 
 section::before {
@@ -125,7 +126,7 @@ section {
 
 .search-field {
     padding: 10px;
-    border-radius: 32px;
+    border-radius: 8px;
     border: none;
     width: 300px;
     margin-right: 10px;
@@ -133,7 +134,7 @@ section {
 
 .search-submit {
     padding: 10px 20px;
-    border-radius: 32px;
+    border-radius: 8px;
     border: none;
     background: #fff;
     color: #000;
@@ -194,6 +195,25 @@ section p {
 .photo-coach {
     border-radius: 16px;
     overflow: hidden;
+}
+
+.coach-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ff9e01;
+    color: #000;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 30%;
+    height: 50px;
+}
+
+.coach-link:hover {
+    background: #ffb237;
+    color: #fff;
+    cursor: pointer;
 }
 
 footer {
