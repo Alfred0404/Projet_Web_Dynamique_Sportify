@@ -24,6 +24,7 @@ $search_error = "";
 // Effectuer une recherche lorsque le formulaire est soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     $search_query = validate($_POST['search_query']);
+    $search_query = strtolower(str_replace(" ", "_", $search_query));
 
     if (empty($search_query)) {
         $search_error = "Veuillez entrer un nom, une spécialité ou un type d'activité pour la recherche.";
@@ -48,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
             // Si la recherche dans la table coach ne donne aucun résultat,
             // rechercher dans la table activites
             $sql_activite = "
-                SELECT 'activite' AS role, nom_activites AS nom, type_activites AS type
+                SELECT 'activite' AS role, id_activites AS id, nom_activites AS nom, type_activites AS type
                 FROM activites
                 WHERE nom_activites LIKE ? OR type_activites = ?";
 
@@ -75,6 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/recherche.js"></script>
     <link rel="stylesheet" href="css/recherche.css">
     <title>Recherche</title>
 </head>
@@ -127,9 +129,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
                                 <a href="coach_details.php?id=<?php echo $item['id_coach']; ?>">Voir le profil</a>
                             </div>
                         <?php elseif ($item['role'] === 'activite'): ?>
-                            <p><strong>Rôle:</strong> Activité</p>
-                            <p><strong>Nom:</strong> <?php echo htmlspecialchars($item['nom']); ?></p>
-                            <p><strong>Type d'activité:</strong> <?php echo htmlspecialchars($item['type']); ?></p>
+                            <ul class="liste-activites">
+                                <?php
+                                echo "<li class='card " . $item["nom"] . " " . $item["type"] . "'><a href='?id=" . $item["id"] . "'>" . ucfirst(str_replace("_", " ", $item["nom"])) . "</a></li>";
+                                ?>
+                            </ul>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
@@ -137,6 +141,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
         <?php elseif (!empty($search_error)): ?>
             <p><?php echo $search_error; ?></p>
         <?php endif; ?>
+        <?php
+        // Afficher le coach responsable si une activité est sélectionnée
+        if (isset($_GET['id'])) {
+            $id_activite = intval($_GET['id']);
+
+            // Requête pour trouver le coach responsable
+            $sql_coach = "SELECT coach.id_coach, coach.nom_coach FROM coach
+                      INNER JOIN activites ON coach.specialite_coach = activites.id_activites
+                      WHERE activites.id_activites = $id_activite";
+            $result_coach = $conn->query($sql_coach);
+
+            if ($result_coach->num_rows > 0) {
+                echo "<h1>Coachs Responsables</h1>";
+                echo '<ul class="liste-coachs">';
+                while ($row_coach = $result_coach->fetch_assoc()) {
+                    echo "<li class='coach'><a href='coach_details.php?id=" . $row_coach["id_coach"] . "'>" . ucfirst($row_coach["nom_coach"]) . "</a></li>";
+                }
+                echo "</ul>";
+            } else {
+                echo "<p>Aucun coach responsable trouvé pour cette activité.</p>";
+            }
+        }
+
+        $conn->close();
+        ?>
     </section>
     <footer>
         <p>© 2024 Sportify</p>
