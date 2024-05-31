@@ -35,4 +35,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
         $register_message = registerUser($conn, 'client', $nom, $prenom, $sexe, $email, $password);
     }
 }
-?>

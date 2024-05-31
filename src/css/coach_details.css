@@ -64,8 +64,7 @@ header img {
 li.nav-item.active {
     background: #ff9e01;
     color: #000;
-    border-radius: 32px;
-    font-weight: 600;
+    border-radius: 8px;
 }
 
 .nav-item {
@@ -74,8 +73,11 @@ li.nav-item.active {
     color: #000;
     width: auto;
     padding: 10px 10px;
-    border-radius: 32px;
-    font-weight: 600;
+    border-radius: 8px;
+}
+
+.nav-item a {
+    margin: 40px 20px;
 }
 
 section::before {
@@ -128,7 +130,6 @@ section {
 section img {
     height: 200px;
     width: auto;
-    /* margin-bottom: 20px; */
 }
 
 section h1 {
@@ -140,24 +141,24 @@ section h1 {
 
 section p {
     font-size: 1.5rem;
-    /* margin-bottom: 20px; */
 }
 
 section a {
     font-size: 1.5rem;
-    /* margin-bottom: 20px; */
     color: #fff;
 }
 
 .coach-card {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.9px);
+    -webkit-backdrop-filter: blur(4.9px);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* align-items: center; */
     gap: 10px;
     padding: 50px;
-    /* border: 2px solid #ffffff; */
     border-radius: 16px;
 }
 

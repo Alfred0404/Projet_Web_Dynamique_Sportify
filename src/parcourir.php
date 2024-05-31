@@ -3,8 +3,26 @@ session_start();
 
 include "db_connection.php";
 
-// Récupérer les activités
-$sql = "SELECT id_activites, nom_activites, type_activites FROM activites";
+// Initialisation de la variable pour le nom du bouton cliqué
+$nom_bouton = "";
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['activite_sportive'])) {
+        $nom_bouton = "activite_sportive";
+    } elseif (isset($_POST['sport_de_competition'])) {
+        $nom_bouton = "sport_de_competition";
+    } elseif (isset($_POST['salle_de_sport_omnes'])) {
+        $nom_bouton = "salle_de_sport_omnes";
+    }
+}
+
+// Construire la requête SQL en fonction du bouton cliqué
+if ($nom_bouton != "") {
+    $sql = "SELECT id_activites, nom_activites, type_activites FROM activites WHERE type_activites = '$nom_bouton'";
+} else {
+    $sql = "SELECT id_activites, nom_activites, type_activites FROM activites";
+}
+
 $result = $conn->query($sql);
 ?>
 
@@ -15,6 +33,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../src/css/parcourir.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="js/parcourir.js"></script>
     <title>Sportify - Parcourir</title>
 </head>
@@ -33,6 +52,7 @@ $result = $conn->query($sql);
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
     <section class="first-section">
@@ -42,35 +62,42 @@ $result = $conn->query($sql);
     </section>
     <section class="services">
         <h1>Nos services</h1>
-        <div class="btns-activite">
-            <button class="bouton-activite" id="activite_sportive" onclick="sort_activities()">
-                <p>Activités sportives</p>
-            </button>
-            <button class="bouton-activite" id="sport_de_competition" onclick="sort_activities()">
-                <p>Les Sports de Compétition</p>
-            </button>
-            <button class="bouton-activite" id="salle_de_sport_omnes" onclick="sort_activities()">
-                <p>Salles de sport Omnes</p>
-            </button>
-        </div>
+        <form class="btns-activite" action="parcourir.php" method="POST">
 
-        <ul class="liste-activites">
-            <?php
-            if ($result->num_rows > 0) {
-                // Afficher chaque activité
-                while ($row = $result->fetch_assoc()) {
-                    echo "<li class='card " . $row["nom_activites"] . " " . $row["type_activites"] . "'><a href='?id=" . $row["id_activites"] . "'>" . ucfirst(str_replace("_", " ", $row["nom_activites"])) . "</a></li>";
+            <input name="activite_sportive" type="submit" class="bouton-activite" id="activite_sportive"
+                onclick="sort_activities()" value="Activités sportives"></input>
+            <input name="sport_de_competition" type="submit" class="bouton-activite" id="sport_de_competition"
+                onclick="sort_activities()" value="Les Sports de Compétition"></input>
+            <input name="salle_de_sport_omnes" type="submit" class="bouton-activite" id="salle_de_sport_omnes"
+                onclick="sort_activities()" value="Salles de sport Omnes"></input>
+        </form>
+        <?php
+        if ($nom_bouton != "") {
+            echo "<p class='selected-activite' >Vous avez sélectionné : " . ucfirst(str_replace("_", " ", $nom_bouton)) . "</p>";
+        } else {
+            echo "<p class='selected-activite' >Vous n'avez pas encore sélectionné de catégorie.</p>";
+        }
+
+        ?>
+        <div id="carrousel">
+            <ul class="liste-activites">
+                <?php
+                if ($result->num_rows > 0) {
+                    // Afficher chaque activité
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<li class='card " . $row["nom_activites"] . " " . $row["type_activites"] . "'><a href='?id=" . $row["id_activites"] . "'>" . ucfirst(str_replace("_", " ", $row["nom_activites"])) . "</a></li>";
+                    }
+                } else {
+                    echo "Aucune activité trouvée.";
                 }
-            } else {
-                echo "Aucune activité trouvée.";
-            }
-            ?>
-        </ul>
+                ?>
+            </ul>
+            <script src="js/carrousel.js"></script>
+        </div>
         <?php
         // Afficher le coach responsable si une activité est sélectionnée
         if (isset($_GET['id'])) {
             $id_activite = intval($_GET['id']);
-            // echo "activite selectionnee : ".$id_activite;
 
             // Requête pour trouver le coach responsable
             $sql_coach = "SELECT coach.id_coach, coach.nom_coach FROM coach

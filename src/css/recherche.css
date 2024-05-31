@@ -64,6 +64,7 @@ header img {
 li.nav-item.active {
     background: #ff9e01;
     color: #000;
+    border-radius: 8px;
 }
 
 .nav-item {
@@ -72,8 +73,7 @@ li.nav-item.active {
     color: #000;
     width: auto;
     padding: 10px 10px;
-    border-radius: 32px;
-    font-weight: 600;
+    border-radius: 8px;
 }
 
 section::before {
@@ -89,18 +89,11 @@ section::before {
 
 section::after {
     content: "";
-    bottom: -130px;
-    width: 100%;
-    height: 100px;
-    background:
-        linear-gradient(rgba(0, 0, 0, 0),
-            rgba(0, 0, 0, 0.7),
-            rgba(0, 0, 0, 1));
-    position: absolute;
 }
 
 section {
-    height: 100vh;
+    min-height: 76vh;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -127,53 +120,100 @@ section {
 
 }
 
+.search {
+    margin-top: 18%;
+}
+
 .search-field {
     padding: 10px;
-    border-radius: 32px;
+    border-radius: 8px;
     border: none;
     width: 300px;
     margin-right: 10px;
-
 }
 
 .search-submit {
     padding: 10px 20px;
-    border-radius: 32px;
+    border-radius: 8px;
     border: none;
     background: #fff;
     color: #000;
     font-weight: 600;
-
 }
 
 section img {
     height: 200px;
     width: auto;
-    margin-bottom: 20px;
-
 }
 
 section h1 {
     font-size: 5rem;
     font-weight: 700;
-    margin-bottom: 20px;
 }
 
 section p {
     font-size: 1.5rem;
-    margin-bottom: 20px;
 }
 
-.resultats {
-    background: black;
+.results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 20px;
+    width: 100%;
 }
 
-.resultats h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    position: relative;
-    top: 100px;
+.result-item {
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.9px);
+    -webkit-backdrop-filter: blur(4.9px);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 100px;
+    padding: 50px;
+    border-radius: 16px;
+    width: 40%;
+    margin-block: 10px;
+}
+
+.infos-coach {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+
+    & p {
+        font-size: 16px;
+    }
+}
+
+.photo-coach {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.coach-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ff9e01;
+    color: #000;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 30%;
+    height: 50px;
+}
+
+.coach-link:hover {
+    background: #ffb237;
+    color: #fff;
+    cursor: pointer;
 }
 
 footer {

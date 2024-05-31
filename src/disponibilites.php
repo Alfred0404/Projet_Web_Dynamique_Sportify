@@ -20,7 +20,8 @@ $is_coach = $_SESSION['role'] === 'coach';
 $is_client = $_SESSION['role'] === 'client';
 
 // Fonction pour valider et sécuriser les entrées utilisateur
-function validate($data) {
+function validate($data)
+{
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -30,9 +31,10 @@ function validate($data) {
 $id_coach = $_GET['id_coach'];
 
 // Fonction pour récupérer les créneaux horaires disponibles
-function getAvailableSlots($conn, $id_coach) {
+function getAvailableSlots($conn, $id_coach)
+{
     $sql = "SELECT j.nom_jour, d.heure_debut, d.heure_fin, d.id_disponibilite
-            FROM disponibilite d 
+            FROM disponibilite d
             JOIN jour j ON d.id_jour = j.id_jour
             WHERE d.id_coach = ?";
     $stmt = mysqli_prepare($conn, $sql);
@@ -53,9 +55,10 @@ function getAvailableSlots($conn, $id_coach) {
 }
 
 // Fonction pour récupérer les créneaux horaires réservés
-function getBookedSlots($conn, $id_coach) {
+function getBookedSlots($conn, $id_coach)
+{
     $sql = "SELECT jour_rdv, heure_rdv
-            FROM prise_de_rendez_vous 
+            FROM prise_de_rendez_vous
             WHERE id_coach = ?";
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "i", $id_coach);
@@ -96,59 +99,71 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
 
 <body>
     <header>
-        <h1>Sportify - Disponibilités</h1>
+        <h1 class="title">Sportify</h1>
+        <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
     </header>
 
     <div class="nav">
         <ul>
-            <li><a href="accueil.php">Accueil</a></li>
-            <li><a href="parcourir.php">Tout parcourir</a></li>
-            <li><a href="recherche.php">Rechercher</a></li>
-            <li><a href="rendez_vous.php">Rendez-vous</a></li>
-            <li><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="accueil.php">Accueil</a></li>
+            <li class="nav-item"><a href="parcourir.php">Tout parcourir</a></li>
+            <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
+            <li class="nav-item active"><a href="#">Rendez-vous</a></li>
+            <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
 
     <section>
-        <h1>Disponibilités</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Coach</th>
-                    <th>Spécialité</th>
-                    <th>Lundi</th>
-                    <th>Mardi</th>
-                    <th>Mercredi</th>
-                    <th>Jeudi</th>
-                    <th>Vendredi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $hours = [
-                    '08:00' => '8h-9h', '09:00' => '9h-10h', '10:00' => '10h-11h', '11:00' => '11h-12h',
-                    '12:00' => '12h-13h', '13:00' => '13h-14h', '14:00' => '14h-15h', '15:00' => '15h-16h', '16:00' => '16h-17h'
-                ];
-                foreach ($hours as $time => $label):
-                    echo '<tr>';
-                    if ($time == '08:00') {
-                        echo '<td rowspan="9">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</td>';
-                        echo '<td rowspan="9">' . htmlspecialchars($coach['specialite_coach']) . '</td>';
-                    }
-                    foreach (['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'] as $jour):
-                        $isBooked = isset($bookedSlots[$jour]) && in_array($time, $bookedSlots[$jour]);
-                        $isLunchTime = $time == '12:00';
-                        $class = $isBooked ? 'taken' : ($isLunchTime ? 'unavailable' : 'available');
-                        $content = $isLunchTime ? 'Pause Déjeuner' : $label;
-                        echo '<td class="' . $class . '" data-jour="' . $jour . '" data-heure="' . $time . '">' . $content . '</td>';
+        <div class="section-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Coach</th>
+                        <th>Spécialité</th>
+                        <th>Lundi</th>
+                        <th>Mardi</th>
+                        <th>Mercredi</th>
+                        <th>Jeudi</th>
+                        <th>Vendredi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $hours = [
+                        '08:00' => '8h-9h',
+                        '09:00' => '9h-10h',
+                        '10:00' => '10h-11h',
+                        '11:00' => '11h-12h',
+                        '12:00' => '12h-13h',
+                        '13:00' => '13h-14h',
+                        '14:00' => '14h-15h',
+                        '15:00' => '15h-16h',
+                        '16:00' => '16h-17h'
+                    ];
+                    foreach ($hours as $time => $label):
+                        echo '<tr>';
+                        if ($time == '08:00') {
+                            echo '<td rowspan="9">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</td>';
+                            echo '<td rowspan="9">' . htmlspecialchars($coach['specialite_coach']) . '</td>';
+                        }
+                        foreach (['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'] as $jour):
+                            $isBooked = isset($bookedSlots[$jour]) && in_array($time, $bookedSlots[$jour]);
+                            $isLunchTime = $time == '12:00';
+                            $class = $isBooked ? 'taken' : ($isLunchTime ? 'unavailable' : 'available');
+                            $content = $isLunchTime ? 'Pause Déjeuner' : $label;
+                            echo '<td class="' . $class . '" data-jour="' . $jour . '" data-heure="' . $time . '">' . $content . '</td>';
+                        endforeach;
+                        echo '</tr>';
                     endforeach;
-                    echo '</tr>';
-                endforeach;
-                ?>
-            </tbody>
-        </table>
-        <div style="text-align: right; margin-top: 20px;">
-            <button id="reserve-button" disabled>Réserver</button>
+                    ?>
+                </tbody>
+            </table>
+            <?php if (!$is_coach && !$is_admin): ?>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button id="reserve-button" disabled>Réserver</button>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -176,29 +191,38 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                     formData.append('id_coach', '<?php echo htmlspecialchars($id_coach); ?>');
                     formData.append('jour_rdv', jour);
                     formData.append('heure_rdv', heure);
-                    
+
                     fetch('rendez_vous.php', {
                         method: 'POST',
                         body: formData
                     })
-                    .then(response => response.text())
-                    .then(data => {
-                        if (data.includes("Rendez-vous pris avec succès!")) {
-                            selectedCell.classList.remove('available');
-                            selectedCell.classList.add('taken');
-                            selectedCell.innerText = 'Réservé';
-                            document.getElementById('reserve-button').disabled = true;
-                            // Redirection vers la page des rendez-vous
-                            window.location.href = 'rendez_vous.php';
-                        } else {
-                            alert(data);
-                        }
-                    })
-                    .catch(error => console.error('Erreur:', error));
+                        .then(response => response.text())
+                        .then(data => {
+                            if (data.includes("Rendez-vous pris avec succès!")) {
+                                selectedCell.classList.remove('available');
+                                selectedCell.classList.add('taken');
+                                selectedCell.innerText = 'Réservé';
+                                document.getElementById('reserve-button').disabled = true;
+                                // Redirection vers la page des rendez-vous
+                                window.location.href = 'rendez_vous.php';
+                            } else {
+                                alert(data);
+                            }
+                        })
+                        .catch(error => console.error('Erreur:', error));
                 }
             }
         });
     </script>
+    <footer>
+        <p>© 2024 Sportify</p>
+        <p>sportify@gmail.com</p>
+        <p>01 38 67 18 52</p>
+        <p>10 rue Sextius Michel - 75015 - Paris</p>
+        <a class="lien-gmaps"
+            href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google
+            Maps</a>
+    </footer>
 </body>
 
 </html>
