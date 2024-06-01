@@ -290,6 +290,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
 
         if ($stmt->affected_rows === 1) {
             echo "[create coach] Compte coach créé avec succès.";
+            // Enregistrement dans la table users
+            $unique_id = rand(time(), 100000000);
+            $fname = "coach";
+            $img = "image_coach/defaut.jpg";
+            $status = "En ligne";
+            
+            $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES ('$unique_id', '$fname', '$nom', '$email', '$password', '$img', '$status')";
+            if ($conn->query($user_sql) === TRUE) {
+                echo "Compte coach créé avec succès.";
+                exit();
+            } else {
+                return "Erreur lors de l'inscription dans la table users: " . $user_sql . "<br>" . $conn->error;
+            }
         } else {
             echo "[create coach] Erreur: " . $sql . "<br>" . $conn->error;
         }

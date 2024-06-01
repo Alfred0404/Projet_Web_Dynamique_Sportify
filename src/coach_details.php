@@ -1,30 +1,13 @@
 <?php
 session_start();
-if (isset($_GET['logout'])) {
-    // Message de sortie simple
-    $logout_message = "<div class='msgln'><span class='left-info'>User <b class='user-name-left'>" . $_SESSION['name'] . "</b> a quitté la session de chat.</span><br></div>";
 
-    $myfile = fopen(__DIR__ . "/log.html", "a") or die("Impossible d'ouvrir le fichier!" . __DIR__ . "/log.html");
-    fwrite($myfile, $logout_message);
-    fclose($myfile);
-    session_destroy();
-    sleep(1);
-
-    if (isset($_GET['id'])) {
-        header("Location: coach_details.php?id=" . $_GET['id']); // Rediriger l'utilisateur avec l'identifiant du coach
-    } else {
-        header("Location: coach_details.php");
-    }
+if (!isset($_SESSION['role']) || !isset($_SESSION['nom'])) {
+    // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+    header("Location: index.php");
     exit();
 }
 
-if (isset($_POST['enter'])) {
-    if ($_POST['name'] != "") {
-        $_SESSION['name'] = stripslashes(htmlspecialchars($_POST['name']));
-    } else {
-        echo '<span class="error">Veuillez saisir votre nom</span>';
-    }
-}
+$role = $_SESSION['role'];
 
 function loginForm($id_coach)
 {
@@ -77,7 +60,7 @@ if (isset($_GET['id'])) {
         $cv_coach = $row["cv_coach"];
         $bureau_coach = $row["bureau_coach"];
         $photo_coach = $row["photo_coach"];
-        ?>
+?>
 
         <!DOCTYPE html>
         <html lang="fr">

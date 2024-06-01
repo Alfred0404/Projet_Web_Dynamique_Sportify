@@ -36,6 +36,17 @@ $result = $conn->query($sql);
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="js/parcourir.js"></script>
     <title>Sportify - Parcourir</title>
+
+    <script>
+        function redirectPage(buttonValue) {
+            if (buttonValue === 'activite_sportive') {
+                window.location.href = 'activites_sportives.php';
+            } else if (buttonValue === 'sport_de_competition') {
+                window.location.href = 'sport_de_competition.php';
+            }
+        }
+    </script>
+
 </head>
 
 <body>
