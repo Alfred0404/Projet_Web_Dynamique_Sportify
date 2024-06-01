@@ -1,17 +1,7 @@
 <?php
-// Configuration de la base de données
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sportify";
 
-// Créer la connexion
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Vérifier la connexion
-if ($conn->connect_error) {
-    die("Connexion échouée: " . $conn->connect_error);
-}
+session_start();
+include "db_connection.php";
 
 // Récupérer les activités de type 'activite'
 $sql = "SELECT id_activites, nom_activites FROM activites WHERE type = 'sport de competition'";
@@ -43,10 +33,10 @@ $result = $conn->query($sql);
     // Afficher le coach responsable si une activité est sélectionnée
     if (isset($_GET['id'])) {
         $id_activite = intval($_GET['id']);
-        
+
         // Requête pour trouver le coach responsable
-        $sql_coach = "SELECT coach.id_coach, coach.nom_coach FROM coach 
-                      INNER JOIN activites ON coach.specialite_coach = activites.id_activites 
+        $sql_coach = "SELECT coach.id_coach, coach.nom_coach FROM coach
+                      INNER JOIN activites ON coach.specialite_coach = activites.id_activites
                       WHERE activites.id_activites = $id_activite";
         $result_coach = $conn->query($sql_coach);
 

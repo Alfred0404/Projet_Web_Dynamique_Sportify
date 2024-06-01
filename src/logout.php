@@ -1,4 +1,5 @@
 <?php
+    // debut jerry
     session_start();
     if(isset($_SESSION['unique_id'])){
         include "db_connection.php";
@@ -18,3 +19,10 @@
         header("location: index.php");
     }
 ?>
+<-- debut jerry -->
+
+session_start();
+session_unset();
+session_destroy();
+header("Location: index.php");
+exit();

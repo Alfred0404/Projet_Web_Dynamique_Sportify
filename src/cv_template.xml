@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CoachCV>
+    <PersonalInformation>
+        <FirstName></FirstName>
+        <LastName></LastName>
+        <DateOfBirth></DateOfBirth>
+        <Email></Email>
+        <PhoneNumber></PhoneNumber>
+        <Address>
+            <Street></Street>
+            <City></City>
+            <PostalCode></PostalCode>
+            <Country></Country>
+        </Address>
+    </PersonalInformation>
+    <ProfessionalSummary>
+        <Summary></Summary>
+    </ProfessionalSummary>
+    <Education>
+        <Degree>
+            <Title></Title>
+        </Degree>
+    </Education>
+    <Skills>
+        <Skill></Skill>
+    </Skills>
+    <Languages>
+        <Language>
+            <Name></Name>
+            <Proficiency></Proficiency>
+        </Language>
+    </Languages>
+</CoachCV>

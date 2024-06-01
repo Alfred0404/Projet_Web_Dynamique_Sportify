@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <CoachCV>
+            <PersonalInformation>
+                <FirstName>Tibo</FirstName>
+                <LastName>Inshape</LastName>
+                <DateOfBirth>1995-02-16</DateOfBirth>
+                <Email>tibo.inshape@gmail.com</Email>
+                <PhoneNumber>02 02 02 02 02</PhoneNumber>
+                <Address>
+                    <Street>test de rue 22</Street>
+                    <City>paris</City>
+                    <PostalCode>75000</PostalCode>
+                    <Country>france</Country>
+                </Address>
+            </PersonalInformation>
+            <ProfessionalSummary>
+                <Summary>coach sportif depuis 10 ans
+professionnel de tractions lestés
+gros ytber</Summary>
+            </ProfessionalSummary>
+            <Education>
+                <Degree>
+                    <Title>bac +5 ingé</Title>
+                </Degree>
+            </Education>
+            <Skills>
+                <Skill>stock
+trofor
+enorme
+sec</Skill>
+            </Skills>
+            <Languages>
+                <Language>
+                    <Name>francais</Name>
+                    <Proficiency>natif</Proficiency>
+                </Language>
+            </Languages>
+        </CoachCV>
