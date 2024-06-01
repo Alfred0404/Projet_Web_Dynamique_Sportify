@@ -10,4 +10,3 @@ if(isset($_SESSION['name'])){
 	fwrite($myfile, $text_message);
 	fclose($myfile);
 }
-?>

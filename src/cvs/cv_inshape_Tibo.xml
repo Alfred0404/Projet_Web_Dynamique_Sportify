@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+        <CoachCV>
+            <PersonalInformation>
+                <FirstName>Tibo</FirstName>
+                <LastName>Inshape</LastName>
+                <DateOfBirth>2000-02-12</DateOfBirth>
+                <Email>tibo@inshape.com</Email>
+                <PhoneNumber>01 01 01 01 01</PhoneNumber>
+                <Address>
+                    <Street>10 rue sextius michel</Street>
+                    <City>Paris</City>
+                    <PostalCode>75015</PostalCode>
+                    <Country>France</Country>
+                </Address>
+            </PersonalInformation>
+            <ProfessionalSummary>
+                <Summary>coach de sport depuis maintenant 10 ans. proporiétaire d'une chaine youtube de bz e td'un temple</Summary>
+            </ProfessionalSummary>
+            <Education>
+                <Degree>
+                    <Title>bac +12 en tractions lestés</Title>
+                </Degree>
+            </Education>
+            <Skills>
+                <Skill>espagnol : A-5npython : senior</Skill>
+            </Skills>
+            <Languages>
+                <Language>
+                    <Name>anglais</Name>
+                    <Proficiency>conversationnel</Proficiency>
+                </Language>
+            </Languages>
+        </CoachCV>
