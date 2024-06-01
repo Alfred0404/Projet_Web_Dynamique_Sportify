@@ -295,7 +295,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
             $fname = "coach";
             $img = "image_coach/defaut.jpg";
             $status = "En ligne";
-            
+
             $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES ('$unique_id', '$fname', '$nom', '$email', '$password', '$img', '$status')";
             if ($conn->query($user_sql) === TRUE) {
                 echo "Compte coach créé avec succès.";
@@ -336,6 +336,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
             <li class="nav-item"><a class="text-decoration-none" href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a class="text-decoration-none" href="rendez_vous.php">Rendez-vous</a></li>
             <li class="nav-item active"><a class="text-decoration-none" href="#">Votre compte</a></li>
+            <li class="nav-item"><a href="users.php">Discussions</a></li>
             <li class="nav-item"><a class="text-decoration-none" href="logout.php">Déconnexion</a></li>
         </ul>
     </div>

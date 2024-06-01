@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -58,7 +62,7 @@ header img {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 50%;
+    width: 65%;
 }
 
 li.nav-item.active {
@@ -110,7 +114,7 @@ section::before {
 
 section::after {
     content: "";
-    bottom: -130px;
+    bottom: -150px;
     width: 100%;
     height: 100px;
     background:
@@ -236,6 +240,7 @@ section a {
 
 }
 
+.btns-coach a,
 .btns-coach button {
     transition: all 0.3s ease;
     cursor: pointer;
@@ -250,10 +255,6 @@ section a {
     border-radius: 16px;
 }
 
-.btns-coach a {
-    color: #fff;
-}
-
 .btns-coach button:hover,
 .btns-coach a:hover {
     background: #fff;
@@ -266,6 +267,7 @@ section a {
     color: #000;
     transition: all 0.3s ease;
 }
+
 
 .card-body p {
     font-size: 1.2rem;

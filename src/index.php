@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
     $nom = validate($_POST['name']);
     $prenom = validate($_POST['prenom']);
     $sexe = validate($_POST['sexe']);
-    $email = validate($_POST['email']); 
+    $email = validate($_POST['email']);
     $password = validate($_POST['password']);
 
     // Vérification des doublons
@@ -36,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
         // Un doublon a été trouvé
         echo "Erreur: Un utilisateur avec le même nom existe déjà.";
         // fin jerry
+    }
 
     if ($stmt->affected_rows === 1) {
         header("Location: index.php?success=Account created successfully");
@@ -51,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
         }
         $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
         $stmt->execute();
-            
+
         if ($stmt->affected_rows === 1) {
             $_SESSION['role'] = $role;
             $_SESSION['nom'] = $nom;
@@ -62,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
             $fname = $table;
             $img = "image_coach/defaut.jpg";
             $status = "En ligne";
-            
+
             $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $user_stmt = $conn->prepare($user_sql);
             if ($user_stmt === false) {
@@ -82,8 +83,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
         }
     }
 }
-
-    
 
 // Connexion
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
@@ -141,9 +140,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
 }
 ?>
 
-
-
-
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -152,52 +148,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/index.css">
     <title>Connexion et Inscription</title>
-    <!-- <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            width: 300px;
-            margin-bottom: 20px;
-        }
-        h2 {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #5cb85c;
-            border: none;
-            color: #fff;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #4cae4c;
-        }
-    </style> -->
     <script>
         function showRegistrationFields() {
             const role = document.getElementById('register_role').value;
@@ -240,7 +190,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
                 <label for="register_role">Sélectionnez votre rôle :</label>
                 <select id="register_role" name="register_role" onchange="showRegistrationFields()" required>
                     <option value="">--Choisir un rôle--</option>
-                    <!-- <option value="admin">Administrateur</option> -->
+                    <option value="admin">Administrateur</option>
                     <option value="client">Client</option>
                 </select>
                 <div id="registration_fields" style="display: none;">

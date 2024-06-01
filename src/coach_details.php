@@ -60,7 +60,7 @@ if (isset($_GET['id'])) {
         $cv_coach = $row["cv_coach"];
         $bureau_coach = $row["bureau_coach"];
         $photo_coach = $row["photo_coach"];
-?>
+        ?>
 
         <!DOCTYPE html>
         <html lang="fr">
@@ -87,6 +87,7 @@ if (isset($_GET['id'])) {
                     <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
                     <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
                     <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+                    <li class="nav-item"><a href="users.php">Discussions</a></li>
                     <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
                 </ul>
             </div>
@@ -113,9 +114,7 @@ if (isset($_GET['id'])) {
                                 <input type="hidden" name="id_coach" value="<?php echo $id_coach; ?>">
                                 <p>Prendre rendez-vous</p>
                             </button>
-                            <button type="submit" name="button_coach" value="contacter">
-                                <p>Contacter le coach</p>
-                            </button>
+                            <a class="contact-coach" href="users.php">Contacter le coach</a>
                         </form>
 
                         <div class="cv-section">
