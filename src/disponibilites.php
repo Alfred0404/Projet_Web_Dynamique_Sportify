@@ -204,7 +204,7 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                                 selectedCell.innerText = 'Réservé';
                                 document.getElementById('reserve-button').disabled = true;
                                 // Redirection vers la page des rendez-vous
-                                window.location.href = 'rendez_vous.php';
+                                window.location.href = 'paiement.php';
                             } else {
                                 alert(data);
                             }

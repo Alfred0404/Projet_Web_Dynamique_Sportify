@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_name'])) {
 $sql = "SELECT id_client FROM client WHERE nom_client = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
-    die("Erreur de préparation de la requête : " . $conn->error);
+    die("[get client id] Erreur de préparation de la requête : " . $conn->error);
 }
 $stmt->bind_param("s", $_SESSION['user_name']); // Supposons que 'user_name' contienne le nom d'utilisateur
 $stmt->execute();
@@ -21,12 +21,12 @@ if ($result->num_rows === 1) {
     $row = $result->fetch_assoc();
     $client_id_from_database = $row['id_client'];
 } else {
-    echo "Erreur : Aucun client trouvé avec ce nom d'utilisateur.";
+    echo "[get client id] Erreur : Aucun client trouvé avec ce nom d'utilisateur.";
 }
 $stmt->close();
 
 // Stocker l'ID du client dans la session
-$_SESSION['user_id'] = $client_id_from_database;
+// $_SESSION['user_id'] = $client_id_from_database;
 
 // Vérifier le rôle de l'utilisateur
 $is_admin = $_SESSION['role'] === 'admin';
@@ -61,16 +61,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_carte_bancaire'
 
         // Requête SQL pour mettre à jour les informations de la carte bancaire dans la table client
         $sql = "UPDATE client SET nom_carte = ?, prenom_carte = ?, adresse_ligne_1_carte = ?, adresse_ligne_2_carte = ?, ville_carte = ?, code_postal_carte = ?, pays_carte = ?, carte_etudiant_client = ? WHERE id_client = ?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("[maj paiement] Erreur de préparation de la requête : " . $conn->error);
+        }
         $stmt->bind_param("ssssssssi", $nom, $prenom, $adresse_ligne_1, $adresse_ligne_2, $ville, $code_postal, $pays, $carte_etudiant_client, $id_client);
         $stmt->execute();
 
         if ($stmt->affected_rows === 1) {
-            echo "Informations de carte bancaire mises à jour avec succès.";
+            echo "[maj paiement] Informations de carte bancaire mises à jour avec succès.";
         } else {
-            echo "Erreur: " . $sql . "<br>" . $conn->error;
+            echo "[maj paiement] Erreur: " . $sql . "<br>" . $conn->error;
         }
+        $stmt->close();
     } else {
-        echo "Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
+        echo "[maj paiement] Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
+    }
+}
 // fin partie pilou
 
 // Sauvegarde du CV
@@ -140,21 +147,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_cv'])) {
 
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
-            die("Erreur de préparation de la requête : " . $conn->error);
+            die("[save cv] Erreur de préparation de la requête : " . $conn->error);
         }
 
         $stmt->bind_param("ss", $cvFileName, $_SESSION['email']);
         $stmt->execute();
 
         if ($stmt->affected_rows === 1) {
-            echo "CV mis à jour avec succès.";
+            echo "[save cv] CV mis à jour avec succès.";
         }
     } else {
-        echo "Vous n'avez pas les autorisations nécessaires pour sauvegarder le CV.";
+        echo "[save cv] Vous n'avez pas les autorisations nécessaires pour sauvegarder le CV.";
     }
 }
 
-// Mise à jour des informations du coach
+// * Mise à jour des informations du coach
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
     if ($is_coach) {
         $bureau = validate($_POST['bureau']);
@@ -165,22 +173,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
         $sql = "UPDATE coach SET bureau_coach=?, specialite_coach=?, photo_coach=?, telephone_coach=? WHERE email_coach=?";
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
-            die("Erreur de préparation de la requête : " . $conn->error);
+            die("[maj coach] Erreur de préparation de la requête : " . $conn->error);
         }
         $stmt->bind_param("sssss", $bureau, $specialite, $photo, $telephone, $_SESSION['email']);
         $stmt->execute();
 
         if ($stmt->affected_rows === 1) {
-            echo "Informations mises à jour avec succès.";
+            echo "[maj coach] Informations mises à jour avec succès.";
         } else {
-            echo "Erreur: " . $sql . "<br>" . $conn->error;
+            echo "[maj coach] Erreur: " . $sql . "<br>" . $conn->error;
         }
     } else {
-        echo "Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
+        echo "[maj coach] Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
     }
 }
 
-// Mise à jour des informations du client
+//* Mise à jour des informations du client
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_client'])) {
     if ($is_client) {
         $date_naissance = validate($_POST['date_naissance']);
@@ -190,18 +199,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_client'])) {
         $sql = "UPDATE client SET date_de_naissance=?, num_telephone=?, profession=? WHERE email_client=?";
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
-            die("Erreur de préparation de la requête : " . $conn->error);
+            die("[maj client] Erreur de préparation de la requête : " . $conn->error);
         }
         $stmt->bind_param("ssss", $date_naissance, $telephone, $profession, $_SESSION['email']);
         $stmt->execute();
 
         if ($stmt->affected_rows === 1) {
-            echo "Informations mises à jour avec succès.";
+            echo "[maj client] Informations mises à jour avec succès.";
         } else {
-            echo "Erreur: " . $sql . "<br>" . $conn->error;
+            echo "[maj client] Erreur: " . $sql . "<br>" . $conn->error;
         }
     } else {
-        echo "Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
+        echo "[maj client] Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
     }
 }
 
@@ -210,7 +219,7 @@ if ($is_coach) {
     $sql = "SELECT bureau_coach, specialite_coach, photo_coach, telephone_coach, cv_coach FROM coach WHERE email_coach=?";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
-        die("Erreur de préparation de la requête : " . $conn->error);
+        die("[coach infos] Erreur de préparation de la requête : " . $conn->error);
     }
     $stmt->bind_param("s", $_SESSION['email']);
     $stmt->execute();
@@ -230,7 +239,7 @@ if ($is_client) {
     $sql = "SELECT date_de_naissance, num_telephone, profession FROM client WHERE email_client=?";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
-        die("Erreur de préparation de la requête : " . $conn->error);
+        die("[client infos] Erreur de préparation de la requête : " . $conn->error);
     }
     $stmt->bind_param("s", $_SESSION['email']);
     $stmt->execute();
@@ -245,10 +254,10 @@ if ($is_client) {
 
 // Récupérer les informations de paiement pour le client
 if ($is_client) {
-    $sql = "SELECT facture, date_paiement, type_carte, numero_carte, nom_carte FROM paiement WHERE id_client=?";
+    $sql = "SELECT id_paiement, facture, date_paiement, type_carte, numero_carte, nom_carte FROM paiement WHERE id_client=?";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
-        die("Erreur de préparation de la requête : " . $conn->error);
+        die("[paiement] Erreur de préparation de la requête : " . $conn->error);
     }
     $stmt->bind_param("i", $_SESSION['user_id']);
     $stmt->execute();
@@ -274,18 +283,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
         $sql = "INSERT INTO coach (nom_coach, prenom_coach, sexe_coach, email_coach, mdp_coach) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
-            die("Erreur de préparation de la requête : " . $conn->error);
+            die("[create coach] Erreur de préparation de la requête : " . $conn->error);
         }
         $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
         $stmt->execute();
 
         if ($stmt->affected_rows === 1) {
-            echo "Compte coach créé avec succès.";
+            echo "[create coach] Compte coach créé avec succès.";
         } else {
-            echo "Erreur: " . $sql . "<br>" . $conn->error;
+            echo "[create coach] Erreur: " . $sql . "<br>" . $conn->error;
         }
     } else {
-        echo "Vous n'avez pas les autorisations nécessaires pour créer un compte coach.";
+        echo "[create coach] Vous n'avez pas les autorisations nécessaires pour créer un compte coach.";
     }
 }
 ?>
@@ -486,58 +495,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
                 </form>
             </div>
         <?php endif; ?>
-<!--    partie pilou    -->
+        <!-- partie pilou    -->
         <?php if ($is_client): ?>
-              <h2>Modifier mes informations de carte bancaire</h2>
-              <form method="post" action="">
-                  <label for="nom">Nom:</label>
-                  <input type="text" id="nom" name="nom" value="" required>
+            <div class="container update">
+                <h2>Modifier mes informations de carte bancaire</h2>
+                <form method="post" action="compte.php">
+                    <label for="nom">Nom:</label>
+                    <input type="text" id="nom" name="nom" value="" required>
 
-                  <label for="prenom">Prénom:</label>
-                  <input type="text" id="prenom" name="prenom" value="" required>
+                    <label for="prenom">Prénom:</label>
+                    <input type="text" id="prenom" name="prenom" value="" required>
 
-                  <label for="adresse_ligne_1">Adresse ligne 1:</label>
-                  <input type="text" id="adresse_ligne_1" name="adresse_ligne_1" value="" required>
+                    <label for="adresse_ligne_1">Adresse ligne 1:</label>
+                    <input type="text" id="adresse_ligne_1" name="adresse_ligne_1" value="" required>
 
-                  <label for="adresse_ligne_2">Adresse ligne 2:</label>
-                  <input type="text" id="adresse_ligne_2" name="adresse_ligne_2" value="">
+                    <label for="adresse_ligne_2">Adresse ligne 2:</label>
+                    <input type="text" id="adresse_ligne_2" name="adresse_ligne_2" value="">
 
-                  <label for="ville">Ville:</label>
-                  <input type="text" id="ville" name="ville" value="" required>
+                    <label for="ville">Ville:</label>
+                    <input type="text" id="ville" name="ville" value="" required>
 
-                  <label for="code_postal">Code postal:</label>
-                  <input type="text" id="code_postal" name="code_postal" value="" required>
+                    <label for="code_postal">Code postal:</label>
+                    <input type="text" id="code_postal" name="code_postal" value="" required>
 
-                  <label for="pays">Pays:</label>
-                  <input type="text" id="pays" name="pays" value="" required>
+                    <label for="pays">Pays:</label>
+                    <input type="text" id="pays" name="pays" value="" required>
 
-                  <label for="carte_etudiant_client">Carte Étudiant:</label>
-                  <input type="text" id="carte_etudiant_client" name="carte_etudiant_client" value="">
+                    <label for="carte_etudiant_client">Carte Étudiant:</label>
+                    <input type="text" id="carte_etudiant_client" name="carte_etudiant_client" value="">
 
-                  <input type="submit" name="update_carte_bancaire" value="Mettre à jour">
-              </form>
-
-              <h2>Mes Factures</h2>
-              <table>
-                  <tr>
-                      <th>Facture</th>
-                      <th>Date de Paiement</th>
-                      <th>Type de Carte</th>
-                      <th>Numéro de Carte</th>
-                      <th>Nom sur la Carte</th>
-                  </tr>
-                  <?php foreach ($paiements as $paiement): ?>
-                      <tr>
-                          <td><?php echo $paiement['facture']; ?></td>
-                          <td><?php echo $paiement['date_paiement']; ?></td>
-                          <td><?php echo $paiement['type_carte']; ?></td>
-                          <td><?php echo $paiement['numero_carte']; ?></td>
-                          <td><?php echo $paiement['nom_carte']; ?></td>
-                      </tr>
-                  <?php endforeach; ?>
-              </table>
-          <?php endif; ?>
-<!--    fin partie pilou    -->
+                    <input class="submit" type="submit" name="update_carte_bancaire" value="Mettre à jour">
+                </form>
+            </div>
+            <div class="container factures">
+                <h2>Mes Factures</h2>
+                <table>
+                    <tr>
+                        <th>Facture</th>
+                        <th>Date de Paiement</th>
+                        <th>Type de Carte</th>
+                        <th>Numéro de Carte</th>
+                        <th>Nom sur la Carte</th>
+                    </tr>
+                    <?php foreach ($paiements as $paiement): ?>
+                        <tr>
+                            <td><?php echo $paiement['facture']; ?></td>
+                            <td><?php echo $paiement['date_paiement']; ?></td>
+                            <td><?php echo $paiement['type_carte']; ?></td>
+                            <td><?php echo $paiement['numero_carte']; ?></td>
+                            <td><?php echo $paiement['nom_carte']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+        <?php endif; ?>
+        <!--    fin partie pilou    -->
     </section>
     <footer>
         <p>© 2024 Sportify</p>

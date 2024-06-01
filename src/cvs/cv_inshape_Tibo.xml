@@ -1,33 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?> 
+<?xml version="1.0" encoding="UTF-8"?>
         <CoachCV>
             <PersonalInformation>
                 <FirstName>Tibo</FirstName>
                 <LastName>Inshape</LastName>
-                <DateOfBirth>2000-02-12</DateOfBirth>
-                <Email>tibo@inshape.com</Email>
-                <PhoneNumber>01 01 01 01 01</PhoneNumber>
+                <DateOfBirth>1995-02-16</DateOfBirth>
+                <Email>tibo.inshape@gmail.com</Email>
+                <PhoneNumber>02 02 02 02 02</PhoneNumber>
                 <Address>
-                    <Street>10 rue sextius michel</Street>
-                    <City>Paris</City>
-                    <PostalCode>75015</PostalCode>
-                    <Country>France</Country>
+                    <Street>test de rue 22</Street>
+                    <City>paris</City>
+                    <PostalCode>75000</PostalCode>
+                    <Country>france</Country>
                 </Address>
             </PersonalInformation>
             <ProfessionalSummary>
-                <Summary>coach de sport depuis maintenant 10 ans. proporiétaire d'une chaine youtube de bz e td'un temple</Summary>
+                <Summary>coach sportif depuis 10 ans
+professionnel de tractions lestés
+gros ytber</Summary>
             </ProfessionalSummary>
             <Education>
                 <Degree>
-                    <Title>bac +12 en tractions lestés</Title>
+                    <Title>bac +5 ingé</Title>
                 </Degree>
             </Education>
             <Skills>
-                <Skill>espagnol : A-5npython : senior</Skill>
+                <Skill>stock
+trofor
+enorme
+sec</Skill>
             </Skills>
             <Languages>
                 <Language>
-                    <Name>anglais</Name>
-                    <Proficiency>conversationnel</Proficiency>
+                    <Name>francais</Name>
+                    <Proficiency>natif</Proficiency>
                 </Language>
             </Languages>
         </CoachCV>
