@@ -170,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
                 <label for="register_role">Sélectionnez votre rôle :</label>
                 <select id="register_role" name="register_role" onchange="showRegistrationFields()" required>
                     <option value="">--Choisir un rôle--</option>
-                    <option value="admin">Administrateur</option>
+                    <!-- <option value="admin">Administrateur</option> -->
                     <option value="client">Client</option>
                 </select>
                 <div id="registration_fields" style="display: none;">
