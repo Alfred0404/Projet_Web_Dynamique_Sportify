@@ -18,7 +18,9 @@
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="users.php">WhatsApp</a></li>
             <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
+
         </ul>
     </div>
     <section class="first-section">
@@ -34,7 +36,7 @@
     <footer>
         <p>© 2024 Sportify</p>
         <p>sportify@gmail.com</p>
-        <p>01 38 67 18 52</p
+        <p>01 38 67 18 52</p>
         <p>10 rue Sextius Michel - 75015 - Paris</p>
         <a href="#">Google Maps</a>
     </footer>

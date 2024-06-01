@@ -12,31 +12,71 @@ function validate($data) {
 
 // Inscription
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
+
     $role = validate($_POST['register_role']);
     $nom = validate($_POST['name']);
     $prenom = validate($_POST['prenom']);
     $sexe = validate($_POST['sexe']);
-    $email = validate($_POST['email']);
+    $email = validate($_POST['email']); 
     $password = validate($_POST['password']);
 
-    $table = $role;
-    $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
+    // Vérification des doublons
+    $check_sql = "SELECT * FROM admin WHERE nom_admin = ?";
+    $stmt = $conn->prepare($check_sql);
     if ($stmt === false) {
-        die("Erreur de préparation de la requête : " . $conn->error);
+        die("Erreur de préparation de la requête de vérification des doublons : " . $conn->error);
     }
-    $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
+    $stmt->bind_param("s", $nom);
     $stmt->execute();
-    
-    if ($stmt->affected_rows === 1) {
-        $_SESSION['role'] = $role;
-        $_SESSION['nom'] = $nom;
-        header("Location: index.php?success=Account created successfully");
-        exit();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Un doublon a été trouvé
+        echo "Erreur: Un utilisateur avec le même nom existe déjà.";
     } else {
-        echo "Erreur: " . $sql . "<br>" . $conn->error;
+        // Pas de doublon, on peut insérer
+        $table = $role;
+        $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES (?, ?, ?, ?, ?)";
+
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("Erreur de préparation de la requête : " . $conn->error);
+        }
+        $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
+        $stmt->execute();
+            
+        if ($stmt->affected_rows === 1) {
+            $_SESSION['role'] = $role;
+            $_SESSION['nom'] = $nom;
+
+            // Enregistrement dans la table users
+            $unique_id = rand(time(), 100000000);
+            $_SESSION['unique_id'] = $unique_id;
+            $fname = $table;
+            $img = "image_coach/defaut.jpg";
+            $status = "En ligne";
+            
+            $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $user_stmt = $conn->prepare($user_sql);
+            if ($user_stmt === false) {
+                die("Erreur de préparation de la requête user : " . $conn->error);
+            }
+            $user_stmt->bind_param("issssss", $unique_id, $fname, $nom, $email, $password, $img, $status);
+            $user_stmt->execute();
+
+            if ($user_stmt->affected_rows === 1) {
+                header("Location: index.php?message=Inscription réussie. Vous pouvez maintenant vous connecter.");
+                exit();
+            } else {
+                echo "Erreur lors de l'inscription dans la table users: " . $user_sql . "<br>" . $conn->error;
+            }
+        } else {
+            echo "Erreur: " . $sql . "<br>" . $conn->error;
+        }
     }
 }
+
+    
 
 // Connexion
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
@@ -62,8 +102,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
             $_SESSION['email'] = $row['email_' . $table];
             $_SESSION['role'] = $role;
             $_SESSION['nom'] = $row['nom_' . $table];
-            header("Location: accueil.php");
-            exit();
+
+            // Récupération du unique_id depuis la table users
+            $user_sql = "SELECT unique_id FROM users WHERE fname = ? AND lname = ? AND password = ?";
+            $user_stmt = $conn->prepare($user_sql);
+            if ($user_stmt === false) {
+                die("Erreur de préparation de la requête users : " . $conn->error);
+            }
+            $user_stmt->bind_param("sss", $role, $username, $password);
+            $user_stmt->execute();
+            $user_result = $user_stmt->get_result();
+
+            if ($user_result->num_rows === 1) {
+                $user_row = $user_result->fetch_assoc();
+                $_SESSION['unique_id'] = $user_row['unique_id'];
+                header("Location: accueil.php");
+                exit();
+            } else {
+                echo "Erreur: impossible de trouver l'utilisateur dans la table users.";
+                exit();
+            }
         } else {
             echo "Mot de passe incorrect.";
             exit();
@@ -74,6 +132,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
     }
 }
 ?>
+
+
 
 
 <!DOCTYPE html>

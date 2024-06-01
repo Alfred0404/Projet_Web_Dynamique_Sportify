@@ -9,40 +9,14 @@ if (!isset($_SESSION['role']) || !isset($_SESSION['nom'])) {
 
 $role = $_SESSION['role'];
 
-
 if (isset($_GET['logout'])) {
     $id_coach = $_GET['id'];
-    // Message de sortie simple
-    $logout_message = "<div class='msgln'><span class='left-info'>User <b class='user-name-left'>" . $_SESSION['name'] . "</b> a quitté la session de chat.</span><br></div>";
-
-    $log_file = __DIR__ . "/log_$id_coach.html";
-    $myfile = fopen($log_file, "a") or die("Impossible d'ouvrir le fichier!");
-    fwrite($myfile, $logout_message);
-    fclose($myfile);
+    // Enregistrer le contenu de la discussion dans la base de données
+    saveChatToDatabase($id_coach, $id_client);
     session_destroy();
     sleep(1);
     header("Location: coach_details.php?id=" . $id_coach); // Rediriger l'utilisateur avec l'identifiant du coach
     exit();
-}
-
-if (isset($_POST['enter'])) {
-    if ($_POST['name'] != "") {
-        $_SESSION['name'] = stripslashes(htmlspecialchars($_POST['name']));
-    } else {
-        echo '<span class="error">Veuillez saisir votre nom</span>';
-    }
-}
-
-function loginForm($id_coach) {
-    echo
-    '<div id="loginform">
-    <p>Veuillez saisir votre nom pour continuer!</p>
-    <form action="coach_details.php?id=' . $id_coach . '" method="post">
-    <label for="name">Nom: </label>
-    <input type="text" name="name" id="name" />
-    <input type="submit" name="enter" id="enter" value="Soumettre" />
-    </form>
-    </div>';
 }
 
 // Vérifier si un identifiant de coach est passé en paramètre
@@ -99,71 +73,7 @@ if (isset($_GET['id'])) {
 
     <?php
     // Vérifier les conditions d'accès à la chatroom
-    if ($role == 'client') {
-        // Chatroom
-        if (!isset($_SESSION['name'])) {
-            loginForm($id_coach);
-        } else {
-            $log_file = "log_$id_coach.html";
-    ?>
-            <div id="wrapper">
-                <div id="menu">
-                    <p class="welcome">Bienvenue, <b><?php echo $_SESSION['name']; ?></b></p>
-                    <p class="logout"><a id="exit" href="#">Quitter la conversation</a></p>
-                </div>
-                <div id="chatbox">
-                <?php
-                if (file_exists($log_file) && filesize($log_file) > 0) {
-                    $contents = file_get_contents($log_file);
-                    echo $contents;
-                }
-                ?>
-                </div>
-
-                <form name="message" action="">
-                    <input name="usermsg" type="text" id="usermsg" />
-                    <input name="submitmsg" type="submit" id="submitmsg" value="Envoyer" />
-                </form>
-            </div>
-            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-            <script type="text/javascript">
-            // jQuery Document
-            $(document).ready(function () {
-                $("#submitmsg").click(function () {
-                    var clientmsg = $("#usermsg").val();
-                    $.post("post.php?id=<?php echo $id_coach; ?>", { text: clientmsg });
-                    $("#usermsg").val("");
-                    return false;
-                });
-
-                function loadLog() {
-                    var oldscrollHeight = $("#chatbox").prop("scrollHeight") - 20;
-                    $.ajax({
-                        url: "<?php echo $log_file; ?>",
-                        cache: false,
-                        success: function (html) {
-                            $("#chatbox").html(html);
-
-                            var newscrollHeight = $("#chatbox").prop("scrollHeight") - 20;
-                            if (newscrollHeight > oldscrollHeight) {
-                                $("#chatbox").animate({ scrollTop: newscrollHeight }, 'normal');
-                            }
-                        }
-                    });
-                }
-
-                setInterval(loadLog, 2500);
-                    $("#exit").click(function () {
-                    var exit = confirm("Êtes-vous sûr de vouloir quitter la conversation?");
-                    if (exit == true) {
-                        window.location = "coach_details.php?logout=true&id=<?php echo $id_coach; ?>";
-                    }
-                });
-            });
-            </script>
-        <?php
-                }
-    } else {
+    if ($role != 'client') {
         echo "<p>Vous n'avez pas accès à cette chatroom.</p>";
     }
 ?>
@@ -179,5 +89,35 @@ if (isset($_GET['id'])) {
     $conn->close();
 } else {
     echo "Identifiant de coach non spécifié.";
+}
+
+// Fonction pour enregistrer le contenu de la discussion dans la base de données
+function saveChatToDatabase($id_coach, $id_client) {
+    // Votre code de connexion à la base de données
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "Sportify";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Vérifier la connexion
+    if ($conn->connect_error) {
+        die("Connexion échouée: " . $conn->connect_error);
+    }
+
+    // Récupérer le contenu de la discussion
+    $log_file = "log.html";
+    if (file_exists($log_file)) {
+        $chat_content = file_get_contents($log_file);
+
+        // Enregistrer le contenu de la discussion dans la base de données
+        $stmt = $conn->prepare("INSERT INTO chat_conversations (id_client, id_coach, chat_file) VALUES (?, ?, ?)");
+        $stmt->bind_param("iis", $id_client, $id_coach, $chat_content);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    // Fermer la connexion
+    $conn->close();
 }
 ?>
