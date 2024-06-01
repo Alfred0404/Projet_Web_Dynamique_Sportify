@@ -49,7 +49,7 @@ if (isset($_GET['id'])) {
     $password = "";
     $database = "sportify";
     $server = "127.0.0.1";
-    $port = 3306;
+    $port = 3301;
 
     $conn = mysqli_connect($server, $user_name, $password, $database, $port);
 
@@ -88,47 +88,6 @@ if (isset($_GET['id'])) {
             <link rel="stylesheet" href="../src/css/coach_details.css">
             <script src="js/activites_sportives.js"></script>
             <title>Sportify - Parcourir</title>
-            <style>
-                .cv-section {
-                    margin-top: 20px;
-                }
-                .cv-section button {
-                    background-color: #ff9e01;
-                    color: #000;
-                    padding: 10px;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                }
-                .cv-section button:hover {
-                    background-color: #e68900;
-                }
-                .cv-content {
-                    display: none;
-                    margin-top: 10px;
-                    background-color: #fff;
-                    padding: 20px;
-                    border-radius: 5px;
-                    color: #000;
-                }
-                .cv-content pre {
-                    white-space: pre-wrap;
-                }
-                .cv-content table {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
-                .cv-content table, .cv-content th, .cv-content td {
-                    border: 1px solid #ddd;
-                }
-                .cv-content th, .cv-content td {
-                    padding: 8px;
-                    text-align: left;
-                }
-                .cv-content th {
-                    background-color: #f2f2f2;
-                }
-            </style>
         </head>
 
         <body>
@@ -185,25 +144,38 @@ if (isset($_GET['id'])) {
                                     if (file_exists($cv_path)) {
                                         $cv_content = file_get_contents($cv_path);
                                         $xml = simplexml_load_string($cv_content);
-                                        if ($xml) {
-                                            echo "<table>";
-                                            echo "<tr><th>Section</th><th>Information</th></tr>";
-                                            echo "<tr><td>Prénom</td><td>{$xml->PersonalInformation->FirstName}</td></tr>";
-                                            echo "<tr><td>Nom</td><td>{$xml->PersonalInformation->LastName}</td></tr>";
-                                            echo "<tr><td>Date de Naissance</td><td>{$xml->PersonalInformation->DateOfBirth}</td></tr>";
-                                            echo "<tr><td>Email</td><td>{$xml->PersonalInformation->Email}</td></tr>";
-                                            echo "<tr><td>Numéro de Téléphone</td><td>{$xml->PersonalInformation->PhoneNumber}</td></tr>";
-                                            echo "<tr><td>Adresse</td><td>{$xml->PersonalInformation->Address->Street}, {$xml->PersonalInformation->Address->City}, {$xml->PersonalInformation->Address->PostalCode}, {$xml->PersonalInformation->Address->Country}</td></tr>";
-                                            echo "<tr><td>Résumé Professionnel</td><td>{$xml->ProfessionalSummary->Summary}</td></tr>";
-                                            echo "<tr><td>Diplôme</td><td>{$xml->Education->Degree->Title}</td></tr>";
-                                            echo "<tr><td>Compétences</td><td>{$xml->Skills->Skill}</td></tr>";
-                                            echo "<tr><td>Langues</td><td>{$xml->Languages->Language->Name} ({$xml->Languages->Language->Proficiency})</td></tr>";
-                                            echo "</table>";
-                                        } else {
-                                            echo "<p>Le contenu du CV n'est pas valide.</p>";
+
+                                        // Affichage du CV en HTML
+                                        echo '<div class="card ">';
+                                        echo '<div class="card-body">';
+                                        echo '<h2 class="card-title">Informations Personnelles</h2>';
+                                        echo '<p><strong>Prénom:</strong> ' . htmlspecialchars($xml->PersonalInformation->FirstName) . '</p>';
+                                        echo '<p><strong>Nom:</strong> ' . htmlspecialchars($xml->PersonalInformation->LastName) . '</p>';
+                                        echo '<p><strong>Date de naissance:</strong> ' . htmlspecialchars($xml->PersonalInformation->DateOfBirth) . '</p>';
+                                        echo '<p><strong>Email:</strong> <a id="mail-link" href="mailto:' . htmlspecialchars($xml->PersonalInformation->Email) . '">' . htmlspecialchars($xml->PersonalInformation->Email) . '</a></p>';
+                                        echo '<p><strong>Téléphone:</strong> ' . htmlspecialchars($xml->PersonalInformation->PhoneNumber) . '</p>';
+                                        echo '<h2>Adresse</h2>';
+                                        echo '<p><strong>Rue:</strong> ' . htmlspecialchars($xml->PersonalInformation->Address->Street) . '</p>';
+                                        echo '<p><strong>Ville:</strong> ' . htmlspecialchars($xml->PersonalInformation->Address->City) . '</p>';
+                                        echo '<p><strong>Code postal:</strong> ' . htmlspecialchars($xml->PersonalInformation->Address->PostalCode) . '</p>';
+                                        echo '<p><strong>Pays:</strong> ' . htmlspecialchars($xml->PersonalInformation->Address->Country) . '</p>';
+                                        echo '<h2>Résumé Professionnel</h2>';
+                                        echo '<p>' . htmlspecialchars($xml->ProfessionalSummary->Summary) . '</p>';
+                                        echo '<h2>Éducation</h2>';
+                                        echo '<p><strong>Diplôme:</strong> ' . htmlspecialchars($xml->Education->Degree->Title) . '</p>';
+                                        echo '<h2>Compétences</h2>';
+                                        echo '<p>' . htmlspecialchars($xml->Skills->Skill) . '</p>';
+                                        echo '<h2>Langues</h2>';
+                                        foreach ($xml->Languages->Language as $language) {
+                                            echo '<div class="mb-2">';
+                                            echo '<p><strong>Langue:</strong> ' . htmlspecialchars($language->Name) . '</p>';
+                                            echo '<p><strong>Niveau:</strong> ' . htmlspecialchars($language->Proficiency) . '</p>';
+                                            echo '</div>';
                                         }
+                                        echo '</div>';
+                                        echo '</div>';
                                     } else {
-                                        echo "<p>Le CV n'a pas été trouvé.</p>";
+                                        echo '<div class="alert alert-warning" role="alert">Le CV n\'a pas été trouvé.</div>';
                                     }
                                 }
                                 ?>

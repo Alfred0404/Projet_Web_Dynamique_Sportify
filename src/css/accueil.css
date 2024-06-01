@@ -11,8 +11,12 @@ body {
 }
 
 a {
-    text-decoration: none;
+    text-decoration: none !important;
     color: #000000;
+}
+
+a:hover {
+    text-decoration: none !important;
 }
 
 li {
@@ -218,4 +222,5 @@ footer {
 footer p,
 a {
     margin: 40px 20px;
+    text-decoration: none !important;
 }

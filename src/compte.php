@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_cv'])) {
 
         // Création du fichier XML
         $cvFileName = "cv_{$lastName}_{$firstName}.xml";
-        $xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> 
+        $xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
         <CoachCV>
             <PersonalInformation>
                 <FirstName>{$firstName}</FirstName>
@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_cv'])) {
 
         if ($stmt->affected_rows === 1) {
             echo "CV mis à jour avec succès.";
-        } 
+        }
     } else {
         echo "Vous n'avez pas les autorisations nécessaires pour sauvegarder le CV.";
     }
@@ -224,32 +224,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="css/compte.css">
     <title>Votre compte</title>
-    <style>
-        .cv-container {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin-top: 10px;
-            display: none;
-            color: #000;
-        }
-
-        .cv-container h3,
-        .cv-container h4 {
-            color: #1406b8;
-        }
-
-        .cv-container p {
-            color: #000;
-        }
-
-        .cv-container pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-    </style>
 </head>
 
 <body>
@@ -259,12 +237,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
     </header>
     <div class="nav">
         <ul>
-            <li class="nav-item"><a href="accueil">Accueil</a></li>
-            <li class="nav-item"><a href="parcourir.php">Tout parcourir</a></li>
-            <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
-            <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
-            <li class="nav-item active"><a href="#">Votre compte</a></li>
-            <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
+            <li class="nav-item"><a class="text-decoration-none" href="accueil">Accueil</a></li>
+            <li class="nav-item"><a class="text-decoration-none" href="parcourir.php">Tout parcourir</a></li>
+            <li class="nav-item"><a class="text-decoration-none" href="recherche.php">Rechercher</a></li>
+            <li class="nav-item"><a class="text-decoration-none" href="rendez_vous.php">Rendez-vous</a></li>
+            <li class="nav-item active"><a class="text-decoration-none" href="#">Votre compte</a></li>
+            <li class="nav-item"><a class="text-decoration-none" href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
     <section>
@@ -277,10 +255,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
             <?php if ($is_coach): ?>
                 <p><strong>Bureau :</strong> <?php echo $bureau_coach ?? ''; ?></p>
                 <p><strong>Spécialité :</strong> <?php echo $specialite_coach ?? ''; ?></p>
-                <p><strong>Photo :</strong> <img src="<?php echo $photo_coach ?? ''; ?>" alt="Photo du coach"></p>
                 <p><strong>Téléphone :</strong> <?php echo $telephone_coach ?? ''; ?></p>
-                <button onclick="toggleDropdown('cv-view')">Voir le CV</button>
-                <div id="cv-view" class="cv-container">
+                <p><img src="<?php echo $photo_coach ?? ''; ?>" alt="Photo du coach"></p>
+                <div class="check-cv">
+                    <button onclick="toggleDropdown('cv-view')">Voir le CV</button>
+                </div>
+                <div id="cv-view" class="cv-container container mt-5 w-100">
                     <?php
                     if (isset($cv_coach)) {
                         $cv_path = "cvs/" . htmlspecialchars($cv_coach);
@@ -289,30 +269,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
                             $xml = simplexml_load_string($cv_content);
 
                             // Affichage du CV en HTML
-                            echo "<h3>Informations Personnelles</h3>";
-                            echo "<p><strong>Prénom:</strong> " . htmlspecialchars($xml->PersonalInformation->FirstName) . "</p>";
-                            echo "<p><strong>Nom:</strong> " . htmlspecialchars($xml->PersonalInformation->LastName) . "</p>";
-                            echo "<p><strong>Date de naissance:</strong> " . htmlspecialchars($xml->PersonalInformation->DateOfBirth) . "</p>";
-                            echo "<p><strong>Email:</strong> " . htmlspecialchars($xml->PersonalInformation->Email) . "</p>";
-                            echo "<p><strong>Téléphone:</strong> " . htmlspecialchars($xml->PersonalInformation->PhoneNumber) . "</p>";
-                            echo "<h4>Adresse</h4>";
-                            echo "<p><strong>Rue:</strong> " . htmlspecialchars($xml->PersonalInformation->Address->Street) . "</p>";
-                            echo "<p><strong>Ville:</strong> " . htmlspecialchars($xml->PersonalInformation->Address->City) . "</p>";
-                            echo "<p><strong>Code postal:</strong> " . htmlspecialchars($xml->PersonalInformation->Address->PostalCode) . "</p>";
-                            echo "<p><strong>Pays:</strong> " . htmlspecialchars($xml->PersonalInformation->Address->Country) . "</p>";
-                            echo "<h3>Résumé Professionnel</h3>";
-                            echo "<p>" . htmlspecialchars($xml->ProfessionalSummary->Summary) . "</p>";
-                            echo "<h3>Éducation</h3>";
-                            echo "<p><strong>Diplôme:</strong> " . htmlspecialchars($xml->Education->Degree->Title) . "</p>";
-                            echo "<h3>Compétences</h3>";
-                            echo "<p>" . htmlspecialchars($xml->Skills->Skill) . "</p>";
-                            echo "<h3>Langues</h3>";
+                            echo '<div class="card mb-4">';
+                            echo '<div class="card-body">';
+                            echo '<h3 class="card-title mb-4">Informations Personnelles</h3>';
+                            echo '<p><strong>Prénom:</strong> ' . htmlspecialchars($xml->PersonalInformation->FirstName) . '</p>';
+                            echo '<p><strong>Nom:</strong> ' . htmlspecialchars($xml->PersonalInformation->LastName) . '</p>';
+                            echo '<p><strong>Date de naissance:</strong> ' . htmlspecialchars($xml->PersonalInformation->DateOfBirth) . '</p>';
+                            echo '<p><strong>Email:</strong> ' . htmlspecialchars($xml->PersonalInformation->Email) . '</p>';
+                            echo '<p><strong>Téléphone:</strong> ' . htmlspecialchars($xml->PersonalInformation->PhoneNumber) . '</p>';
+                            echo '<h4 class="mt-4">Adresse</h4>';
+                            echo '<p><strong>Rue:</strong> ' . htmlspecialchars($xml->PersonalInformation->Address->Street) . '</p>';
+                            echo '<p><strong>Ville:</strong> ' . htmlspecialchars($xml->PersonalInformation->Address->City) . '</p>';
+                            echo '<p><strong>Code postal:</strong> ' . htmlspecialchars($xml->PersonalInformation->Address->PostalCode) . '</p>';
+                            echo '<p><strong>Pays:</strong> ' . htmlspecialchars($xml->PersonalInformation->Address->Country) . '</p>';
+                            echo '<h3 class="mt-4">Résumé Professionnel</h3>';
+                            echo '<p>' . htmlspecialchars($xml->ProfessionalSummary->Summary) . '</p>';
+                            echo '<h3 class="mt-4">Éducation</h3>';
+                            echo '<p><strong>Diplôme:</strong> ' . htmlspecialchars($xml->Education->Degree->Title) . '</p>';
+                            echo '<h3 class="mt-4">Compétences</h3>';
+                            echo '<p>' . htmlspecialchars($xml->Skills->Skill) . '</p>';
+                            echo '<h3 class="mt-4">Langues</h3>';
                             foreach ($xml->Languages->Language as $language) {
-                                echo "<p><strong>Langue:</strong> " . htmlspecialchars($language->Name) . "</p>";
-                                echo "<p><strong>Niveau:</strong> " . htmlspecialchars($language->Proficiency) . "</p>";
+                                echo '<div class="mb-2">';
+                                echo '<p><strong>Langue:</strong> ' . htmlspecialchars($language->Name) . '</p>';
+                                echo '<p><strong>Niveau:</strong> ' . htmlspecialchars($language->Proficiency) . '</p>';
+                                echo '</div>';
                             }
+                            echo '</div>';
+                            echo '</div>';
                         } else {
-                            echo "<p>Le CV n'a pas été trouvé.</p>";
+                            echo '<div class="alert alert-warning" role="alert">Le CV n\'a pas été trouvé.</div>';
                         }
                     }
                     ?>
@@ -323,11 +309,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
                 <p><strong>Numéro de téléphone :</strong> <?php echo $telephone ?? ''; ?></p>
                 <p><strong>Profession :</strong> <?php echo $profession ?? ''; ?></p>
             <?php endif; ?>
-            <form method="post" action="logout.php">
-                <button class="btn-logout" type="submit">Déconnexion</button>
-            </form>
             <form method="get" action="accueil.php">
                 <button type="submit" class="btn-back">Retour à l'accueil</button>
+            </form>
+            <form method="post" action="logout.php">
+                <button class="btn-logout" type="submit">Déconnexion</button>
             </form>
         </div>
 
@@ -372,8 +358,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
 
             <div class="container update">
                 <h2>Remplir le CV</h2>
-                <button onclick="toggleDropdown('cv-form')">Remplir mon CV</button>
-                <div id="cv-form" class="cv-container">
+                <div class="fill-cv">
+                    <button onclick="toggleDropdown('cv-form')">Remplir mon CV</button>
+                </div>
+                <div id="cv-form" class="cv-form-container">
                     <form method="post" action="compte.php">
                         <input type="hidden" name="save_cv" value="1">
                         <label for="FirstName">Prénom :</label>
@@ -395,11 +383,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
                         <label for="Country">Pays :</label>
                         <input type="text" id="Country" name="Country" required>
                         <label for="Summary">Résumé professionnel :</label>
-                        <textarea id="Summary" name="Summary" required></textarea>
+                        <textarea id="Summary" name="Summary" rows="=10" required></textarea>
                         <label for="DegreeTitle">Diplôme :</label>
                         <input type="text" id="DegreeTitle" name="DegreeTitle" required>
                         <label for="Skills">Compétences :</label>
-                        <textarea id="Skills" name="Skills" required></textarea>
+                        <textarea id="Skills" name="Skills" rows="=10" required></textarea>
                         <label for="LanguageName">Langue :</label>
                         <input type="text" id="LanguageName" name="LanguageName" required>
                         <label for="Proficiency">Niveau :</label>
