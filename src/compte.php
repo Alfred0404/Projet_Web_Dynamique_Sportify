@@ -8,6 +8,26 @@ if (!isset($_SESSION['user_name'])) {
     exit();
 }
 
+// Récupérer l'ID du client à partir de la base de données en fonction du nom d'utilisateur
+$sql = "SELECT id_client FROM client WHERE nom_client = ?";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    die("Erreur de préparation de la requête : " . $conn->error);
+}
+$stmt->bind_param("s", $_SESSION['user_name']); // Supposons que 'user_name' contienne le nom d'utilisateur
+$stmt->execute();
+$result = $stmt->get_result();
+if ($result->num_rows === 1) {
+    $row = $result->fetch_assoc();
+    $client_id_from_database = $row['id_client'];
+} else {
+    echo "Erreur : Aucun client trouvé avec ce nom d'utilisateur.";
+}
+$stmt->close();
+
+// Stocker l'ID du client dans la session
+$_SESSION['user_id'] = $client_id_from_database;
+
 // Vérifier le rôle de l'utilisateur
 $is_admin = $_SESSION['role'] === 'admin';
 $is_coach = $_SESSION['role'] === 'coach';
@@ -21,6 +41,37 @@ function validate($data)
     $data = htmlspecialchars($data);
     return $data;
 }
+
+//   partie pilou
+// Mise à jour des informations de la carte bancaire du client
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_carte_bancaire'])) {
+    if ($is_client) {
+        // Récupérer l'ID du client connecté à partir de la session
+        $id_client = $_SESSION['user_id'];
+
+        // Valider et récupérer les données du formulaire
+        $nom = validate($_POST['nom']);
+        $prenom = validate($_POST['prenom']);
+        $adresse_ligne_1 = validate($_POST['adresse_ligne_1']);
+        $adresse_ligne_2 = validate($_POST['adresse_ligne_2']);
+        $ville = validate($_POST['ville']);
+        $code_postal = validate($_POST['code_postal']);
+        $pays = validate($_POST['pays']);
+        $carte_etudiant_client = validate($_POST['carte_etudiant_client']);
+
+        // Requête SQL pour mettre à jour les informations de la carte bancaire dans la table client
+        $sql = "UPDATE client SET nom_carte = ?, prenom_carte = ?, adresse_ligne_1_carte = ?, adresse_ligne_2_carte = ?, ville_carte = ?, code_postal_carte = ?, pays_carte = ?, carte_etudiant_client = ? WHERE id_client = ?";
+        $stmt->bind_param("ssssssssi", $nom, $prenom, $adresse_ligne_1, $adresse_ligne_2, $ville, $code_postal, $pays, $carte_etudiant_client, $id_client);
+        $stmt->execute();
+
+        if ($stmt->affected_rows === 1) {
+            echo "Informations de carte bancaire mises à jour avec succès.";
+        } else {
+            echo "Erreur: " . $sql . "<br>" . $conn->error;
+        }
+    } else {
+        echo "Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
+// fin partie pilou
 
 // Sauvegarde du CV
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_cv'])) {
@@ -86,10 +137,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_cv'])) {
 
         // Mise à jour du chemin du CV dans la base de données
         $sql = "UPDATE coach SET cv_coach=? WHERE email_coach=?";
+
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
             die("Erreur de préparation de la requête : " . $conn->error);
         }
+
         $stmt->bind_param("ss", $cvFileName, $_SESSION['email']);
         $stmt->execute();
 
@@ -188,6 +241,25 @@ if ($is_client) {
         $telephone = $client_info['num_telephone'];
         $profession = $client_info['profession'];
     }
+}
+
+// Récupérer les informations de paiement pour le client
+if ($is_client) {
+    $sql = "SELECT facture, date_paiement, type_carte, numero_carte, nom_carte FROM paiement WHERE id_client=?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Erreur de préparation de la requête : " . $conn->error);
+    }
+    $stmt->bind_param("i", $_SESSION['user_id']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $paiements = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $paiements[] = $row;
+        }
+    }
+    $stmt->close();
 }
 
 // Inscription d'un nouveau coach
@@ -414,6 +486,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
                 </form>
             </div>
         <?php endif; ?>
+<!--    partie pilou    -->
+        <?php if ($is_client): ?>
+              <h2>Modifier mes informations de carte bancaire</h2>
+              <form method="post" action="">
+                  <label for="nom">Nom:</label>
+                  <input type="text" id="nom" name="nom" value="" required>
+
+                  <label for="prenom">Prénom:</label>
+                  <input type="text" id="prenom" name="prenom" value="" required>
+
+                  <label for="adresse_ligne_1">Adresse ligne 1:</label>
+                  <input type="text" id="adresse_ligne_1" name="adresse_ligne_1" value="" required>
+
+                  <label for="adresse_ligne_2">Adresse ligne 2:</label>
+                  <input type="text" id="adresse_ligne_2" name="adresse_ligne_2" value="">
+
+                  <label for="ville">Ville:</label>
+                  <input type="text" id="ville" name="ville" value="" required>
+
+                  <label for="code_postal">Code postal:</label>
+                  <input type="text" id="code_postal" name="code_postal" value="" required>
+
+                  <label for="pays">Pays:</label>
+                  <input type="text" id="pays" name="pays" value="" required>
+
+                  <label for="carte_etudiant_client">Carte Étudiant:</label>
+                  <input type="text" id="carte_etudiant_client" name="carte_etudiant_client" value="">
+
+                  <input type="submit" name="update_carte_bancaire" value="Mettre à jour">
+              </form>
+
+              <h2>Mes Factures</h2>
+              <table>
+                  <tr>
+                      <th>Facture</th>
+                      <th>Date de Paiement</th>
+                      <th>Type de Carte</th>
+                      <th>Numéro de Carte</th>
+                      <th>Nom sur la Carte</th>
+                  </tr>
+                  <?php foreach ($paiements as $paiement): ?>
+                      <tr>
+                          <td><?php echo $paiement['facture']; ?></td>
+                          <td><?php echo $paiement['date_paiement']; ?></td>
+                          <td><?php echo $paiement['type_carte']; ?></td>
+                          <td><?php echo $paiement['numero_carte']; ?></td>
+                          <td><?php echo $paiement['nom_carte']; ?></td>
+                      </tr>
+                  <?php endforeach; ?>
+              </table>
+          <?php endif; ?>
+<!--    fin partie pilou    -->
     </section>
     <footer>
         <p>© 2024 Sportify</p>
