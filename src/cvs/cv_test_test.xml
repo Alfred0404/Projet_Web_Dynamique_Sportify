@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+        <CoachCV>
+            <PersonalInformation>
+                <FirstName>test</FirstName>
+                <LastName>test</LastName>
+                <DateOfBirth>2024-05-16</DateOfBirth>
+                <Email>nrigeds@gmail.com</Email>
+                <PhoneNumber>5984</PhoneNumber>
+                <Address>
+                    <Street>allée des prices</Street>
+                    <City>54</City>
+                    <PostalCode>4</PostalCode>
+                    <Country>54</Country>
+                </Address>
+            </PersonalInformation>
+            <ProfessionalSummary>
+                <Summary>l</Summary>
+            </ProfessionalSummary>
+            <Education>
+                <Degree>
+                    <Title>ik</Title>
+                </Degree>
+            </Education>
+            <Skills>
+                <Skill>iok</Skill>
+            </Skills>
+            <Languages>
+                <Language>
+                    <Name>iok</Name>
+                    <Proficiency>iok</Proficiency>
+                </Language>
+            </Languages>
+        </CoachCV>

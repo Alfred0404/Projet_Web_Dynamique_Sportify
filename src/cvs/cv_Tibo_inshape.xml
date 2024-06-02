@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+        <CoachCV>
+            <PersonalInformation>
+                <FirstName>inshape</FirstName>
+                <LastName>Tibo</LastName>
+                <DateOfBirth>2024-05-14</DateOfBirth>
+                <Email>nrigeds@gmail.com</Email>
+                <PhoneNumber>5984</PhoneNumber>
+                <Address>
+                    <Street>allée des prices</Street>
+                    <City>54</City>
+                    <PostalCode>915366</PostalCode>
+                    <Country>france</Country>
+                </Address>
+            </PersonalInformation>
+            <ProfessionalSummary>
+                <Summary>78</Summary>
+            </ProfessionalSummary>
+            <Education>
+                <Degree>
+                    <Title>78</Title>
+                </Degree>
+            </Education>
+            <Skills>
+                <Skill>78</Skill>
+            </Skills>
+            <Languages>
+                <Language>
+                    <Name>78</Name>
+                    <Proficiency>78</Proficiency>
+                </Language>
+            </Languages>
+        </CoachCV>

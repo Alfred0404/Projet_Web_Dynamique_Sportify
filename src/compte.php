@@ -34,13 +34,15 @@ $is_coach = $_SESSION['role'] === 'coach';
 $is_client = $_SESSION['role'] === 'client';
 
 // Fonction pour valider et sécuriser les entrées utilisateur
-function validate($data) {
+function validate($data)
+{
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
     return $data;
 }
 
+//   partie pilou
 // Mise à jour des informations de la carte bancaire du client
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_carte_bancaire'])) {
     if ($is_client) {
@@ -73,6 +75,86 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_carte_bancaire'
         }
     } else {
         echo "Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
+// fin partie pilou
+
+// Sauvegarde du CV
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_cv'])) {
+    if ($is_coach) {
+        $firstName = validate($_POST['FirstName']);
+        $lastName = validate($_POST['LastName']);
+        $dateOfBirth = validate($_POST['DateOfBirth']);
+        $email = validate($_POST['Email']);
+        $phoneNumber = validate($_POST['PhoneNumber']);
+        $street = validate($_POST['Street']);
+        $city = validate($_POST['City']);
+        $postalCode = validate($_POST['PostalCode']);
+        $country = validate($_POST['Country']);
+        $summary = validate($_POST['Summary']);
+        $degreeTitle = validate($_POST['DegreeTitle']);
+        $skills = validate($_POST['Skills']);
+        $languageName = validate($_POST['LanguageName']);
+        $proficiency = validate($_POST['Proficiency']);
+
+        // Création du fichier XML
+        $cvFileName = "cv_{$lastName}_{$firstName}.xml";
+        $xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+        <CoachCV>
+            <PersonalInformation>
+                <FirstName>{$firstName}</FirstName>
+                <LastName>{$lastName}</LastName>
+                <DateOfBirth>{$dateOfBirth}</DateOfBirth>
+                <Email>{$email}</Email>
+                <PhoneNumber>{$phoneNumber}</PhoneNumber>
+                <Address>
+                    <Street>{$street}</Street>
+                    <City>{$city}</City>
+                    <PostalCode>{$postalCode}</PostalCode>
+                    <Country>{$country}</Country>
+                </Address>
+            </PersonalInformation>
+            <ProfessionalSummary>
+                <Summary>{$summary}</Summary>
+            </ProfessionalSummary>
+            <Education>
+                <Degree>
+                    <Title>{$degreeTitle}</Title>
+                </Degree>
+            </Education>
+            <Skills>
+                <Skill>{$skills}</Skill>
+            </Skills>
+            <Languages>
+                <Language>
+                    <Name>{$languageName}</Name>
+                    <Proficiency>{$proficiency}</Proficiency>
+                </Language>
+            </Languages>
+        </CoachCV>";
+
+        // Vérifier si le dossier cvs existe, sinon le créer
+        if (!file_exists('cvs')) {
+            mkdir('cvs', 0777, true);
+        }
+
+        // Enregistrement du fichier XML
+        file_put_contents("cvs/{$cvFileName}", $xmlContent);
+
+        // Mise à jour du chemin du CV dans la base de données
+        $sql = "UPDATE coach SET cv_coach=? WHERE email_coach=?";
+
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("Erreur de préparation de la requête : " . $conn->error);
+        }
+
+        $stmt->bind_param("ss", $cvFileName, $_SESSION['email']);
+        $stmt->execute();
+
+        if ($stmt->affected_rows === 1) {
+            echo "CV mis à jour avec succès.";
+        }
+    } else {
+        echo "Vous n'avez pas les autorisations nécessaires pour sauvegarder le CV.";
     }
 }
 
@@ -82,7 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
     if ($is_coach) {
         $bureau = validate($_POST['bureau']);
         $specialite = validate($_POST['specialite']);
-        $photo = validate($_POST['photo']); // Vous pouvez adapter cette ligne pour gérer le téléchargement de fichiers
+        $photo = validate($_POST['photo']);
         $telephone = validate($_POST['telephone']);
 
         $sql = "UPDATE coach SET bureau_coach=?, specialite_coach=?, photo_coach=?, telephone_coach=? WHERE email_coach=?";
@@ -92,7 +174,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
         }
         $stmt->bind_param("sssss", $bureau, $specialite, $photo, $telephone, $_SESSION['email']);
         $stmt->execute();
-        
+
         if ($stmt->affected_rows === 1) {
             echo "Informations mises à jour avec succès.";
         } else {
@@ -117,7 +199,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_client'])) {
         }
         $stmt->bind_param("ssss", $date_naissance, $telephone, $profession, $_SESSION['email']);
         $stmt->execute();
-        
+
         if ($stmt->affected_rows === 1) {
             echo "Informations mises à jour avec succès.";
         } else {
@@ -130,7 +212,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_client'])) {
 
 // Récupérer les informations du coach
 if ($is_coach) {
-    $sql = "SELECT bureau_coach, specialite_coach, photo_coach, telephone_coach FROM coach WHERE email_coach=?";
+    $sql = "SELECT bureau_coach, specialite_coach, photo_coach, telephone_coach, cv_coach FROM coach WHERE email_coach=?";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
         die("Erreur de préparation de la requête : " . $conn->error);
@@ -144,6 +226,7 @@ if ($is_coach) {
         $specialite_coach = $coach_info['specialite_coach'];
         $photo_coach = $coach_info['photo_coach'];
         $telephone_coach = $coach_info['telephone_coach'];
+        $cv_coach = $coach_info['cv_coach'];
     }
 }
 
@@ -181,7 +264,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
         }
         $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
         $stmt->execute();
-        
+
         if ($stmt->affected_rows === 1) {
             echo "Compte coach créé avec succès.";
         } else {
@@ -226,6 +309,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_admin'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/compte.css">
     <title>Votre compte</title>
     <style>
         body {

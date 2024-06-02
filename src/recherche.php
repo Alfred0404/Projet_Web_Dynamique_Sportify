@@ -9,7 +9,8 @@ if (!isset($_SESSION['user_name'])) {
 }
 
 // Fonction pour valider et sécuriser les entrées utilisateur
-function validate($data) {
+function validate($data)
+{
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -23,16 +24,17 @@ $search_error = "";
 // Effectuer une recherche lorsque le formulaire est soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     $search_query = validate($_POST['search_query']);
-    
+    $search_query = strtolower(str_replace(" ", "_", $search_query));
+
     if (empty($search_query)) {
         $search_error = "Veuillez entrer un nom, une spécialité ou un type d'activité pour la recherche.";
     } else {
         // Rechercher uniquement dans la table coach
         $sql_coach = "
-            SELECT 'coach' AS role, nom_coach AS nom, prenom_coach AS prenom, email_coach AS email, bureau_coach AS bureau, specialite_coach AS specialite, photo_coach AS photo, telephone_coach AS telephone
+            SELECT 'coach' AS role, id_coach, nom_coach AS nom, prenom_coach AS prenom, email_coach AS email, bureau_coach AS bureau, specialite_coach AS specialite, photo_coach AS photo, telephone_coach AS telephone
             FROM coach
             WHERE nom_coach LIKE ? OR specialite_coach LIKE ?";
-        
+
         $stmt_coach = $conn->prepare($sql_coach);
         if ($stmt_coach === false) {
             die("Erreur de préparation de la requête : " . $conn->error);
@@ -47,10 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
             // Si la recherche dans la table coach ne donne aucun résultat,
             // rechercher dans la table activites
             $sql_activite = "
-                SELECT 'activite' AS role, nom_activites AS nom, type_activites AS type
+                SELECT 'activite' AS role, id_activites AS id, nom_activites AS nom, type_activites AS type
                 FROM activites
                 WHERE nom_activites LIKE ? OR type_activites = ?";
-            
+
             $stmt_activite = $conn->prepare($sql_activite);
             if ($stmt_activite === false) {
                 die("Erreur de préparation de la requête : " . $conn->error);
@@ -74,104 +76,106 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/recherche.js"></script>
+    <link rel="stylesheet" href="css/recherche.css">
     <title>Recherche</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding: 20px;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        input[type="text"] {
-            width: 70%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #5cb85c;
-            border: none;
-            color: #fff;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #4cae4c;
-        }
-
-        .results {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .result-item {
-            border-bottom: 1px solid #ccc;
-            padding: 10px 0;
-        }
-
-        .result-item:last-child {
-            border-bottom: none;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-        }
-
-        strong {
-            font-weight: bold;
-        }
-    </style>
 </head>
 
 <body>
-    <!-- Formulaire de recherche -->
-    <form method="post" action="recherche.php">
-        <input type="text" name="search_query" placeholder="Entrez un nom, une spécialité ou un type d'activité" required>
-        <button type="submit" name="search">Rechercher</button>
-    </form>
+    <header>
+        <h1 class="title">Sportify</h1>
+        <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
+    </header>
 
-    <!-- Affichage des résultats de recherche -->
-    <?php if (!empty($search_result)): ?>
-        <div class="results">
-            <h2>Résultats de recherche</h2>
-            <?php foreach ($search_result as $item): ?>
-                <div class="result-item">
-                    <?php if ($item['role'] === 'coach'): ?>
-                        <p><strong>Rôle:</strong> Coach</p>
-                        <p><strong>Nom:</strong> <?php echo htmlspecialchars($item['nom']); ?></p>
-                        <p><strong>Prénom:</strong> <?php echo htmlspecialchars($item['prenom']); ?></p>
-                        <p><strong>Email:</strong> <?php echo htmlspecialchars($item['email']); ?></p>
-                        <p><strong>Bureau:</strong> <?php echo htmlspecialchars($item['bureau']); ?></p>
-                        <p><strong>Spécialité:</strong> <?php echo htmlspecialchars($item['specialite']); ?></p>
-                        <p><strong>Téléphone:</strong> <?php echo htmlspecialchars($item['telephone']); ?></p>
-                        <?php if (!empty($item['photo'])): ?>
-                            <p><strong>Photo:</strong> <img src="<?php echo htmlspecialchars($item['photo']); ?>" alt="Photo du coach"></p>
+    <div class="nav">
+        <ul>
+            <li class="nav-item"><a href="accueil.php">Accueil</a></li>
+            <li class="nav-item"><a href="parcourir.php">Tout parcourir</a></li>
+            <li class="nav-item active"><a href="#">Rechercher</a></li>
+            <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
+            <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
+        </ul>
+    </div>
+    <section>
+        <!-- Formulaire de recherche -->
+        <form method="post" action="recherche.php" class="search">
+            <input class="search-field" type="text" name="search_query"
+                placeholder="Entrez un nom, une spécialité ou un type d'activité" required>
+            <button class="search-submit" type="submit" name="search">Rechercher</button>
+        </form>
+
+        <!-- Affichage des résultats de recherche -->
+        <?php if (!empty($search_result)): ?>
+            <div class="results">
+                <?php foreach ($search_result as $item): ?>
+                    <div class="result-item">
+                        <?php if ($item['role'] === 'coach'): ?>
+                            <div class="infos-coach">
+                                <p><strong>Rôle :</strong> Coach</p>
+                                <p><strong>Nom :</strong> <?php echo htmlspecialchars($item['nom']); ?></p>
+                                <p><strong>Prénom :</strong> <?php echo htmlspecialchars($item['prenom']); ?></p>
+                                <p><strong>Email :</strong> <?php echo htmlspecialchars($item['email']); ?></p>
+                                <p><strong>Bureau :</strong> <?php echo htmlspecialchars($item['bureau']); ?></p>
+                                <p><strong>Spécialité :</strong> <?php echo htmlspecialchars($item['specialite']); ?></p>
+                                <p><strong>Téléphone :</strong> <?php echo htmlspecialchars($item['telephone']); ?></p>
+                            </div>
+                            <div class="photo-coach">
+                                <?php if (!empty($item['photo'])): ?>
+                                    <img src="<?php echo htmlspecialchars($item['photo']); ?>" alt="Photo du coach">
+                                <?php endif; ?>
+                            </div>
+                            <div class="coach-link">
+                                <a href="coach_details.php?id=<?php echo $item['id_coach']; ?>">Voir le profil</a>
+                            </div>
+                        <?php elseif ($item['role'] === 'activite'): ?>
+                            <ul class="liste-activites">
+                                <?php
+                                echo "<li class='card " . $item["nom"] . " " . $item["type"] . "'><a href='?id=" . $item["id"] . "'>" . ucfirst(str_replace("_", " ", $item["nom"])) . "</a></li>";
+                                ?>
+                            </ul>
                         <?php endif; ?>
-                    <?php elseif ($item['role'] === 'activite'): ?>
-                        <p><strong>Rôle:</strong> Activité</p>
-                        <p><strong>Nom:</strong> <?php echo htmlspecialchars($item['nom']); ?></p>
-                        <p><strong>Type d'activité:</strong> <?php echo htmlspecialchars($item['type']); ?></p>
-                    <?php endif; ?>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php elseif (!empty($search_error)): ?>
-        <p><?php echo $search_error; ?></p>
-    <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php elseif (!empty($search_error)): ?>
+            <p><?php echo $search_error; ?></p>
+        <?php endif; ?>
+        <?php
+        // Afficher le coach responsable si une activité est sélectionnée
+        if (isset($_GET['id'])) {
+            $id_activite = intval($_GET['id']);
+
+            // Requête pour trouver le coach responsable
+            $sql_coach = "SELECT coach.id_coach, coach.nom_coach FROM coach
+                      INNER JOIN activites ON coach.specialite_coach = activites.id_activites
+                      WHERE activites.id_activites = $id_activite";
+            $result_coach = $conn->query($sql_coach);
+
+            if ($result_coach->num_rows > 0) {
+                echo "<h1>Coachs Responsables</h1>";
+                echo '<ul class="liste-coachs">';
+                while ($row_coach = $result_coach->fetch_assoc()) {
+                    echo "<li class='coach'><a href='coach_details.php?id=" . $row_coach["id_coach"] . "'>" . ucfirst($row_coach["nom_coach"]) . "</a></li>";
+                }
+                echo "</ul>";
+            } else {
+                echo "<p>Aucun coach responsable trouvé pour cette activité.</p>";
+            }
+        }
+
+        $conn->close();
+        ?>
+    </section>
+    <footer>
+        <p>© 2024 Sportify</p>
+        <p>sportify@gmail.com</p>
+        <p>01 38 67 18 52</p>
+        <p>10 rue Sextius Michel - 75015 - Paris</p>
+        <a class="lien-gmaps"
+            href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google
+            Maps</a>
+    </footer>
 </body>
 
 </html>
