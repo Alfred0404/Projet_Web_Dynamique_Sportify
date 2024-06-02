@@ -33,8 +33,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->close();
 
+    // Récupérer les informations du rendez-vous depuis la base de données
+    $unique_id_client = $_SESSION['unique_id']; // ID du client récupéré de la session
+    $unique_id_coach = $_SESSION['unique_id_coach']; // ID du coach récupéré de la session
+
+    // Récupérer le dernier rendez-vous enregistré dans la base de données
+    $sql_rdv = "SELECT jour_rdv, heure_rdv FROM prise_de_rendez_vous ORDER BY id_rdv DESC LIMIT 1";
+    $stmt = $conn->prepare($sql_rdv);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        // Mettre à jour les valeurs de jour_rdv et heure_rdv
+        $jour_rdv = $row['jour_rdv'];
+        $heure_rdv = $row['heure_rdv'];
+    } else {
+        // Gérer le cas où aucun rendez-vous n'est trouvé
+        $jour_rdv = "date inconnue";
+        $heure_rdv = "heure inconnue";
+    }
+
+    // Construire le message avec les nouvelles valeurs de jour_rdv et heure_rdv
+    $message = "Votre rendez-vous avec moi a bien été validé pour le $jour_rdv à $heure_rdv."; // Message automatique 
+
+    // Insérer le message dans la table messages
+    $sql = "INSERT INTO messages (incoming_msg_id, outgoing_msg_id, msg) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Erreur de préparation de la requête : " . $conn->error);
+    }
+    $stmt->bind_param("iis", $unique_id_client, $unique_id_coach, $message);
+    $stmt->execute();
+    $stmt->close();
+
+
+    // Insérer un message automatique dans la table messages
+    $message = "Votre rendez-vous avec moi a bien été validé pour le $jour_rdv à $heure_rdv."; // Message automatique 
+
+    $sql = "INSERT INTO messages (incoming_msg_id, outgoing_msg_id, msg) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Erreur de préparation de la requête : " . $conn->error);
+    }
+    $stmt->bind_param("iis", $unique_id_client, $unique_id_coach, $message);
+    $stmt->execute();
+    $stmt->close();
+
     // Redirection vers la page d'accueil
-    header("Location: accueil.php");
+    header("Location: rendez_vous.php");
     exit();
 }
 ?>
@@ -56,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </header>
     <div class="nav">
         <ul>
-            <li class="nav-item"><a class="text-decoration-none" href="accueil">Accueil</a></li>
+            <li class="nav-item"><a class="text-decoration-none" href="accueil.php">Accueil</a></li>
             <li class="nav-item"><a class="text-decoration-none" href="parcourir.php">Tout parcourir</a></li>
             <li class="nav-item"><a class="text-decoration-none" href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a class="text-decoration-none" href="rendez_vous.php">Rendez-vous</a></li>

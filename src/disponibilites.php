@@ -83,6 +83,29 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $coach = mysqli_fetch_assoc($result);
 
+// Récupérer le unique_id du coach depuis la table users
+$unique_id_coach = null;
+if ($coach) {
+    $sql = "SELECT users.unique_id 
+            FROM users 
+            WHERE users.fname = 'coach' 
+              AND users.lname = ? 
+              AND users.password = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "ss", $coach['nom_coach'], $coach['mdp_coach']);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($row = mysqli_fetch_assoc($result)) {
+        $unique_id_coach = $row['unique_id'];
+    }
+}
+
+// Stocker unique_id_coach dans la session si l'utilisateur est un client
+if ($is_client && $unique_id_coach !== null) {
+    $_SESSION['unique_id_coach'] = $unique_id_coach;
+}
+
+
 $availableSlots = get_heures_disponibles($conn, $id_coach);
 $bookedSlots = get_heures_non_disponibles($conn, $id_coach);
 ?>
