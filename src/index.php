@@ -13,26 +13,30 @@ function validate($data) {
 // Inscription
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
     $role = validate($_POST['register_role']);
-    $nom = validate($_POST['name']);
-    $prenom = validate($_POST['prenom']);
-    $sexe = validate($_POST['sexe']);
-    $email = validate($_POST['email']);
-    $password = validate($_POST['password']);
+    if ($role == 'client') {
+        $nom = validate($_POST['name']);
+        $prenom = validate($_POST['prenom']);
+        $sexe = validate($_POST['sexe']);
+        $email = validate($_POST['email']);
+        $password = validate($_POST['password']);
 
-    $table = $role;
-    $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    if ($stmt === false) {
-        die("Erreur de préparation de la requête : " . $conn->error);
-    }
-    $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
-    $stmt->execute();
-    
-    if ($stmt->affected_rows === 1) {
-        header("Location: index.php?success=Account created successfully");
-        exit();
+        $table = $role;
+        $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("Erreur de préparation de la requête : " . $conn->error);
+        }
+        $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
+        $stmt->execute();
+        
+        if ($stmt->affected_rows === 1) {
+            header("Location: index.php?success=Account created successfully");
+            exit();
+        } else {
+            echo "Erreur: " . $sql . "<br>" . $conn->error;
+        }
     } else {
-        echo "Erreur: " . $sql . "<br>" . $conn->error;
+        echo "Inscription uniquement pour les clients.";
     }
 }
 
@@ -160,20 +164,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
             <label for="register_role">Sélectionnez votre rôle :</label>
             <select id="register_role" name="register_role" onchange="showRegistrationFields()" required>
                 <option value="">--Choisir un rôle--</option>
-                <option value="admin">Administrateur</option>
                 <option value="client">Client</option>
             </select>
             <div id="registration_fields" style="display: none;">
                 <label for="name">Nom :</label>
-                <input type="text" id="name" name="name">
+                <input type="text" id="name" name="name" required>
                 <label for="prenom">Prénom :</label>
-                <input type="text" id="prenom" name="prenom">
+                <input type="text" id="prenom" name="prenom" required>
                 <label for="sexe">Sexe :</label>
-                <input type="text" id="sexe" name="sexe">
+                <input type="text" id="sexe" name="sexe" required>
                 <label for="email">Adresse Email :</label>
-                <input type="email" id="email" name="email">
+                <input type="email" id="email" name="email" required>
                 <label for="password">Mot de passe :</label>
-                <input type="password" id="password" name="password">
+                <input type="password" id="password" name="password" required>
                 <button type="submit">S'inscrire</button>
             </div>
         </form>
