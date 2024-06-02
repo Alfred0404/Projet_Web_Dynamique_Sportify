@@ -31,9 +31,6 @@ if ($is_client) {
     $stmt->close();
 }
 
-// Stocker l'ID du client dans la session
-// $_SESSION['user_id'] = $client_id_from_database;
-
 
 // Fonction pour valider et sécuriser les entrées utilisateur
 function validate($data)
@@ -161,8 +158,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_cv'])) {
     }
 }
 
-// * Mise à jour des informations du coach
-
+// ? Mise à jour des informations du coach
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
     if ($is_coach) {
         $bureau = validate($_POST['bureau']);
@@ -188,8 +184,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_coach'])) {
     }
 }
 
-//* Mise à jour des informations du client
-
+// ? Mise à jour des informations du client
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_client'])) {
     if ($is_client) {
         $date_naissance = validate($_POST['date_naissance']);
@@ -214,7 +209,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_client'])) {
     }
 }
 
-// Récupérer les informations du coach
+// ? Récupérer les informations du coach
 if ($is_coach) {
     $sql = "SELECT bureau_coach, specialite_coach, photo_coach, telephone_coach, cv_coach FROM coach WHERE email_coach=?";
     $stmt = $conn->prepare($sql);
@@ -234,7 +229,7 @@ if ($is_coach) {
     }
 }
 
-// Récupérer les informations du client
+// ? Récupérer les informations du client
 if ($is_client) {
     $sql = "SELECT date_de_naissance, num_telephone, profession FROM client WHERE email_client=?";
     $stmt = $conn->prepare($sql);
@@ -252,7 +247,7 @@ if ($is_client) {
     }
 }
 
-// Récupérer les informations de paiement pour le client
+// ? Récupérer les informations de paiement du client
 if ($is_client) {
     $sql = "SELECT id_paiement, facture, date_paiement, type_carte, numero_carte, nom_carte FROM paiement WHERE id_client=?";
     $stmt = $conn->prepare($sql);
@@ -280,6 +275,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
         $email = validate($_POST['email']);
         $password = validate($_POST['password']);
 
+        // création de la requete SQL
         $sql = "INSERT INTO coach (nom_coach, prenom_coach, sexe_coach, email_coach, mdp_coach) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
@@ -288,6 +284,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
         $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
         $stmt->execute();
 
+        // vérification de la création du compte
         if ($stmt->affected_rows === 1) {
             echo "[create coach] Compte coach créé avec succès.";
             // Enregistrement dans la table users
@@ -297,6 +294,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
             $status = "En ligne";
 
             $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES ('$unique_id', '$fname', '$nom', '$email', '$password', '$img', '$status')";
+            // vérification de l'insertion
             if ($conn->query($user_sql) === TRUE) {
                 echo "[create coach] Compte coach créé avec succès.";
                 header("Location: compte.php");
@@ -321,6 +319,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_admin'])) {
         $email = validate($_POST['email']);
         $password = validate($_POST['password']);
 
+        // création de la requete SQL
         $sql = "INSERT INTO admin (nom_admin, prenom_admin, sexe_admin, email_admin, mdp_admin) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
@@ -329,6 +328,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_admin'])) {
         $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
         $stmt->execute();
 
+        // vérification de la création du compte
         if ($stmt->affected_rows === 1) {
             echo "[create admin] Compte administrateur créé avec succès.";
             // Enregistrement dans la table users
@@ -338,6 +338,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_admin'])) {
             $status = "En ligne";
 
             $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES ('$unique_id', '$fname', '$nom', '$email', '$password', '$img', '$status')";
+            // vérification de l'insertion
             if ($conn->query($user_sql) === TRUE) {
                 echo "[create admin] Compte administrateur créé avec succès.";
                 header("Location: compte.php");
@@ -366,6 +367,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_coach'])) {
         $stmt->bind_param("i", $id_coach);
         $stmt->execute();
 
+        // vérification de la suppression
         if ($stmt->affected_rows === 1) {
             echo "[delete coach] Compte coach supprimé avec succès.";
         } else {
@@ -610,7 +612,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_coach'])) {
                 </form>
             </div>
         <?php endif; ?>
-        <!-- partie pilou    -->
         <?php if ($is_client): ?>
             <div class="container update">
                 <h2>Modifier mes informations de carte bancaire</h2>
@@ -664,7 +665,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_coach'])) {
                 </table>
             </div>
         <?php endif; ?>
-        <!--    fin partie pilou    -->
     </section>
     <footer>
         <p>© 2024 Sportify</p>

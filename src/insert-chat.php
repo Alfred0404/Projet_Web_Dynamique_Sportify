@@ -2,6 +2,7 @@
 session_start();
 include "db_connection.php";
 
+// si l'utilisateur est connecté
 if (isset($_SESSION['unique_id'])) {
     $outgoing_id = $_SESSION['unique_id'];
     echo "" . $outgoing_id;

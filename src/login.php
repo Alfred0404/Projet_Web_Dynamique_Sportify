@@ -3,7 +3,8 @@ session_start();
 include "db_connection.php";
 
 // Fonction pour valider et sécuriser les entrées utilisateur
-function validate($data) {
+function validate($data)
+{
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -12,6 +13,7 @@ function validate($data) {
 
 // Connexion
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
+    // Récupération des données du formulaire
     $role = validate($_POST['login_role']);
     $username = validate($_POST['username']);
     $password = validate($_POST['password']);
@@ -29,7 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
     if ($result->num_rows === 1) {
         $row = $result->fetch_assoc();
         if ($password == $row['mdp_' . $table]) {
-            $_SESSION['user_id'] = $row['id_' . $table]; // Stocker l'ID de l'utilisateur dans la session
+            // Stocker les données de l'utilisateur dans la session
+            $_SESSION['user_id'] = $row['id_' . $table];
             $_SESSION['user_name'] = $row['nom_' . $table];
             $_SESSION['prenom'] = $row['prenom_' . $table];
             $_SESSION['email'] = $row['email_' . $table];

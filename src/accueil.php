@@ -49,8 +49,8 @@ $result_activites = $conn->query($sql_activites);
         <h1>Bulletin sportif de la semaine</h1>
         <ul class="liste-bulletin">
             <?php
+            // ? afficher les bulletins de la semaine depuis la base de données
             if ($result->num_rows > 0) {
-                // Afficher chaque bulletin
                 while ($row = $result->fetch_assoc()) {
                     echo "<li class='card-bulletin'><h2 class='titre-bulletin'>" . $row["titre_bulletin"] . "</h2><p>" . $row["contenu_bulletin"] . "</p></li>";
                 }
@@ -65,8 +65,8 @@ $result_activites = $conn->query($sql_activites);
             <h1 class="carrousel-title">Ce que nous proposons</h1>
             <ul class="liste-activites">
                 <?php
+                // ? afficher les activités depuis la base de données sous forme de carrousel
                 if ($result_activites->num_rows > 0) {
-                    // Afficher chaque activité
                     while ($row = $result_activites->fetch_assoc()) {
                         if ($row['nom_activites'] == "salle_de_sport_omnes") {
                             echo "<li class='card-activite " . $row["nom_activites"] . " " . $row["type_activites"] . "'><a href='salle_omnes.php'>" . ucfirst(str_replace("_", " ", $row["nom_activites"])) . "</a></li>";

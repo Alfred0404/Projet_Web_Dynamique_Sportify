@@ -12,6 +12,7 @@ $(document).ready(function () {
         $carrousel.append('<div class="controls"> <span class="prev">Précédent</span> <span class="next">Suivant</span> </div>');
     }
 
+    // Fonction pour afficher une image
     function showImage(index) {
         $link.css('display', 'none'); // on cache les images
         $current_link = $link.eq(index); // on définit la nouvelle image
@@ -34,6 +35,7 @@ $(document).ready(function () {
         showImage(i);
     });
 
+    // Fonction pour faire défiler les images
     function slide_link() {
         setTimeout(function () { // on utilise une fonction anonyme
             i++; // on incrémente le compteur

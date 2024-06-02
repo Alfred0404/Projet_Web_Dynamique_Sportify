@@ -2,12 +2,6 @@
 session_start();
 
 include "db_connection.php";
-
-$sql = "SELECT id_bulletin, titre_bulletin, contenu_bulletin FROM bulletin";
-$result = $conn->query($sql);
-
-$sql_activites = "SELECT id_activites, nom_activites, type_activites FROM activites";
-$result_activites = $conn->query($sql_activites);
 ?>
 
 <!DOCTYPE html>

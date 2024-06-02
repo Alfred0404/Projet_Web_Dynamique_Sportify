@@ -3,9 +3,9 @@ session_start();
 
 include "db_connection.php";
 
-// Initialisation de la variable pour le nom du bouton cliqué
 $nom_bouton = "";
 
+// récupération du nom du bouton cliqué
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['activite_sportive'])) {
         $nom_bouton = "activite_sportive";
@@ -36,16 +36,6 @@ $result = $conn->query($sql);
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="js/parcourir.js"></script>
     <title>Sportify - Parcourir</title>
-
-    <script>
-        function redirectPage(buttonValue) {
-            if (buttonValue === 'activite_sportive') {
-                window.location.href = 'activites_sportives.php';
-            } else if (buttonValue === 'sport_de_competition') {
-                window.location.href = 'sport_de_competition.php';
-            }
-        }
-    </script>
 </head>
 
 <body>
@@ -83,6 +73,7 @@ $result = $conn->query($sql);
                 onclick="sort_activities()" value="Salles de sport Omnes"></input>
         </form>
         <?php
+        // Afficher la catégorie sélectionnée
         if ($nom_bouton != "") {
             echo "<p class='selected-activite' >Vous avez sélectionné : " . ucfirst(str_replace("_", " ", $nom_bouton)) . "</p>";
         } else {
@@ -110,7 +101,7 @@ $result = $conn->query($sql);
             <script src="js/carrousel.js"></script>
         </div>
         <?php
-        // Afficher le coach responsable si une activité est sélectionnée
+        // Afficher le/les coach responsable si une activité est sélectionnée
         if (isset($_GET['id'])) {
             $id_activite = intval($_GET['id']);
 
