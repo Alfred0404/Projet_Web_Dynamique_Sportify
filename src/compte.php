@@ -44,7 +44,6 @@ function validate($data)
     return $data;
 }
 
-//   partie pilou
 // Mise à jour des informations de la carte bancaire du client
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_carte_bancaire'])) {
     if ($is_client) {
@@ -80,7 +79,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_carte_bancaire'
         echo "[maj paiement] Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
     }
 }
-// fin partie pilou
 
 // Sauvegarde du CV
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_cv'])) {
@@ -313,6 +311,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
         echo "[create coach] Vous n'avez pas les autorisations nécessaires pour créer un compte coach.";
     }
 }
+
+// Inscription d'un nouvel administrateur
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_admin'])) {
+    if ($is_admin) {
+        $nom = validate($_POST['name']);
+        $prenom = validate($_POST['prenom']);
+        $sexe = validate($_POST['sexe']);
+        $email = validate($_POST['email']);
+        $password = validate($_POST['password']);
+
+        $sql = "INSERT INTO admin (nom_admin, prenom_admin, sexe_admin, email_admin, mdp_admin) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("[create admin] Erreur de préparation de la requête : " . $conn->error);
+        }
+        $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
+        $stmt->execute();
+
+        if ($stmt->affected_rows === 1) {
+            echo "[create admin] Compte administrateur créé avec succès.";
+            // Enregistrement dans la table users
+            $unique_id = rand(time(), 100000000);
+            $fname = "admin";
+            $img = "image_admin/defaut.jpg";
+            $status = "En ligne";
+
+            $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES ('$unique_id', '$fname', '$nom', '$email', '$password', '$img', '$status')";
+            if ($conn->query($user_sql) === TRUE) {
+                echo "[create admin] Compte administrateur créé avec succès.";
+                header("Location: compte.php");
+                exit();
+            } else {
+                return "[create admin] Erreur lors de l'inscription dans la table users: " . $user_sql . "<br>" . $conn->error;
+            }
+        } else {
+            echo "[create admin] Erreur: " . $sql . "<br>" . $conn->error;
+        }
+    } else {
+        echo "[create admin] Vous n'avez pas les autorisations nécessaires pour créer un compte administrateur.";
+    }
+}
+
+// suppression d'un coach
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_coach'])) {
+    if ($is_admin) {
+        $id_coach = validate($_POST['id_coach']);
+
+        $sql = "DELETE FROM coach WHERE id_coach=?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("[delete coach] Erreur de préparation de la requête : " . $conn->error);
+        }
+        $stmt->bind_param("i", $id_coach);
+        $stmt->execute();
+
+        if ($stmt->affected_rows === 1) {
+            echo "[delete coach] Compte coach supprimé avec succès.";
+        } else {
+            echo "[delete coach] Erreur: " . $sql . "<br>" . $conn->error;
+        }
+    } else {
+        echo "[delete coach] Vous n'avez pas les autorisations nécessaires pour supprimer un compte coach.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -417,6 +479,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
 
         <?php if ($is_admin): ?>
             <div class="container create-coach">
+                <h2>Créer un compte admin</h2>
+                <form for="register_admin" method="post" action="compte.php">
+                    <input type="hidden" name="register_admin" value="1">
+                    <label for="name">Nom :</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="prenom">Prénom :</label>
+                    <input type="text" id="prenom" name="prenom" required>
+                    <label for="sexe">Sexe :</label>
+                    <input type="text" id="sexe" name="sexe" required>
+                    <label for="email">Adresse Email :</label>
+                    <input type="email" id="email" name="email" required>
+                    <label for="password">Mot de passe :</label>
+                    <input type="password" id="password" name="password" required>
+                    <button type="submit">Créer un compte admin</button>
+                </form>
+
                 <h2>Créer un compte coach</h2>
                 <form for="register_coach" method="post" action="compte.php">
                     <input type="hidden" name="register_coach" value="1">
@@ -431,6 +509,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
                     <label for="password">Mot de passe :</label>
                     <input type="password" id="password" name="password" required>
                     <button type="submit">Créer un compte coach</button>
+                </form>
+
+                <h2>Supprimer un compte coach</h2>
+                <form for="delete_coach" method="post" action="compte.php">
+                    <input type="hidden" name="delete_coach" value="1">
+                    <label for="id_coach">ID du coach :</label>
+                    <?php
+                    $sql = "SELECT id_coach, nom_coach, prenom_coach FROM coach";
+                    $result = $conn->query($sql);
+                    if ($result->num_rows > 0) {
+                        echo '<select id="id_coach" name="id_coach" required>';
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row['id_coach'] . '">' . $row['nom_coach'] . ' ' . $row['prenom_coach'] . '</option>';
+                        }
+                        echo '</select>';
+                    } else {
+                        echo '<p>No coaches found.</p>';
+                    }
+                    ?>
+                    <button type="submit">Supprimer le compte coach</button>
                 </form>
             </div>
         <?php endif; ?>
