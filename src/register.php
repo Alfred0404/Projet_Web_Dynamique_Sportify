@@ -9,7 +9,7 @@ function validate($data) {
     return $data;
 }
 
-function registerUser($conn, $table, $nom, $prenom, $sexe, $email, $motdepasse) {
+function enregistrer_user($conn, $table, $nom, $prenom, $sexe, $email, $motdepasse) {
     $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES ('$nom', '$prenom', '$sexe', '$email', '$motdepasse')";
     if ($conn->query($sql) === TRUE) {
         // Enregistrement dans la table users
@@ -17,7 +17,7 @@ function registerUser($conn, $table, $nom, $prenom, $sexe, $email, $motdepasse) 
         $fname = $table;
         $img = "image_coach/defaut.jpg";
         $status = "En ligne";
-        
+
         $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES ('$unique_id', '$fname', '$nom', '$email', '$motdepasse', '$img', '$status')";
         if ($conn->query($user_sql) === TRUE) {
             header("Location: index.php?message=Inscription réussie. Vous pouvez maintenant vous connecter.");
@@ -39,10 +39,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
     $password = validate($_POST['password']);
 
     if ($role == 'admin') {
-        $register_message = registerUser($conn, 'admin', $nom, $prenom, $sexe, $email, $password);
+        $register_message = enregistrer_user($conn, 'admin', $nom, $prenom, $sexe, $email, $password);
     } elseif ($role == 'coach') {
-        $register_message = registerUser($conn, 'coach', $nom, $prenom, $sexe, $email, $password);
+        $register_message = enregistrer_user($conn, 'coach', $nom, $prenom, $sexe, $email, $password);
     } elseif ($role == 'client') {
-        $register_message = registerUser($conn, 'client', $nom, $prenom, $sexe, $email, $password);
+        $register_message = enregistrer_user($conn, 'client', $nom, $prenom, $sexe, $email, $password);
     }
 }

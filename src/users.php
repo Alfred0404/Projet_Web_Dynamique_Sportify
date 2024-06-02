@@ -1,6 +1,8 @@
 <?php
 session_start();
 include "db_connection.php";
+
+// si l'utilisateur n'est pas connecté
 if (!isset($_SESSION['unique_id'])) {
   header("location: index.php");
 }
@@ -9,25 +11,43 @@ $outgoing_id = $_SESSION['unique_id'];
 $sql = "SELECT * FROM users WHERE NOT unique_id = {$outgoing_id} ORDER BY user_id DESC";
 $query = mysqli_query($conn, $sql);
 $output = "";
+
+// si aucun utilisateur n'est disponible pour discuter
 if (mysqli_num_rows($query) == 0) {
   $output .= "No users are available to chat";
-} elseif (mysqli_num_rows($query) > 0) {
+}
+
+// si des utilisateurs sont disponibles pour discuter
+elseif (mysqli_num_rows($query) > 0) {
   while ($row = mysqli_fetch_assoc($query)) {
+    // on récupère le dernier message entre l'utilisateur connecté et l'utilisateur avec qui il discute
     $sql2 = "SELECT * FROM messages WHERE (incoming_msg_id = {$row['unique_id']}
                 OR outgoing_msg_id = {$row['unique_id']}) AND (outgoing_msg_id = {$outgoing_id}
                 OR incoming_msg_id = {$outgoing_id}) ORDER BY msg_id DESC LIMIT 1";
+
     $query2 = mysqli_query($conn, $sql2);
     $row2 = mysqli_fetch_assoc($query2);
+
+    // afficher le dernier message s'il existe
     (mysqli_num_rows($query2) > 0) ? $result = $row2['msg'] : $result = "Aucun message";
+
+    // si le message est supérieur à 28 caractères, on le tronque
     (strlen($result) > 28) ? $msg = substr($result, 0, 28) . '...' : $msg = $result;
+
     if (isset($row2['outgoing_msg_id'])) {
       ($outgoing_id == $row2['outgoing_msg_id']) ? $you = "You: " : $you = "";
-    } else {
+    }
+    else {
       $you = "";
     }
+
+    // afficher si l'utilisateur est en ligne ou non
     ($row['status'] == "Offline now") ? $offline = "offline" : $offline = "";
+
+    // cacher le message "You: " si l'utilisateur connecté est l'utilisateur avec qui on discute
     ($outgoing_id == $row['unique_id']) ? $hid_me = "hide" : $hid_me = "";
 
+    // afficher les utilisateurs disponibles pour discuter
     $output .= '<a class = "user_info" href="chat.php?user_id=' . $row['unique_id'] . '">
                   <div class="content">
                   <img src="php/images/' . $row['img'] . '" alt="">
@@ -78,6 +98,7 @@ if (mysqli_num_rows($query) == 0) {
         <header>
           <div class="content">
             <?php
+            // récupérer les informations de l'utilisateur connecté
             $sql = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$_SESSION['unique_id']}");
             if (mysqli_num_rows($sql) > 0) {
               $row = mysqli_fetch_assoc($sql);
@@ -85,17 +106,12 @@ if (mysqli_num_rows($query) == 0) {
             ?>
             <img src="image_coach/defaut.jpg" alt="">
             <div class="details">
+              <!-- afficher les informations de l'utilisateur connecté -->
               <span><?php echo $row['fname'] . " " . $row['lname'] ?></span>
               <p><?php echo $row['status']; ?></p>
             </div>
           </div>
-          <!-- <a href="logout.php?logout_id=<?php echo $row['unique_id']; ?>" class="logout">Logout</a> -->
         </header>
-        <!-- <div class="search">
-          <span class="text">Select an user to start chat</span>
-          <input type="text" placeholder="Enter name to search...">
-          <button><i class="fas fa-search"></i></button>
-        </div> -->
         <?php echo $output; ?>
         <div class="users-list">
         </div>

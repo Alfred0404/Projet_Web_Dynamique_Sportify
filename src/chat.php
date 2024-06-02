@@ -37,6 +37,7 @@ if (!isset($_SESSION['unique_id'])) {
       <section class="chat-area">
         <header>
           <?php
+          // ? récupérer l'utilisateur avec lequel on discute
           $user_id = mysqli_real_escape_string($conn, $_GET['user_id']);
           $sql = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$user_id}");
           if (mysqli_num_rows($sql) > 0) {
@@ -48,6 +49,7 @@ if (!isset($_SESSION['unique_id'])) {
           <a href="users.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
           <img src="image_coach/defaut.jpg">
           <div class="details">
+            <!-- afficher l'utilsateur a vec lequel on discute -->
             <span><?php echo $row['fname'] . " " . $row['lname'] ?></span>
             <p><?php echo $row['status']; ?></p>
           </div>

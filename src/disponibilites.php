@@ -31,7 +31,7 @@ function validate($data)
 $id_coach = $_GET['id_coach'];
 
 // Fonction pour récupérer les créneaux horaires disponibles
-function getAvailableSlots($conn, $id_coach)
+function get_heures_disponibles($conn, $id_coach)
 {
     $sql = "SELECT j.nom_jour, d.heure_debut, d.heure_fin, d.id_disponibilite
             FROM disponibilite d
@@ -55,7 +55,7 @@ function getAvailableSlots($conn, $id_coach)
 }
 
 // Fonction pour récupérer les créneaux horaires réservés
-function getBookedSlots($conn, $id_coach)
+function get_heures_non_disponibles($conn, $id_coach)
 {
     $sql = "SELECT jour_rdv, heure_rdv
             FROM prise_de_rendez_vous
@@ -83,7 +83,6 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $coach = mysqli_fetch_assoc($result);
 
-
 // Récupérer le unique_id du coach depuis la table users
 $unique_id_coach = null;
 if ($coach) {
@@ -107,12 +106,8 @@ if ($is_client && $unique_id_coach !== null) {
 }
 
 
-$availableSlots = getAvailableSlots($conn, $id_coach);
-$bookedSlots = getBookedSlots($conn, $id_coach);
-
-
-
-
+$availableSlots = get_heures_disponibles($conn, $id_coach);
+$bookedSlots = get_heures_non_disponibles($conn, $id_coach);
 ?>
 
 <!DOCTYPE html>
@@ -170,12 +165,22 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                         '15:00' => '15h-16h',
                         '16:00' => '16h-17h'
                     ];
+                    // Afficher les créneaux horaires disponibles
                     foreach ($hours as $time => $label):
                         echo '<tr>';
                         if ($time == '08:00') {
                             echo '<td rowspan="9">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</td>';
-                            echo '<td rowspan="9">' . htmlspecialchars($coach['specialite_coach']) . '</td>';
+                            echo '<td rowspan="9">';
+                            $sql = "SELECT nom_activites FROM activites WHERE id_activites = ?";
+                            $stmt = mysqli_prepare($conn, $sql);
+                            mysqli_stmt_bind_param($stmt, "i", $coach['specialite_coach']);
+                            mysqli_stmt_execute($stmt);
+                            $result = mysqli_stmt_get_result($stmt);
+                            $activite = mysqli_fetch_assoc($result);
+                            echo htmlspecialchars($activite['nom_activites']);
+                            echo '</td>';
                         }
+                        // Vérifier si le créneau est déjà réservé
                         foreach (['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'] as $jour):
                             $isBooked = isset($bookedSlots[$jour]) && in_array($time, $bookedSlots[$jour]);
                             $isLunchTime = $time == '12:00';
@@ -198,7 +203,7 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
 
     <script>
         let selectedCell = null;
-
+        // détécter le clic sur une cellule disponible et la marquer comme sélectionnée
         document.querySelectorAll('.available').forEach(cell => {
             cell.addEventListener('click', function () {
                 if (selectedCell) {
@@ -210,11 +215,13 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
             });
         });
 
+        // Réserver le créneau sélectionné
         document.getElementById('reserve-button').addEventListener('click', function () {
             if (selectedCell) {
                 const jour = selectedCell.dataset.jour;
                 const heure = selectedCell.dataset.heure;
                 const confirmation = confirm(`Voulez-vous réserver le créneau ${jour} de ${heure} à ${parseInt(heure.split(':')[0]) + 1}h ?`);
+                // si l'utilisateur confirme la réservation, envoyer une requête POST pour réserver le créneau
                 if (confirmation) {
                     const formData = new FormData();
                     formData.append('id_coach', '<?php echo htmlspecialchars($id_coach); ?>');

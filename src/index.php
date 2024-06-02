@@ -11,9 +11,10 @@ function validate($data)
     return $data;
 }
 
-// Inscription
+// Inscription des utilisateurs
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
 
+    // Récupération des données du formulaire
     $role = validate($_POST['register_role']);
     $nom = validate($_POST['name']);
     $prenom = validate($_POST['prenom']);
@@ -29,20 +30,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
     }
     $stmt->bind_param("s", $nom);
     $stmt->execute();
-    // debut jerry
     $result = $stmt->get_result();
 
+    // vérification des doublons
     if ($result->num_rows > 0) {
-        // Un doublon a été trouvé
         echo "Erreur: Un utilisateur avec le même nom existe déjà.";
-        // fin jerry
     }
 
+    // Pas de doublon
     if ($stmt->affected_rows === 1) {
         header("Location: index.php?success=Account created successfully");
         exit();
     } else {
-        // Pas de doublon, on peut insérer
+        // Insertion des données dans la table correspondante
         $table = $role;
         $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES (?, ?, ?, ?, ?)";
 
@@ -53,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
         $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
         $stmt->execute();
 
+        // mettre les données dans la session et mettre le user dans la table users
         if ($stmt->affected_rows === 1) {
             $_SESSION['role'] = $role;
             $_SESSION['nom'] = $nom;
@@ -84,8 +85,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
     }
 }
 
-// Connexion
+// Connexion des utilisateurs
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
+    // Récupération des données du formulaire
     $role = validate($_POST['login_role']);
     $username = validate($_POST['username']);
     $password = validate($_POST['password']);
@@ -103,6 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
     if ($result->num_rows === 1) {
         $row = $result->fetch_assoc();
         if ($password == $row['mdp_' . $table]) {
+            // Connexion réussie, on met les données dans la session
             $_SESSION['user_id'] = $row['id_' . $table];
             $_SESSION['user_name'] = $row['nom_' . $table];
             $_SESSION['prenom'] = $row['prenom_' . $table];

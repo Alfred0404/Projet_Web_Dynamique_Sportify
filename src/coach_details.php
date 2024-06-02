@@ -1,14 +1,15 @@
 <?php
 session_start();
 
+// ? Si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
 if (!isset($_SESSION['role']) || !isset($_SESSION['nom'])) {
-    // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
     header("Location: index.php");
     exit();
 }
 
 $role = $_SESSION['role'];
 
+// ? fonction pour ajouter le formulaire de connexion d'un coach
 function loginForm($id_coach)
 {
     echo
@@ -22,36 +23,20 @@ function loginForm($id_coach)
     </div>';
 }
 
-// Vérifier si un identifiant de coach est passé en paramètre
+// ? Vérifier si un identifiant de coach est passé en paramètre
 if (isset($_GET['id'])) {
     // Récupérer l'identifiant du coach depuis l'URL
     $id_coach = intval($_GET['id']);
 
     // Connexion à la base de données
-    $user_name = "root";
-    $password = "";
-    $database = "sportify";
-    $server = "127.0.0.1";
-    $port = 3306;
-
-    $conn = mysqli_connect($server, $user_name, $password, $database, $port);
-
-    if (!$conn) {
-        echo "le port 3301 ne marche pas";
-        $port = 3306;
-        $conn = mysqli_connect($server, $user_name, $password, $database, $port);
-
-        if (!$conn) {
-            die("Connection failed: " . mysqli_connect_error());
-        }
-    }
+    include "db_connection.php";
 
     // Récupérer les informations du coach
-    $sql = "SELECT nom_coach, prenom_coach, email_coach, cv_coach, bureau_coach, photo_coach FROM coach WHERE id_coach = $id_coach";
+    $sql = "SELECT nom_coach, prenom_coach, email_coach, cv_coach, bureau_coach, photo_coach, specialite_coach, telephone_coach FROM coach WHERE id_coach = $id_coach";
     $result = $conn->query($sql);
 
 
-    // Vérifier si le coach existe
+    // si le coach existe, on récupère ses informations
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $nom_coach = $row["nom_coach"];
@@ -60,6 +45,8 @@ if (isset($_GET['id'])) {
         $cv_coach = $row["cv_coach"];
         $bureau_coach = $row["bureau_coach"];
         $photo_coach = $row["photo_coach"];
+        $specialite_coach = $row["specialite_coach"];
+        $telephone_coach = $row["telephone_coach"];
         ?>
 
         <!DOCTYPE html>
@@ -100,17 +87,24 @@ if (isset($_GET['id'])) {
                                 <img class="photo-coach" src="<?php echo $photo_coach; ?>" alt="Photo du Coach">
                             <?php } ?>
                             <div class="infos-coach">
-                                <p>Coach</p>
-                                <p>Id : <?php echo $id_coach; ?></p>
+                                <?php
+                                //? on affiche les infos du coach sur la page
+                                $sql = "SELECT nom_activites FROM activites WHERE id_activites = ?";
+                                $stmt = mysqli_prepare($conn, $sql);
+                                mysqli_stmt_bind_param($stmt, "i", $specialite_coach);
+                                mysqli_stmt_execute($stmt);
+                                $result = mysqli_stmt_get_result($stmt);
+                                $activite = mysqli_fetch_assoc($result);
+                                echo "<p>Coach de " . htmlspecialchars($activite['nom_activites']) . "</p>";
+                                ?>
                                 <p>Bureau : <?php echo $bureau_coach; ?></p>
-                                <p>Téléphone : (numéro de téléphone)</p>
+                                <p>Téléphone : <?php echo $telephone_coach; ?></p>
                                 <p>Email : <?php echo $email_coach; ?></p>
                             </div>
                         </div>
 
                         <form class="btns-coach" action="disponibilites.php" method="get">
                             <button type="submit" name="button_coach" value="rendez-vous">
-                                <!-- send $id_coach -->
                                 <input type="hidden" name="id_coach" value="<?php echo $id_coach; ?>">
                                 <p>Prendre rendez-vous</p>
                             </button>
@@ -118,7 +112,7 @@ if (isset($_GET['id'])) {
                         </form>
 
                         <div class="cv-section">
-                            <button onclick="toggleCV()">Voir le CV</button>
+                            <button onclick="afficher_cv()">Voir le CV</button>
                             <div id="cv-content" class="cv-content">
                                 <?php
                                 if (isset($cv_coach)) {
@@ -127,7 +121,7 @@ if (isset($_GET['id'])) {
                                         $cv_content = file_get_contents($cv_path);
                                         $xml = simplexml_load_string($cv_content);
 
-                                        // Affichage du CV en HTML
+                                        // ? Affichage du CV en HTML
                                         echo '<div class="card ">';
                                         echo '<div class="card-body">';
                                         echo '<h2 class="card-title">Informations Personnelles</h2>';
@@ -176,7 +170,7 @@ if (isset($_GET['id'])) {
                     Maps</a>
             </footer>
             <script>
-                function toggleCV() {
+                function afficher_cv() {
                     var element = document.getElementById("cv-content");
                     if (element.style.display === "none" || element.style.display === "") {
                         element.style.display = "block";

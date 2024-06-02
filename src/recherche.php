@@ -111,6 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
             <div class="results">
                 <?php foreach ($search_result as $item): ?>
                     <div class="result-item">
+                        <!-- si la recherche est le nom d'un coach ou le numéro d'une activité -->
                         <?php if ($item['role'] === 'coach'): ?>
                             <div class="infos-coach">
                                 <p><strong>Rôle :</strong> Coach</p>
@@ -118,7 +119,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
                                 <p><strong>Prénom :</strong> <?php echo htmlspecialchars($item['prenom']); ?></p>
                                 <p><strong>Email :</strong> <?php echo htmlspecialchars($item['email']); ?></p>
                                 <p><strong>Bureau :</strong> <?php echo htmlspecialchars($item['bureau']); ?></p>
-                                <p><strong>Spécialité :</strong> <?php echo htmlspecialchars($item['specialite']); ?></p>
+                                <?php
+                                // Récupérer le nom de la spécialité du coach
+                                $sql = "SELECT nom_activites FROM activites WHERE id_activites = ?";
+                                $stmt = mysqli_prepare($conn, $sql);
+                                mysqli_stmt_bind_param($stmt, "i", $item['specialite']);
+                                mysqli_stmt_execute($stmt);
+                                $result = mysqli_stmt_get_result($stmt);
+                                $activite = mysqli_fetch_assoc($result);
+                                echo "<p><strong>Spécialité :</strong> " . htmlspecialchars($activite['nom_activites']) . "</p>";
+                                ?>
                                 <p><strong>Téléphone :</strong> <?php echo htmlspecialchars($item['telephone']); ?></p>
                             </div>
                             <div class="photo-coach">
@@ -129,6 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
                             <div class="coach-link">
                                 <a href="coach_details.php?id=<?php echo $item['id_coach']; ?>">Voir le profil</a>
                             </div>
+                            <!-- si la recherche est le nom d'une activité -->
                         <?php elseif ($item['role'] === 'activite'): ?>
                             <ul class="liste-activites">
                                 <?php

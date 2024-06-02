@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_client = $_SESSION['user_id']; // Récupérer l'ID du client à partir de la session
 
     // Valeurs de la facture et de la date de paiement
-    $facture = 50.00; // Valeur de la facture fixée à 50
+    $facture = 50.00; // Valeur de la facture fixée à 50 euros
     $date_paiement = date('Y-m-d H:i:s'); // Date et heure actuelles
 
     // Requête SQL pour insérer les informations de la carte dans la table paiement
