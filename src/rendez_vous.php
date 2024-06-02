@@ -180,7 +180,7 @@ if ($is_client || $is_admin) {
             </form>
         <?php endif; ?>
 
-        <h1>Rendez-vous client confirmés</h1>
+        <h1>Rendez-vous confirmés</h1>
         <?php if (count($rendez_vous) > 0): ?>
             <?php foreach ($rendez_vous as $rdv): ?>
                 <div class="rdv-details" data-coach-id="<?= $rdv['id_coach'] ?>"

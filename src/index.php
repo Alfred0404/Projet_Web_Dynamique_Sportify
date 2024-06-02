@@ -178,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
         <div class="container connect">
             <h2>Connexion</h2>
             <form method="post" action="index.php">
-                <label for="login_role">Sélectionnez votre rôle :</label>
+                <label for="login_role">Sélectionnez votre rôle</label>
                 <select id="login_role" name="login_role" required>
                     <option value="">--Choisir un rôle--</option>
                     <option value="admin">Administrateur</option>
@@ -187,7 +187,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
                 </select>
                 <label for="username">Nom d'utilisateur :</label>
                 <input type="text" id="username" name="username" required>
-                <label for="password">Mot de passe :</label>
+                <label for="password">Mot de passe</label>
                 <input type="password" id="password" name="password" required>
                 <button type="submit">Se connecter</button>
             </form>
@@ -195,7 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
         <div class="container create-account">
             <h2>Créer un compte</h2>
             <form method="post" action="index.php">
-                <label for="register_role">Sélectionnez votre rôle :</label>
+                <label for="register_role">Sélectionnez votre rôle</label>
                 <select id="register_role" name="register_role" onchange="showRegistrationFields()" required>
                     <option value="">--Choisir un rôle--</option>
                     <option value="admin">Administrateur</option>
