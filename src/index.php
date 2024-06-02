@@ -112,10 +112,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
 
             // Récupération du unique_id depuis la table users
             $user_sql = "SELECT unique_id FROM users WHERE fname = ? AND lname = ? AND password = ?";
+            echo $user_sql;
             $user_stmt = $conn->prepare($user_sql);
             if ($user_stmt === false) {
                 die("Erreur de préparation de la requête users : " . $conn->error);
             }
+            echo $role . " " . $username . " " . $password;
             $user_stmt->bind_param("sss", $role, $username, $password);
             $user_stmt->execute();
             $user_result = $user_stmt->get_result();

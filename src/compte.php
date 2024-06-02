@@ -7,31 +7,33 @@ if (!isset($_SESSION['user_name'])) {
     header("Location: index.php");
     exit();
 }
-
-// Récupérer l'ID du client à partir de la base de données en fonction du nom d'utilisateur
-$sql = "SELECT id_client FROM client WHERE nom_client = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    die("[get client id] Erreur de préparation de la requête : " . $conn->error);
-}
-$stmt->bind_param("s", $_SESSION['user_name']); // Supposons que 'user_name' contienne le nom d'utilisateur
-$stmt->execute();
-$result = $stmt->get_result();
-if ($result->num_rows === 1) {
-    $row = $result->fetch_assoc();
-    $client_id_from_database = $row['id_client'];
-} else {
-    echo "[get client id] Erreur : Aucun client trouvé avec ce nom d'utilisateur.";
-}
-$stmt->close();
-
-// Stocker l'ID du client dans la session
-// $_SESSION['user_id'] = $client_id_from_database;
-
 // Vérifier le rôle de l'utilisateur
 $is_admin = $_SESSION['role'] === 'admin';
 $is_coach = $_SESSION['role'] === 'coach';
 $is_client = $_SESSION['role'] === 'client';
+
+if ($is_client) {
+    // Récupérer l'ID du client à partir de la base de données en fonction du nom d'utilisateur
+    $sql = "SELECT id_client FROM client WHERE nom_client = ?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("[get client id] Erreur de préparation de la requête : " . $conn->error);
+    }
+    $stmt->bind_param("s", $_SESSION['user_name']); // Supposons que 'user_name' contienne le nom d'utilisateur
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+        $client_id_from_database = $row['id_client'];
+    } else {
+        echo "[get client id] Erreur : Aucun client trouvé avec ce nom d'utilisateur.";
+    }
+    $stmt->close();
+}
+
+// Stocker l'ID du client dans la session
+// $_SESSION['user_id'] = $client_id_from_database;
+
 
 // Fonction pour valider et sécuriser les entrées utilisateur
 function validate($data)
