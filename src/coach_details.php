@@ -117,7 +117,7 @@ if (isset($_GET['id'])) {
                                 <?php
                                 if (isset($cv_coach)) {
                                     $cv_path = "cvs/" . htmlspecialchars($cv_coach);
-                                    if (file_exists($cv_path)) {
+                                    if (file_exists($cv_path) && is_file($cv_path)) {
                                         $cv_content = file_get_contents($cv_path);
                                         $xml = simplexml_load_string($cv_content);
 

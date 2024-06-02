@@ -132,14 +132,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
                 exit();
             } else {
                 echo "Erreur: impossible de trouver l'utilisateur dans la table users.";
+                header("Location: index.php?message=Erreur: impossible de trouver l'utilisateur dans la table users.");
                 exit();
             }
         } else {
             echo "Mot de passe incorrect.";
+            header ("Location: index.php?message=Mot de passe incorrect.");
             exit();
         }
     } else {
         echo "Nom d'utilisateur incorrect.";
+        header ("Location: index.php?message=Nom d'utilisateur incorrect.");
         exit();
     }
 }

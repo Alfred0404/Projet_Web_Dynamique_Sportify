@@ -3,35 +3,30 @@
             <PersonalInformation>
                 <FirstName>Tibo</FirstName>
                 <LastName>Inshape</LastName>
-                <DateOfBirth>1995-02-16</DateOfBirth>
-                <Email>tibo.inshape@gmail.com</Email>
-                <PhoneNumber>02 02 02 02 02</PhoneNumber>
+                <DateOfBirth>2000-12-15</DateOfBirth>
+                <Email>test@test.fr</Email>
+                <PhoneNumber>07 82 91 91 49</PhoneNumber>
                 <Address>
-                    <Street>test de rue 22</Street>
-                    <City>paris</City>
-                    <PostalCode>75000</PostalCode>
-                    <Country>france</Country>
+                    <Street>10 rue Sextius Michel</Street>
+                    <City>Paris</City>
+                    <PostalCode>75015</PostalCode>
+                    <Country>France</Country>
                 </Address>
             </PersonalInformation>
             <ProfessionalSummary>
-                <Summary>coach sportif depuis 10 ans
-professionnel de tractions lestés
-gros ytber</Summary>
+                <Summary>coach de sport, laveur de carreaux</Summary>
             </ProfessionalSummary>
             <Education>
                 <Degree>
-                    <Title>bac +5 ingé</Title>
+                    <Title>bac +7 en tractions</Title>
                 </Degree>
             </Education>
             <Skills>
-                <Skill>stock
-trofor
-enorme
-sec</Skill>
+                <Skill>muscu, muscu</Skill>
             </Skills>
             <Languages>
                 <Language>
-                    <Name>francais</Name>
+                    <Name>Francais</Name>
                     <Proficiency>natif</Proficiency>
                 </Language>
             </Languages>

@@ -274,14 +274,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
         $sexe = validate($_POST['sexe']);
         $email = validate($_POST['email']);
         $password = validate($_POST['password']);
+        $specialite = validate($_POST['specialite']);
 
         // création de la requete SQL
-        $sql = "INSERT INTO coach (nom_coach, prenom_coach, sexe_coach, email_coach, mdp_coach) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO coach (nom_coach, prenom_coach, sexe_coach, email_coach, mdp_coach, specialite_coach) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
             die("[create coach] Erreur de préparation de la requête : " . $conn->error);
         }
-        $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
+        $stmt->bind_param("ssssss", $nom, $prenom, $sexe, $email, $password, $specialite);
         $stmt->execute();
 
         // vérification de la création du compte
@@ -359,6 +360,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_admin'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_coach'])) {
     if ($is_admin) {
         $id_coach = validate($_POST['id_coach']);
+        $nom_coach = validate($_POST['nom_coach']);
 
         $sql = "DELETE FROM coach WHERE id_coach=?";
         $stmt = $conn->prepare($sql);
@@ -374,8 +376,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_coach'])) {
         } else {
             echo "[delete coach] Erreur: " . $sql . "<br>" . $conn->error;
         }
+
+        // delete user from users table
+        $sql = "DELETE FROM users WHERE fname='coach' AND lname=?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("[delete coach] Erreur de préparation de la requête : " . $conn->error);
+        }
+        $stmt->bind_param("i", $nom_coach);
+        $stmt->execute();
+
+        if ($stmt->affected_rows === 1) {
+            echo "[delete coach] Compte coach supprimé avec succès.";
+            header("Location: compte.php");
+        } else {
+            echo "[delete coach] Erreur: " . $sql . "<br>" . $conn->error;
+            header("Location: compte.php");
+        }
     } else {
         echo "[delete coach] Vous n'avez pas les autorisations nécessaires pour supprimer un compte coach.";
+        header("Location: compte.php");
     }
 }
 ?>
@@ -427,7 +447,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_coach'])) {
                     <?php
                     if (isset($cv_coach)) {
                         $cv_path = "cvs/" . htmlspecialchars($cv_coach);
-                        if (file_exists($cv_path)) {
+                        if (file_exists($cv_path) && is_file($cv_path)) {
                             $cv_content = file_get_contents($cv_path);
                             $xml = simplexml_load_string($cv_content);
 
@@ -511,6 +531,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_coach'])) {
                     <input type="email" id="email" name="email" required>
                     <label for="password">Mot de passe :</label>
                     <input type="password" id="password" name="password" required>
+                    <label for="specialite">Specialite :</label>
+                    <input type="text" id="specialite" name="specialite" required>
                     <button type="submit">Créer un compte coach</button>
                 </form>
 
@@ -525,6 +547,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_coach'])) {
                         echo '<select id="id_coach" name="id_coach" required>';
                         while ($row = $result->fetch_assoc()) {
                             echo '<option value="' . $row['id_coach'] . '">' . $row['nom_coach'] . ' ' . $row['prenom_coach'] . '</option>';
+                            echo '<input type="hidden" name="nom_coach" value="' . $row['nom_coach'] . '">';
                         }
                         echo '</select>';
                     } else {
