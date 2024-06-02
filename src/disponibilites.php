@@ -83,8 +83,36 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $coach = mysqli_fetch_assoc($result);
 
+
+// Récupérer le unique_id du coach depuis la table users
+$unique_id_coach = null;
+if ($coach) {
+    $sql = "SELECT users.unique_id 
+            FROM users 
+            WHERE users.fname = 'coach' 
+              AND users.lname = ? 
+              AND users.password = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "ss", $coach['nom_coach'], $coach['mdp_coach']);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($row = mysqli_fetch_assoc($result)) {
+        $unique_id_coach = $row['unique_id'];
+    }
+}
+
+// Stocker unique_id_coach dans la session si l'utilisateur est un client
+if ($is_client && $unique_id_coach !== null) {
+    $_SESSION['unique_id_coach'] = $unique_id_coach;
+}
+
+
 $availableSlots = getAvailableSlots($conn, $id_coach);
 $bookedSlots = getBookedSlots($conn, $id_coach);
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -108,7 +136,7 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
             <li class="nav-item"><a href="accueil.php">Accueil</a></li>
             <li class="nav-item"><a href="parcourir.php">Tout parcourir</a></li>
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
-            <li class="nav-item active"><a href="#">Rendez-vous</a></li>
+            <li class="nav-item active"><a href="rendez_vous.php">Rendez-vous</a></li>
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>
             <li class="nav-item"><a href="users.php">Discussions</a></li>
             <li class="nav-item"><a href="logout.php">Déconnexion</a></li>

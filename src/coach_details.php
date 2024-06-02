@@ -32,7 +32,7 @@ if (isset($_GET['id'])) {
     $password = "";
     $database = "sportify";
     $server = "127.0.0.1";
-    $port = 3301;
+    $port = 3306;
 
     $conn = mysqli_connect($server, $user_name, $password, $database, $port);
 

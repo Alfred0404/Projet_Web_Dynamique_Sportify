@@ -44,6 +44,21 @@ if (isset($_POST['cancel_rdv'])) {
     mysqli_stmt_bind_param($stmt, "iiss", $id_coach, $id_client, $jour_rdv, $heure_rdv);
 
     if (mysqli_stmt_execute($stmt)) {
+        // Insérer un message automatique dans la table messages
+        $unique_id_coach = $_SESSION['unique_id_coach']; // ID du coach récupéré de la session
+        $unique_id_client = $_SESSION['unique_id']; // ID du client récupéré de la session
+        $message = "Votre rendez-vous avec moi prévu le $jour_rdv à $heure_rdv a été annulé."; // Message automatique
+
+        $sql_message = "INSERT INTO messages (incoming_msg_id, outgoing_msg_id, msg) VALUES (?, ?, ?)";
+        $stmt_message = $conn->prepare($sql_message);
+        if ($stmt_message === false) {
+            die("Erreur de préparation de la requête : " . $conn->error);
+        }
+        $stmt_message->bind_param("iis", $unique_id_client, $unique_id_coach, $message);
+        $stmt_message->execute();
+        $stmt_message->close();
+
+        // Redirection vers la page des rendez-vous
         header("Location: rendez_vous.php");
         exit();
     } else {

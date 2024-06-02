@@ -301,6 +301,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
             $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES ('$unique_id', '$fname', '$nom', '$email', '$password', '$img', '$status')";
             if ($conn->query($user_sql) === TRUE) {
                 echo "Compte coach créé avec succès.";
+                header("Location: compte.php");
                 exit();
             } else {
                 return "Erreur lors de l'inscription dans la table users: " . $user_sql . "<br>" . $conn->error;
