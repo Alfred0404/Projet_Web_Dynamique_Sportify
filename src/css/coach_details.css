@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -58,13 +62,20 @@ header img {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 50%;
+    width: 65%;
 }
 
 li.nav-item.active {
     background: #ff9e01;
     color: #000;
     border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+        color: #000;
+    }
 }
 
 .nav-item {
@@ -74,6 +85,14 @@ li.nav-item.active {
     width: auto;
     padding: 10px 10px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ff9e01;
+        color: #000;
+    }
 }
 
 .nav-item a {
@@ -95,7 +114,7 @@ section::before {
 
 section::after {
     content: "";
-    bottom: -130px;
+    bottom: -150px;
     width: 100%;
     height: 100px;
     background:
@@ -108,14 +127,14 @@ section::after {
 }
 
 section {
-    height: 100vh;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     background:
         linear-gradient(rgba(0, 0, 0, 0.7),
             rgba(0, 0, 0, 0.7)),
-        url(../../assets/background.jpg);
+        url(../../assets/background_animate.gif);
     background-size: cover;
     z-index: -2;
 }
@@ -148,7 +167,38 @@ section a {
     color: #fff;
 }
 
+.cv-section {
+    margin-top: 20px;
+}
+
+.cv-section button {
+    background-color: #ff9e01;
+    color: #000;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cv-section button:hover {
+    background-color: #e68900;
+}
+
+.cv-content {
+    display: none;
+    margin-top: 10px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    color: #000;
+}
+
+.cv-content pre {
+    white-space: pre-wrap;
+}
+
 .coach-card {
+    margin-bottom: 2%;
     background: rgba(0, 0, 0, 0.4);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -187,9 +237,13 @@ section a {
     justify-content: center;
     align-items: center;
     gap: 100px;
+
 }
 
+.btns-coach a,
 .btns-coach button {
+    transition: all 0.3s ease;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -201,16 +255,33 @@ section a {
     border-radius: 16px;
 }
 
-.btns-coach button:hover {
+.btns-coach button:hover,
+.btns-coach a:hover {
     background: #fff;
     color: #000;
-    transition: all 0.5s ease-in-out;
+    transition: all 0.3s ease;
 }
 
 .btns-coach button:focus {
     background: #fff;
     color: #000;
-    transition: all 0.1s ease;
+    transition: all 0.3s ease;
+}
+
+
+.card-body p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.card-body h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+#mail-link {
+    color: #000;
+    font-size: 1.2rem;
 }
 
 footer {

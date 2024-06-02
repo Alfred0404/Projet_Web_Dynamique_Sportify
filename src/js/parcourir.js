@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const items = document.querySelectorAll('.liste-activites li.card');
+    console.log(items);
     items.forEach(item => {
         const classes = Array.from(item.classList);
         const sportClass = classes.find(cls => cls !== 'card');

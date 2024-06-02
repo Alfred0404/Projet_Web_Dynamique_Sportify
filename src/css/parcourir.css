@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -58,13 +62,20 @@ header img {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 50%;
+    width: 65%;
 }
 
 li.nav-item.active {
     background: #ff9e01;
     color: #000;
     border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+        color: #000;
+    }
 }
 
 .nav-item {
@@ -74,6 +85,14 @@ li.nav-item.active {
     width: auto;
     padding: 10px 10px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ff9e01;
+        color: #000;
+    }
 }
 
 .nav-item a {
@@ -93,7 +112,7 @@ section::before {
 
 section::after {
     content: "";
-    bottom: -130px;
+    bottom: -150px;
     width: 100%;
     height: 100px;
     background:
@@ -111,7 +130,7 @@ section {
     background:
         linear-gradient(rgba(0, 0, 0, 0.7),
             rgba(0, 0, 0, 0.7)),
-        url(../../assets/background.jpg);
+        url(../../assets/background_animate.gif);
     background-size: cover;
     z-index: -2;
 }
@@ -162,6 +181,7 @@ section p {
 }
 
 .btns-activite input {
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -171,12 +191,15 @@ section p {
     color: #fff;
     border: 2px solid #fff;
     border-radius: 16px;
+    transition: all 0.3s ease;
+
 }
 
 .btns-activite input:hover {
     background: #fff;
     color: #000;
-    transition: all 0.5s ease-in-out;
+    transition: all 0.3s ease;
+
 }
 
 .btns-activite input:focus {
@@ -220,7 +243,8 @@ section p {
     width: 100%;
     height: 100%;
     text-align: center;
-    text-decoration: none; /* Pour supprimer les soulignements des liens */
+    text-decoration: none;
+    /* Pour supprimer les soulignements des liens */
 }
 
 
@@ -247,11 +271,20 @@ section p {
     margin-top: 20px;
 }
 
-.prev, .next {
+.prev,
+.next {
+    transition: all 0.3s ease;
     background: #ff9e01;
     padding: 10px 20px;
+    color: #000;
     border-radius: 8px;
     cursor: pointer;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+        color: #000;
+    }
 }
 
 ul.liste-coachs {
@@ -267,6 +300,7 @@ ul.liste-coachs {
 .liste-coachs .coach {
     color: #fff;
     width: auto;
+    cursor: pointer;
     border-radius: 16px;
     border: 2px solid #5a5a5a;
     display: flex;

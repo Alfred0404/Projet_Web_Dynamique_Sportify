@@ -1,18 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
     font-family: 'Inter', sans-serif;
     background-color: #000;
-    color: #1406b8;
+    color: #fff;
 }
 
 a {
     text-decoration: none;
     color: #000000;
+    margin: 40px 20px;
+}
+
+a:hover {
+    color: inherit;
+    text-decoration: none;
 }
 
 li {
@@ -58,13 +68,20 @@ header img {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 50%;
+    width: 65%;
 }
 
 li.nav-item.active {
     background: #ff9e01;
     color: #000;
     border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+        color: #000;
+    }
 }
 
 .nav-item {
@@ -74,6 +91,14 @@ li.nav-item.active {
     width: auto;
     padding: 10px 10px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ff9e01;
+        color: #000;
+    }
 }
 
 section::before {
@@ -99,7 +124,7 @@ section {
     background:
         linear-gradient(rgba(0, 0, 0, 0.7),
             rgba(0, 0, 0, 0.7)),
-        url(../../assets/background.jpg);
+        url(../../assets/background_animate.gif);
     background-size: cover;
     z-index: -2;
 }
@@ -134,14 +159,34 @@ section {
         margin-top: 20px;
         cursor: pointer;
         width: 30%;
+        transition: all 0.3s ease;
+        color: #000;
 
         &.btn-logout {
             background: #e13636;
-            color: #ffffff;
+            color: #000;
+
+            &:hover {
+                transition: all 0.3s ease;
+                background: #e46464;
+                color: #000;
+            }
         }
 
         &.btn-back {
-            background: #2bda3c;
+            background: #ff9e01;
+            color: #000;
+
+            &:hover {
+                transition: all 0.3s ease;
+                background: #ffdba2;
+                color: #000;
+            }
+        }
+
+        &:hover {
+            transition: all 0.3s ease;
+            background: #ffdba2;
             color: #000;
         }
     }
@@ -158,7 +203,8 @@ section {
             text-align: left;
         }
 
-        & input {
+        & input,
+        & textarea {
             padding: 10px;
             border-radius: 6px;
             border: none;
@@ -166,6 +212,63 @@ section {
             margin-bottom: 30px;
         }
     }
+
+    &.client-infos p {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+}
+
+.check-cv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    color: #000;
+    border: none;
+}
+
+.fill-cv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #fff;
+    border: none;
+}
+
+.cv-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    display: none;
+    color: #000;
+}
+
+.cv-form-container {
+    /* background-color: #f9f9f9; */
+    /* border: 1px solid #ddd; */
+    padding: 20px;
+    display: none;
+    color: #fff;
+}
+
+.cv-container h3,
+.cv-container h4 {
+    color: #ff9e01;
+}
+
+.cv-container p {
+    color: #000;
+}
+
+.cv-container pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#date_naissance {
+    cursor: pointer;
 }
 
 .client-infos {
@@ -173,10 +276,36 @@ section {
     margin-bottom: 2%;
 }
 
+.client-infos p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
 .update,
-.create-coach {
+.create-coach,
+.factures {
     margin-bottom: 2%;
 
+    & .submit {
+        background: #ff9e01;
+        color: #000;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        margin-top: 20px;
+        cursor: pointer;
+        width: 30%;
+        transition: all 0.3s ease;
+        color: #000;
+
+        &:hover {
+            transition: all 0.3s ease;
+            background: #ffdba2;
+            color: #000;
+        }
+
+    }
 }
 
 section img {
@@ -223,6 +352,8 @@ footer {
 }
 
 footer p,
-a {
+footer a {
     margin: 40px 20px;
+    text-decoration: none;
+    color: #fff;
 }

@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -11,8 +15,12 @@ body {
 }
 
 a {
-    text-decoration: none;
+    text-decoration: none !important;
     color: #000000;
+}
+
+a:hover {
+    text-decoration: none !important;
 }
 
 li {
@@ -57,13 +65,20 @@ header img {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 50%;
+    width: 65%;
 }
 
 li.nav-item.active {
     background: #ff9e01;
     color: #000;
     border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ffdba2;
+        color: #000;
+    }
 }
 
 .nav-item {
@@ -73,6 +88,14 @@ li.nav-item.active {
     width: auto;
     padding: 10px 10px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        background: #ff9e01;
+        color: #000;
+    }
 }
 
 section::before {
@@ -90,7 +113,7 @@ section::before {
 
 section::after {
     content: "";
-    bottom: -130px;
+    bottom: -150px;
     width: 100%;
     height: 100px;
     background:
@@ -110,7 +133,7 @@ section {
     background:
         linear-gradient(rgba(0, 0, 0, 0.7),
             rgba(0, 0, 0, 0.7)),
-        url(../../assets/background.jpg);
+        url(../../assets/background_animate.gif);
     background-size: cover;
     z-index: -2;
 }
@@ -141,6 +164,7 @@ section p {
 }
 
 .bulletin {
+    height: auto;
     background: black;
 }
 
@@ -153,6 +177,38 @@ section p {
     top: 100px;
 }
 
+.liste-bulletin {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 200px;
+    padding: 20px;
+    width: 60%;
+}
+
+.liste-bulletin h1 {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: black;
+    color: white;
+    border-radius: 16px;
+    padding: 20px;
+    border: 2px solid white;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    font-weight: 200;
+}
+
+.card p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
 
 footer {
     display: flex;
@@ -170,4 +226,5 @@ footer {
 footer p,
 a {
     margin: 40px 20px;
+    text-decoration: none !important;
 }

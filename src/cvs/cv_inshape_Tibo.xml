@@ -1,33 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?> 
+<?xml version="1.0" encoding="UTF-8"?>
         <CoachCV>
             <PersonalInformation>
                 <FirstName>Tibo</FirstName>
-                <LastName>inshape</LastName>
-                <DateOfBirth>2024-05-30</DateOfBirth>
-                <Email>nrigeds@gmail.com</Email>
-                <PhoneNumber>5984</PhoneNumber>
+                <LastName>Inshape</LastName>
+                <DateOfBirth>1995-02-16</DateOfBirth>
+                <Email>tibo.inshape@gmail.com</Email>
+                <PhoneNumber>02 02 02 02 02</PhoneNumber>
                 <Address>
-                    <Street>45</Street>
-                    <City>54</City>
-                    <PostalCode>4</PostalCode>
+                    <Street>test de rue 22</Street>
+                    <City>paris</City>
+                    <PostalCode>75000</PostalCode>
                     <Country>france</Country>
                 </Address>
             </PersonalInformation>
             <ProfessionalSummary>
-                <Summary>opl</Summary>
+                <Summary>coach sportif depuis 10 ans
+professionnel de tractions lestés
+gros ytber</Summary>
             </ProfessionalSummary>
             <Education>
                 <Degree>
-                    <Title>pol</Title>
+                    <Title>bac +5 ingé</Title>
                 </Degree>
             </Education>
             <Skills>
-                <Skill>opl</Skill>
+                <Skill>stock
+trofor
+enorme
+sec</Skill>
             </Skills>
             <Languages>
                 <Language>
-                    <Name>opl</Name>
-                    <Proficiency>opl</Proficiency>
+                    <Name>francais</Name>
+                    <Proficiency>natif</Proficiency>
                 </Language>
             </Languages>
         </CoachCV>

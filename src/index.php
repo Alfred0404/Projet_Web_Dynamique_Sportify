@@ -13,6 +13,7 @@ function validate($data)
 
 // Inscription
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
+
     $role = validate($_POST['register_role']);
     $nom = validate($_POST['name']);
     $prenom = validate($_POST['prenom']);
@@ -20,20 +21,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
     $email = validate($_POST['email']);
     $password = validate($_POST['password']);
 
-    $table = $role;
-    $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
+    // Vérification des doublons
+    $check_sql = "SELECT * FROM admin WHERE nom_admin = ?";
+    $stmt = $conn->prepare($check_sql);
     if ($stmt === false) {
-        die("Erreur de préparation de la requête : " . $conn->error);
+        die("Erreur de préparation de la requête de vérification des doublons : " . $conn->error);
     }
-    $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
+    $stmt->bind_param("s", $nom);
     $stmt->execute();
+    // debut jerry
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Un doublon a été trouvé
+        echo "Erreur: Un utilisateur avec le même nom existe déjà.";
+        // fin jerry
+    }
 
     if ($stmt->affected_rows === 1) {
         header("Location: index.php?success=Account created successfully");
         exit();
     } else {
-        echo "Erreur: " . $sql . "<br>" . $conn->error;
+        // Pas de doublon, on peut insérer
+        $table = $role;
+        $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES (?, ?, ?, ?, ?)";
+
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("Erreur de préparation de la requête : " . $conn->error);
+        }
+        $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
+        $stmt->execute();
+
+        if ($stmt->affected_rows === 1) {
+            $_SESSION['role'] = $role;
+            $_SESSION['nom'] = $nom;
+
+            // Enregistrement dans la table users
+            $unique_id = rand(time(), 100000000);
+            $_SESSION['unique_id'] = $unique_id;
+            $fname = $table;
+            $img = "image_coach/defaut.jpg";
+            $status = "En ligne";
+
+            $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $user_stmt = $conn->prepare($user_sql);
+            if ($user_stmt === false) {
+                die("Erreur de préparation de la requête user : " . $conn->error);
+            }
+            $user_stmt->bind_param("issssss", $unique_id, $fname, $nom, $email, $password, $img, $status);
+            $user_stmt->execute();
+
+            if ($user_stmt->affected_rows === 1) {
+                header("Location: index.php?message=Inscription réussie. Vous pouvez maintenant vous connecter.");
+                exit();
+            } else {
+                echo "Erreur lors de l'inscription dans la table users: " . $user_sql . "<br>" . $conn->error;
+            }
+        } else {
+            echo "Erreur: " . $sql . "<br>" . $conn->error;
+        }
     }
 }
 
@@ -61,8 +108,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
             $_SESSION['prenom'] = $row['prenom_' . $table];
             $_SESSION['email'] = $row['email_' . $table];
             $_SESSION['role'] = $role;
-            header("Location: accueil.php");
-            exit();
+            $_SESSION['nom'] = $row['nom_' . $table];
+
+            // Récupération du unique_id depuis la table users
+            $user_sql = "SELECT unique_id FROM users WHERE fname = ? AND lname = ? AND password = ?";
+            echo $user_sql;
+            $user_stmt = $conn->prepare($user_sql);
+            if ($user_stmt === false) {
+                die("Erreur de préparation de la requête users : " . $conn->error);
+            }
+            echo $role . " " . $username . " " . $password;
+            $user_stmt->bind_param("sss", $role, $username, $password);
+            $user_stmt->execute();
+            $user_result = $user_stmt->get_result();
+
+            if ($user_result->num_rows === 1) {
+                $user_row = $user_result->fetch_assoc();
+                $_SESSION['unique_id'] = $user_row['unique_id'];
+                header("Location: accueil.php");
+                exit();
+            } else {
+                echo "Erreur: impossible de trouver l'utilisateur dans la table users.";
+                exit();
+            }
         } else {
             echo "Mot de passe incorrect.";
             exit();
@@ -82,52 +150,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/index.css">
     <title>Connexion et Inscription</title>
-    <!-- <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            width: 300px;
-            margin-bottom: 20px;
-        }
-        h2 {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #5cb85c;
-            border: none;
-            color: #fff;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #4cae4c;
-        }
-    </style> -->
     <script>
         function showRegistrationFields() {
             const role = document.getElementById('register_role').value;
