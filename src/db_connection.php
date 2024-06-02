@@ -11,7 +11,6 @@ $conn = mysqli_connect($server, $user_name, $password, $database, $port);
 if (!$conn) {
     $port = 3306;
     $conn = mysqli_connect($server, $user_name, $password, $database, $port);
-
 }
 
 if (!mysqli_select_db($conn, $database)) {

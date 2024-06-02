@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(items);
     items.forEach(item => {
         const classes = Array.from(item.classList);
-        const sportClass = classes.find(cls => cls !== 'card-activite');
+        console.log(classes);
+        const sportClass = classes.find(cls => cls !== 'card-activite' && cls !== 'card');
         if (sportClass) {
             item.style.backgroundImage = `
                 linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
@@ -14,39 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-// Thanks to Pavel Dobryakov //
-
-const ANGLE = 40;
-
-let card = document.querySelectorAll(".card");
-
-card.forEach((element, i) => {
-    floatable(element);
-});
-
-function floatable(panel) {
-    let content = panel.querySelector(".content");
-    panel.addEventListener('mouseout', e => {
-        content.style.transform = `perspective(400px)
-                   rotateX(0deg)
-                   rotateY(0deg)
-                   rotateZ(0deg)
-                    translateZ(40px)`;
-        content.style.transition = `all 2s linear`;
-    });
-
-    panel.addEventListener('mousemove', e => {
-        let w = panel.clientWidth;
-        let h = panel.clientHeight;
-        let y = (e.offsetX - w * 0.5) / w * ANGLE;
-        let x = (1 - (e.offsetY - h * 0.5)) / h * ANGLE;
-
-        content.style.transform = `perspective(400px)
-                   rotateX(${x}deg)
-                   rotateY(${y}deg)`;
-    });
-}
 
 const activites = document.getElementsByClassName("card");
 if (activites) {

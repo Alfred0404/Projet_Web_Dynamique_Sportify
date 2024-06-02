@@ -46,7 +46,6 @@ $result = $conn->query($sql);
             }
         }
     </script>
-
 </head>
 
 <body>
@@ -97,7 +96,11 @@ $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     // Afficher chaque activité
                     while ($row = $result->fetch_assoc()) {
-                        echo "<li class='card " . $row["nom_activites"] . " " . $row["type_activites"] . "'><a href='?id=" . $row["id_activites"] . "'>" . ucfirst(str_replace("_", " ", $row["nom_activites"])) . "</a></li>";
+                        if ($row['nom_activites'] == "salle_de_sport_omnes") {
+                            echo "<li class='card " . $row["nom_activites"] . " " . $row["type_activites"] . "'><a href='salle_omnes.php'>" . ucfirst(str_replace("_", " ", $row["nom_activites"])) . "</a></li>";
+                        } else {
+                            echo "<li class='card " . $row["nom_activites"] . " " . $row["type_activites"] . "'><a href='?id=" . $row["id_activites"] . "'>" . ucfirst(str_replace("_", " ", $row["nom_activites"])) . "</a></li>";
+                        }
                     }
                 } else {
                     echo "Aucune activité trouvée.";
