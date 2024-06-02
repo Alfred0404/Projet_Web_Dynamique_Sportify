@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <CoachCV>
+            <PersonalInformation>
+                <FirstName>Nicolas</FirstName>
+                <LastName>Rihana</LastName>
+                <DateOfBirth>2024-06-02</DateOfBirth>
+                <Email>popo@oui.fr</Email>
+                <PhoneNumber>547643822</PhoneNumber>
+                <Address>
+                    <Street>54 rue des fleurs</Street>
+                    <City>Paris</City>
+                    <PostalCode>94140</PostalCode>
+                    <Country>France</Country>
+                </Address>
+            </PersonalInformation>
+            <ProfessionalSummary>
+                <Summary>Je suis coach professionnel</Summary>
+            </ProfessionalSummary>
+            <Education>
+                <Degree>
+                    <Title>Brevet</Title>
+                </Degree>
+            </Education>
+            <Skills>
+                <Skill>oui</Skill>
+            </Skills>
+            <Languages>
+                <Language>
+                    <Name>oui</Name>
+                    <Proficiency>A1</Proficiency>
+                </Language>
+            </Languages>
+        </CoachCV>

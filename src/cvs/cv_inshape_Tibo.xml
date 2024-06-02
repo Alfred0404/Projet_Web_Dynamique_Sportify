@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <CoachCV>
+            <PersonalInformation>
+                <FirstName>Tibo</FirstName>
+                <LastName>Inshape</LastName>
+                <DateOfBirth>2000-12-15</DateOfBirth>
+                <Email>test@test.fr</Email>
+                <PhoneNumber>07 82 91 91 49</PhoneNumber>
+                <Address>
+                    <Street>10 rue Sextius Michel</Street>
+                    <City>Paris</City>
+                    <PostalCode>75015</PostalCode>
+                    <Country>France</Country>
+                </Address>
+            </PersonalInformation>
+            <ProfessionalSummary>
+                <Summary>coach de sport, laveur de carreaux</Summary>
+            </ProfessionalSummary>
+            <Education>
+                <Degree>
+                    <Title>bac +7 en tractions</Title>
+                </Degree>
+            </Education>
+            <Skills>
+                <Skill>muscu, muscu</Skill>
+            </Skills>
+            <Languages>
+                <Language>
+                    <Name>Francais</Name>
+                    <Proficiency>natif</Proficiency>
+                </Language>
+            </Languages>
+        </CoachCV>
