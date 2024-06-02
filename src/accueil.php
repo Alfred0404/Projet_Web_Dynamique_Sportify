@@ -71,7 +71,7 @@ $result_activites = $conn->query($sql_activites);
                         if ($row['nom_activites'] == "salle_de_sport_omnes") {
                             echo "<li class='card-activite " . $row["nom_activites"] . " " . $row["type_activites"] . "'><a href='salle_omnes.php'>" . ucfirst(str_replace("_", " ", $row["nom_activites"])) . "</a></li>";
                         } else {
-                            echo "<li class='card-activite " . $row["nom_activites"] . " " . $row["type_activites"] . "'><a href='?id=" . $row["id_activites"] . "'>" . ucfirst(str_replace("_", " ", $row["nom_activites"])) . "</a></li>";
+                            echo "<li class='card-activite " . $row["nom_activites"] . " " . $row["type_activites"] . "'><a href='parcourir.php?id=" . $row["id_activites"] . "'>" . ucfirst(str_replace("_", " ", $row["nom_activites"])) . "</a></li>";
                         }
                     }
                 } else {

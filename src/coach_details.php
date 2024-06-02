@@ -47,7 +47,7 @@ if (isset($_GET['id'])) {
     }
 
     // Récupérer les informations du coach
-    $sql = "SELECT nom_coach, prenom_coach, email_coach, cv_coach, bureau_coach, photo_coach FROM coach WHERE id_coach = $id_coach";
+    $sql = "SELECT nom_coach, prenom_coach, email_coach, cv_coach, bureau_coach, photo_coach, specialite_coach FROM coach WHERE id_coach = $id_coach";
     $result = $conn->query($sql);
 
 
@@ -60,6 +60,7 @@ if (isset($_GET['id'])) {
         $cv_coach = $row["cv_coach"];
         $bureau_coach = $row["bureau_coach"];
         $photo_coach = $row["photo_coach"];
+        $specialite_coach = $row["specialite_coach"];
         ?>
 
         <!DOCTYPE html>
@@ -100,8 +101,15 @@ if (isset($_GET['id'])) {
                                 <img class="photo-coach" src="<?php echo $photo_coach; ?>" alt="Photo du Coach">
                             <?php } ?>
                             <div class="infos-coach">
-                                <p>Coach</p>
-                                <p>Id : <?php echo $id_coach; ?></p>
+                                <?php
+                                $sql = "SELECT nom_activites FROM activites WHERE id_activites = ?";
+                                $stmt = mysqli_prepare($conn, $sql);
+                                mysqli_stmt_bind_param($stmt, "i", $specialite_coach);
+                                mysqli_stmt_execute($stmt);
+                                $result = mysqli_stmt_get_result($stmt);
+                                $activite = mysqli_fetch_assoc($result);
+                                echo "<p>Coach de " . htmlspecialchars($activite['nom_activites']) . "</p>";
+                                ?>
                                 <p>Bureau : <?php echo $bureau_coach; ?></p>
                                 <p>Téléphone : (numéro de téléphone)</p>
                                 <p>Email : <?php echo $email_coach; ?></p>

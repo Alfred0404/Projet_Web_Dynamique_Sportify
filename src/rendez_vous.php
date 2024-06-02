@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['cancel_rdv']) && !$is
     $jour_rdv = $_POST['jour_rdv'] ?? null;
     $heure_rdv = $_POST['heure_rdv'] ?? null;
     $id_client = $_POST['id_client'] ?? $_SESSION['user_id'];
-    echo "".$id_coach;
+    echo "" . $id_coach;
     if ($id_coach === null || $jour_rdv === null || $heure_rdv === null) {
         echo "Paramètres manquants pour la prise du rendez-vous.";
         exit();
@@ -180,7 +180,15 @@ if ($is_client || $is_admin) {
                             <p>Date et Heure: <?= htmlspecialchars($rdv['jour_rdv'] . ' ' . $rdv['heure_rdv']) ?></p>
                             <p>Salle: <?= htmlspecialchars($rdv['nom_salle']) ?></p>
                             <p>Email: <?= htmlspecialchars($rdv['email_coach']) ?></p>
-                            <p>Spécialité: <?= htmlspecialchars($rdv['specialite_coach']) ?></p>
+                            <?php
+                            $sql = "SELECT nom_activites FROM activites WHERE id_activites = ?";
+                            $stmt = mysqli_prepare($conn, $sql);
+                            mysqli_stmt_bind_param($stmt, "i", $rdv['specialite_coach']);
+                            mysqli_stmt_execute($stmt);
+                            $result = mysqli_stmt_get_result($stmt);
+                            $activite = mysqli_fetch_assoc($result);
+                            echo "<p>Spécialité : " . htmlspecialchars($activite['nom_activites']) . "</p>";
+                            ?>
                         </div>
                         <div class="img-coach">
                             <img src=<?= $rdv['photo_coach'] ?> alt="photo-coach">

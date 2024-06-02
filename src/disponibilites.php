@@ -146,7 +146,15 @@ $bookedSlots = getBookedSlots($conn, $id_coach);
                         echo '<tr>';
                         if ($time == '08:00') {
                             echo '<td rowspan="9">' . htmlspecialchars($coach['nom_coach']) . ' ' . htmlspecialchars($coach['prenom_coach']) . '</td>';
-                            echo '<td rowspan="9">' . htmlspecialchars($coach['specialite_coach']) . '</td>';
+                            echo '<td rowspan="9">';
+                            $sql = "SELECT nom_activites FROM activites WHERE id_activites = ?";
+                            $stmt = mysqli_prepare($conn, $sql);
+                            mysqli_stmt_bind_param($stmt, "i", $coach['specialite_coach']);
+                            mysqli_stmt_execute($stmt);
+                            $result = mysqli_stmt_get_result($stmt);
+                            $activite = mysqli_fetch_assoc($result);
+                            echo htmlspecialchars($activite['nom_activites']);
+                            echo '</td>';
                         }
                         foreach (['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'] as $jour):
                             $isBooked = isset($bookedSlots[$jour]) && in_array($time, $bookedSlots[$jour]);
