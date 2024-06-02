@@ -26,7 +26,7 @@ if ($result->num_rows === 1) {
 $stmt->close();
 
 // Stocker l'ID du client dans la session
-$_SESSION['user_id'] = $client_id_from_database;
+//$_SESSION['user_id'] = $client_id_from_database;
 
 // Vérifier le rôle de l'utilisateur
 $is_admin = $_SESSION['role'] === 'admin';
@@ -75,6 +75,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_carte_bancaire'
         }
     } else {
         echo "Vous n'avez pas les autorisations nécessaires pour mettre à jour ces informations.";
+    }
+}
 // fin partie pilou
 
 // Sauvegarde du CV
@@ -313,64 +315,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_admin'])) {
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="css/compte.css">
     <title>Votre compte</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            width: 300px;
-            margin-bottom: 20px;
-            margin-top: 20px; /* Ajout d'une marge en haut */
-        }
-        h2 {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #5cb85c;
-            border: none;
-            color: #fff;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #4cae4c;
-        }
-        .btn-back {
-            background-color: #007bff;
-        }
-        .btn-back:hover {
-            background-color: #0056b3;
-        }
-        img {
-            width: 100px;
-            height: auto;
-            margin-top: 10px;
-        }
-    </style>
 </head>
 
 

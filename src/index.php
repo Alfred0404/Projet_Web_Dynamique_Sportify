@@ -20,24 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
         $sexe = validate($_POST['sexe']);
         $email = validate($_POST['email']);
         $password = validate($_POST['password']);
-
-<<<<<<< HEAD
-        $table = $role;
-        $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        if ($stmt === false) {
-            die("Erreur de préparation de la requête : " . $conn->error);
-        }
-        $stmt->bind_param("sssss", $nom, $prenom, $sexe, $email, $password);
-        $stmt->execute();
-        
-        if ($stmt->affected_rows === 1) {
-            header("Location: index.php?success=Account created successfully");
-            exit();
-        } else {
-            echo "Erreur: " . $sql . "<br>" . $conn->error;
-        }
-=======
+    }
     $table = $role;
     $sql = "INSERT INTO $table (nom_$table, prenom_$table, sexe_$table, email_$table, mdp_$table) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
@@ -50,7 +33,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_role'])) {
     if ($stmt->affected_rows === 1) {
         header("Location: index.php?success=Account created successfully");
         exit();
->>>>>>> cbcff11c7c45cedf1cc8994f7f7bb73ba6b06e25
     } else {
         echo "Inscription uniquement pour les clients.";
     }
@@ -161,48 +143,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
 </head>
 
 <body>
-<<<<<<< HEAD
-    <div class="container">
-        <h2>Connexion</h2>
-        <form method="post" action="index.php">
-            <label for="login_role">Sélectionnez votre rôle :</label>
-            <select id="login_role" name="login_role" required>
-                <option value="">--Choisir un rôle--</option>
-                <option value="admin">Administrateur</option>
-                <option value="coach">Coach</option>
-                <option value="client">Client</option>
-            </select>
-            <label for="username">Nom d'utilisateur :</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password">Mot de passe :</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Se connecter</button>
-        </form>
-    </div>
-    <div class="container">
-        <h2>Créer un compte</h2>
-        <form method="post" action="index.php">
-            <label for="register_role">Sélectionnez votre rôle :</label>
-            <select id="register_role" name="register_role" onchange="showRegistrationFields()" required>
-                <option value="">--Choisir un rôle--</option>
-                <option value="client">Client</option>
-            </select>
-            <div id="registration_fields" style="display: none;">
-                <label for="name">Nom :</label>
-                <input type="text" id="name" name="name" required>
-                <label for="prenom">Prénom :</label>
-                <input type="text" id="prenom" name="prenom" required>
-                <label for="sexe">Sexe :</label>
-                <input type="text" id="sexe" name="sexe" required>
-                <label for="email">Adresse Email :</label>
-                <input type="email" id="email" name="email" required>
-                <label for="password">Mot de passe :</label>
-                <input type="password" id="password" name="password" required>
-                <button type="submit">S'inscrire</button>
-            </div>
-        </form>
-    </div>
-=======
     <header>
         <h1 class="title">Sportify</h1>
         <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
@@ -231,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
                 <label for="register_role">Sélectionnez votre rôle :</label>
                 <select id="register_role" name="register_role" onchange="showRegistrationFields()" required>
                     <option value="">--Choisir un rôle--</option>
-                    <option value="admin">Administrateur</option>
+                    <!-- <option value="admin">Administrateur</option> -->
                     <option value="client">Client</option>
                 </select>
                 <div id="registration_fields" style="display: none;">
@@ -259,7 +199,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_role'])) {
             href="https://www.google.fr/maps/place/10+Rue+Sextius+Michel,+75015+Paris/@48.8511413,2.2860178,17z/data=!3m1!4b1!4m6!3m5!1s0x47e67151e3c16d05:0x1e3446766ada1337!8m2!3d48.8511378!4d2.2885927!16s%2Fg%2F11jy_4vh_c?entry=ttu">Google
             Maps</a>
     </footer>
->>>>>>> cbcff11c7c45cedf1cc8994f7f7bb73ba6b06e25
 </body>
 
 </html>
