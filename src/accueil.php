@@ -5,6 +5,9 @@ include "db_connection.php";
 
 $sql = "SELECT id_bulletin, titre_bulletin, contenu_bulletin FROM bulletin";
 $result = $conn->query($sql);
+
+$sql_activites = "SELECT id_activites, nom_activites, type_activites FROM activites";
+$result_activites = $conn->query($sql_activites);
 ?>
 
 <!DOCTYPE html>
@@ -14,6 +17,8 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../src/css/accueil.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="js/accueil.js"></script>
     <title>Sportify - Accueil</title>
 </head>
 
@@ -29,13 +34,11 @@ $result = $conn->query($sql);
             <li class="nav-item"><a href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>
-            <li class="nav-item"><a href="users.php">WhatsApp</a></li>
+            <li class="nav-item"><a href="users.php">Discussions</a></li>
             <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
-
         </ul>
     </div>
     <section class="first-section">
-
         <div class="section-content">
             <img src="../assets/logo_Sportify.png" alt="logo" id="logo">
             <h1>Sportify</h1>
@@ -49,13 +52,31 @@ $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 // Afficher chaque bulletin
                 while ($row = $result->fetch_assoc()) {
-                    echo "<li class='card'><h2 class='titre-bulletin'>" . $row["titre_bulletin"] . "</h2><p>" . $row["contenu_bulletin"] . "</p></li>";
+                    echo "<li class='card-bulletin'><h2 class='titre-bulletin'>" . $row["titre_bulletin"] . "</h2><p>" . $row["contenu_bulletin"] . "</p></li>";
                 }
             } else {
                 echo "Aucun bulletin trouvée.";
             }
             ?>
         </ul>
+    </section>
+    <section class="carrousel-container">
+        <div id="carrousel">
+            <h1 class="carrousel-title">Ce que nous proposons</h1>
+            <ul class="liste-activites">
+                <?php
+                if ($result_activites->num_rows > 0) {
+                    // Afficher chaque activité
+                    while ($row = $result_activites->fetch_assoc()) {
+                        echo "<li class='card-activite " . $row["nom_activites"] . " " . $row["type_activites"] . "'><a href='parcourir.php?id=" . $row["id_activites"] . "'>" . ucfirst(str_replace("_", " ", $row["nom_activites"])) . "</a></li>";
+                    }
+                } else {
+                    echo "Aucune activité trouvée.";
+                }
+                ?>
+            </ul>
+            <script src="js/carrousel_accueil.js"></script>
+        </div>
     </section>
     <footer>
         <p>© 2024 Sportify</p>

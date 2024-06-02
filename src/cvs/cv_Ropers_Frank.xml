@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <CoachCV>
+            <PersonalInformation>
+                <FirstName>Frank</FirstName>
+                <LastName>Ropers</LastName>
+                <DateOfBirth>1985-06-20</DateOfBirth>
+                <Email>frank@ropers.com</Email>
+                <PhoneNumber>0101010101</PhoneNumber>
+                <Address>
+                    <Street>22 rue du soleil</Street>
+                    <City>Paris</City>
+                    <PostalCode>75015</PostalCode>
+                    <Country>France</Country>
+                </Address>
+            </PersonalInformation>
+            <ProfessionalSummary>
+                <Summary>Professionnel de combat rapproché
+coach de muai thai depuis 25 ans</Summary>
+            </ProfessionalSummary>
+            <Education>
+                <Degree>
+                    <Title>bts patate de forain</Title>
+                </Degree>
+            </Education>
+            <Skills>
+                <Skill>clé de bras
+jujuitsu brésilien
+kravmaga</Skill>
+            </Skills>
+            <Languages>
+                <Language>
+                    <Name>Francais</Name>
+                    <Proficiency>natif</Proficiency>
+                </Language>
+            </Languages>
+        </CoachCV>

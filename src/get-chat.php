@@ -1,7 +1,7 @@
-<?php 
+<?php
     session_start();
     include "db_connection.php";
-  
+
     if(isset($_SESSION['unique_id'])){
         $outgoing_id = $_SESSION['unique_id'];
         $incoming_id = mysqli_real_escape_string($conn, $_POST['incoming_id']);
@@ -33,5 +33,3 @@
     }else{
         header("location: index.php");
     }
-
-?>

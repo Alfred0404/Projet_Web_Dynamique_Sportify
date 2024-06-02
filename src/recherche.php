@@ -94,6 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
             <li class="nav-item active"><a href="#">Rechercher</a></li>
             <li class="nav-item"><a href="rendez_vous.php">Rendez-vous</a></li>
             <li class="nav-item"><a href="compte.php">Votre compte</a></li>
+            <li class="nav-item"><a href="users.php">Discussions</a></li>
             <li class="nav-item"><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>

@@ -7,31 +7,33 @@ if (!isset($_SESSION['user_name'])) {
     header("Location: index.php");
     exit();
 }
-
-// Récupérer l'ID du client à partir de la base de données en fonction du nom d'utilisateur
-$sql = "SELECT id_client FROM client WHERE nom_client = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    die("[get client id] Erreur de préparation de la requête : " . $conn->error);
-}
-$stmt->bind_param("s", $_SESSION['user_name']); // Supposons que 'user_name' contienne le nom d'utilisateur
-$stmt->execute();
-$result = $stmt->get_result();
-if ($result->num_rows === 1) {
-    $row = $result->fetch_assoc();
-    $client_id_from_database = $row['id_client'];
-} else {
-    echo "[get client id] Erreur : Aucun client trouvé avec ce nom d'utilisateur.";
-}
-$stmt->close();
-
-// Stocker l'ID du client dans la session
-// $_SESSION['user_id'] = $client_id_from_database;
-
 // Vérifier le rôle de l'utilisateur
 $is_admin = $_SESSION['role'] === 'admin';
 $is_coach = $_SESSION['role'] === 'coach';
 $is_client = $_SESSION['role'] === 'client';
+
+if ($is_client) {
+    // Récupérer l'ID du client à partir de la base de données en fonction du nom d'utilisateur
+    $sql = "SELECT id_client FROM client WHERE nom_client = ?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("[get client id] Erreur de préparation de la requête : " . $conn->error);
+    }
+    $stmt->bind_param("s", $_SESSION['user_name']); // Supposons que 'user_name' contienne le nom d'utilisateur
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+        $client_id_from_database = $row['id_client'];
+    } else {
+        echo "[get client id] Erreur : Aucun client trouvé avec ce nom d'utilisateur.";
+    }
+    $stmt->close();
+}
+
+// Stocker l'ID du client dans la session
+// $_SESSION['user_id'] = $client_id_from_database;
+
 
 // Fonction pour valider et sécuriser les entrées utilisateur
 function validate($data)
@@ -295,7 +297,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
             $fname = "coach";
             $img = "image_coach/defaut.jpg";
             $status = "En ligne";
-            
+
             $user_sql = "INSERT INTO users (unique_id, fname, lname, email, password, img, status) VALUES ('$unique_id', '$fname', '$nom', '$email', '$password', '$img', '$status')";
             if ($conn->query($user_sql) === TRUE) {
                 echo "Compte coach créé avec succès.";
@@ -336,6 +338,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_coach'])) {
             <li class="nav-item"><a class="text-decoration-none" href="recherche.php">Rechercher</a></li>
             <li class="nav-item"><a class="text-decoration-none" href="rendez_vous.php">Rendez-vous</a></li>
             <li class="nav-item active"><a class="text-decoration-none" href="#">Votre compte</a></li>
+            <li class="nav-item"><a href="users.php">Discussions</a></li>
             <li class="nav-item"><a class="text-decoration-none" href="logout.php">Déconnexion</a></li>
         </ul>
     </div>
