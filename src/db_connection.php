@@ -3,7 +3,7 @@ $user_name = "root";
 $password = "";
 $database = "sportify";
 $server = "127.0.0.1";
-$port = 3306;
+$port = 3301;
 
 // on essaie de se connecter à la base de données avec le port 3301 (fonctionne sur le pc d'Alfred)
 $conn = mysqli_connect($server, $user_name, $password, $database, $port);

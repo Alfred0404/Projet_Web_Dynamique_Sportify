@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Construire le message avec les nouvelles valeurs de jour_rdv et heure_rdv
-    $message = "Votre rendez-vous avec moi a bien été validé pour le $jour_rdv à $heure_rdv."; // Message automatique 
+    $message = "Votre rendez-vous avec moi a bien été validé pour le $jour_rdv à $heure_rdv."; // Message automatique
 
     // Insérer le message dans la table messages
     $sql = "INSERT INTO messages (incoming_msg_id, outgoing_msg_id, msg) VALUES (?, ?, ?)";
@@ -68,16 +68,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // Insérer un message automatique dans la table messages
-    $message = "Votre rendez-vous avec moi a bien été validé pour le $jour_rdv à $heure_rdv."; // Message automatique 
-
-    $sql = "INSERT INTO messages (incoming_msg_id, outgoing_msg_id, msg) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    if ($stmt === false) {
-        die("Erreur de préparation de la requête : " . $conn->error);
-    }
-    $stmt->bind_param("iis", $unique_id_client, $unique_id_coach, $message);
-    $stmt->execute();
-    $stmt->close();
 
     // Redirection vers la page d'accueil
     header("Location: rendez_vous.php");
