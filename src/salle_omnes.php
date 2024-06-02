@@ -41,7 +41,7 @@ $result_activites = $conn->query($sql_activites);
     <section class="first-section">
         <div class="section-content">
             <div class="presentation">
-                <h1>Salle de sport omnes</h1>
+                <h1>Salle de sport Omnes</h1>
                 <p>Bienvenue à la salle de sport Omnes, votre destination ultime pour atteindre vos objectifs de
                     fitness et de bien-être ! Située au cœur de la ville, notre salle de sport moderne est équipée des
                     dernières innovations en matière d'équipements de musculation et de cardio-training. Que vous soyez
